@@ -1,8 +1,7 @@
-﻿<Window x:Class="UWIC.FinalProject.WebBrowser.MainWindow"
+﻿<Controls:Window x:Class="UWIC.FinalProject.WebBrowser.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Web Browser" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
-</Window>
+        xmlns:Controls="clr-namespace:Elysium.Controls;assembly=Elysium"
+        xmlns:params="http://schemas.codeplex.com/elysium/params"
+        Title="Vocem Web Browser" Height="674" Width="1200" WindowStartupLocation="CenterScreen" >
+</Controls:Window>
