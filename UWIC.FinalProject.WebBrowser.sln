@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWIC.FinalProject.WebBrowser", "UWIC.FinalProject.WebBrowser\UWIC.FinalProject.WebBrowser.csproj", "{0F375137-C4E9-49D0-ACA6-65DF55079A94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWIC.FinalProject.WebBrowser", "UWIC.FinalProject.WebBrowser\UWIC.FinalProject.WebBrowser.csproj", "{AD3E6B89-9630-4EE4-B066-8FDB3C99BE9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0F375137-C4E9-49D0-ACA6-65DF55079A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F375137-C4E9-49D0-ACA6-65DF55079A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F375137-C4E9-49D0-ACA6-65DF55079A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F375137-C4E9-49D0-ACA6-65DF55079A94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD3E6B89-9630-4EE4-B066-8FDB3C99BE9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD3E6B89-9630-4EE4-B066-8FDB3C99BE9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD3E6B89-9630-4EE4-B066-8FDB3C99BE9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD3E6B89-9630-4EE4-B066-8FDB3C99BE9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
