@@ -5,18 +5,23 @@
               xmlns:params="http://schemas.codeplex.com/elysium/params"
               xmlns:awesomium="http://schemas.awesomium.com/winfx" 
               xmlns:myControl="clr-namespace:UWIC.FinalProject.WebBrowser.Controller"
+              xmlns:vm ="clr-namespace:UWIC.FinalProject.WebBrowser.ViewModel"
               params:Design.Theme="Dark"
               params:Design.AccentBrush="{x:Static metro:AccentBrushes.Blue}"
               params:Design.ContrastBrush="White"
-              Title="Vocem Browser" Height="674" Width="1200" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+              Title="Vocem Browser" Height="674" Width="1200" MinHeight="674" MinWidth="1200" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" WindowState="Maximized">
+    <Window.DataContext>
+        <vm:TabItemViewModel/>
+    </Window.DataContext>
+    <metro:Window.ApplicationBar>
+        <metro:ApplicationBar>
+            <metro:CommandButton Header="Add New Tab" Margin="5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Command="{Binding ClickCommand}">
+                <Image Source="/UWIC.FinalProject.WebBrowser;component/Images/icon-add.png"  Width="25" />
+            </metro:CommandButton>
+        </metro:ApplicationBar>
+    </metro:Window.ApplicationBar>
     <Grid>
-        <TabControl>
-            <TabItem Header="Google">
-                <myControl:BrowserContainer/>
-            </TabItem>
-            <TabItem Header="Facebook">
-                <myControl:BrowserContainer/>
-            </TabItem>
-        </TabControl>
+        <Decorator metro:Window.IsApplicationBarHost="True"/>
+        <TabControl ItemsSource="{Binding TabItems}" Name="mainTabControl" SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay}" />
     </Grid>
 </metro:Window>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,26 +10,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using UWIC.FinalProject.WebBrowser.Controller;
-using UWIC.FinalProject.WebBrowser.ViewModel;
 
-namespace UWIC.FinalProject.WebBrowser.View
+namespace UWIC.FinalProject.WebBrowser.Controller
 {
     /// <summary>
-    /// Interaction logic for BrowserWindow.xaml
+    /// Interaction logic for TabItemHeader.xaml
     /// </summary>
-    public partial class BrowserWindow : Elysium.Controls.Window
+    public partial class TabItemHeader : UserControl
     {
-        public BrowserWindow()
+        public TabItemHeader(BitmapImage image, string title)
         {
             InitializeComponent();
-            
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
+            pageIcon.Source = image;
+            PageTitle.Text = title;
         }
     }
 }
