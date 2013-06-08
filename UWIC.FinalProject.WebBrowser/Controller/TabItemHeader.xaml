@@ -3,12 +3,26 @@
              xmlns:metro="http://schemas.codeplex.com/elysium"
              xmlns:params="http://schemas.codeplex.com/elysium/params"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:awesomium="http://schemas.awesomium.com/winfx" 
              mc:Ignorable="d">
     <StackPanel Orientation="Horizontal">
         <Image Margin="3,0,0,0" VerticalAlignment="Center" Width="15" Name="pageIcon"/>
         <TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Name="PageTitle" Foreground="White" FontSize="13" Text="New Tab"/>
+        <Label Content="x" Margin="5,0,0,0" Name="btnClose" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="15">
+            <Label.Style>
+                <Style TargetType="Label">
+                    <Setter Property="Background" Value="#171717"/>
+                    <Setter Property="Foreground" Value="Aqua"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Red"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
+        </Label>
     </StackPanel>
 </UserControl>

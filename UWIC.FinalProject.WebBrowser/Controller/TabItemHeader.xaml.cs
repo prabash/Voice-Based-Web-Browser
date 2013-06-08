@@ -26,5 +26,11 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             pageIcon.Source = image;
             PageTitle.Text = title;
         }
+
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            var parent = (UIElement)this.Parent;
+            var _parent = (TabItem)parent;
+        }
     }
 }

@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <ExpressionBlendVersion>5.0.40218.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -63,6 +64,7 @@
     <Compile Include="Controller\TabItemHeader.xaml.cs">
       <DependentUpon>TabItemHeader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\BrowserContainerViewModel.cs" />
     <Compile Include="ViewModel\TabItemViewModel.cs" />
     <Compile Include="View\BrowserWindow.xaml.cs">
       <DependentUpon>BrowserWindow.xaml</DependentUpon>
@@ -112,7 +114,39 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\amazon-bnw-1.png" />
+    <Resource Include="Images\amazon-bnw-2.png" />
+    <Resource Include="Images\apple-bnw-1.png" />
+    <Resource Include="Images\apple-bnw-2.png" />
+    <Resource Include="Images\dropbox-bnw-1.png" />
+    <Resource Include="Images\dropbox-bnw-2.png" />
+    <Resource Include="Images\ebay-bnw-1.png" />
+    <Resource Include="Images\ebay-bnw-2.png" />
+    <Resource Include="Images\facebook-bnw-1.png" />
+    <Resource Include="Images\facebook-bnw-2.png" />
+    <Resource Include="Images\gmail-bnw-1.png" />
+    <Resource Include="Images\gmail-bnw-2.png" />
+    <Resource Include="Images\google-bnw-1.png" />
+    <Resource Include="Images\google-bnw-2.png" />
+    <Resource Include="Images\google-plus-bnw-1.png" />
+    <Resource Include="Images\google-plus-bnw-2.png" />
     <Resource Include="Images\icon-page.png" />
+    <Resource Include="Images\imdb-bnw-1.png" />
+    <Resource Include="Images\imdb-bnw-2.png" />
+    <Resource Include="Images\linkedin-bnw-1.png" />
+    <Resource Include="Images\linkedin-bnw-2.png" />
+    <Resource Include="Images\microsoft-bnw-1.png" />
+    <Resource Include="Images\microsoft-bnw-2.png" />
+    <Resource Include="Images\msn-bnw-1.png" />
+    <Resource Include="Images\msn-bnw-2.png" />
+    <Resource Include="Images\twitter-bnw-1.png" />
+    <Resource Include="Images\twitter-bnw-2.png" />
+    <Resource Include="Images\wikipedia-bnw-1.png" />
+    <Resource Include="Images\wikipedia-bnw-2.png" />
+    <Resource Include="Images\yahoo-bnw-1.png" />
+    <Resource Include="Images\yahoo-bnw-2.png" />
+    <Resource Include="Images\youtube-bnw-1.png" />
+    <Resource Include="Images\youtube-bnw-2.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon-add.png" />

@@ -15,7 +15,7 @@
     </Window.DataContext>
     <metro:Window.ApplicationBar>
         <metro:ApplicationBar>
-            <metro:CommandButton Header="Add New Tab" Margin="5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Command="{Binding ClickCommand}">
+            <metro:CommandButton Header="Add New Tab" Margin="5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Command="{Binding ClickCommand}" >
                 <Image Source="/UWIC.FinalProject.WebBrowser;component/Images/icon-add.png"  Width="25" />
             </metro:CommandButton>
         </metro:ApplicationBar>
