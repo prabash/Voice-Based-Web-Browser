@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:awesomium="http://schemas.awesomium.com/winfx" 
+             xmlns:my ="clr-namespace:UWIC.FinalProject.WebBrowser.Controller"
              mc:Ignorable="d">
 	<UserControl.Resources>
 		<Storyboard x:Key="DownAnimation">
@@ -78,7 +79,7 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="0" Name="btnGoogle" Click="btnGoogle_Click">
+				<!--<Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="0" Name="btnGoogle" Click="btnGoogle_Click">
 					<Image>
 						<Image.Style>
 							<Style TargetType="{x:Type Image}">
@@ -96,8 +97,10 @@
 							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
 						</EventTrigger>
 					</Button.Triggers>	
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="1" Name="btnGooglePlus" Click="btnGooglePlus_Click">
+				</Button>-->
+                <my:BookmarkButton DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-1.png"/>
+                
+                <Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="1" Name="btnGooglePlus" Click="btnGooglePlus_Click">
 					<Image>
 						<Image.Style>
 							<Style TargetType="{x:Type Image}">

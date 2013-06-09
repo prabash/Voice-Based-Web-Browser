@@ -339,6 +339,5 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         }
 
         #endregion
-
     }
 }
