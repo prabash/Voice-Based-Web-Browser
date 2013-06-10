@@ -54,6 +54,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             public Int32 X;
             public Int32 Y;
         };
+
         public static Point GetMousePosition()
         {
             Win32Point w32Mouse = new Win32Point();

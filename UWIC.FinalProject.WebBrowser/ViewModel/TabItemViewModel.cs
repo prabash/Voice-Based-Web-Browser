@@ -69,7 +69,7 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             return new TabItemHeader(getBlankPageImage(), "New Tab");
         }
 
-        private BitmapImage getBlankPageImage()
+        public BitmapImage getBlankPageImage()
         {
             BitmapImage image = new BitmapImage();
             image.BeginInit();
