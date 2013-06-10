@@ -10,8 +10,8 @@
              mc:Ignorable="d">
     <StackPanel Orientation="Horizontal">
         <Image Margin="3,0,0,0" VerticalAlignment="Center" Width="15" Name="pageIcon"/>
-        <TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Name="PageTitle" Foreground="White" FontSize="13" Text="New Tab"/>
-        <Label Content="x" Margin="5,0,0,0" Name="btnClose" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="15">
+        <TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Name="PageTitle" Foreground="White" FontSize="13" Text="New Tab" MaxWidth="80" TextTrimming="WordEllipsis"/>
+        <Label Content="x" Margin="5,0,0,0" Name="btnClose" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="15" MouseLeftButtonUp="btnClose_MouseLeftButtonUp">
             <Label.Style>
                 <Style TargetType="Label">
                     <Setter Property="Background" Value="#171717"/>

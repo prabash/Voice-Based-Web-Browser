@@ -7,7 +7,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:awesomium="http://schemas.awesomium.com/winfx" 
              xmlns:my ="clr-namespace:UWIC.FinalProject.WebBrowser.Controller"
+             xmlns:vm ="clr-namespace:UWIC.FinalProject.WebBrowser.ViewModel"
              mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vm:BrowserContainerViewModel/>
+    </UserControl.DataContext>
 	<UserControl.Resources>
 		<Storyboard x:Key="DownAnimation">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="grid">
@@ -53,11 +57,11 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Name="txtURL"/>
-            <Button Content="Go" Grid.Column="1" Margin="2,0,0,0" Click="Button_Click"/>
+            <TextBox Grid.Column="0" Name="txtURL" Text="{Binding URLText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Content="Go" Grid.Column="1" Margin="2,0,0,0" Command="{Binding GoCommand}"/>
         </Grid>
-        <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1" Visibility="Collapsed"/>
-        <Grid Grid.Row="2" Panel.ZIndex="2" Background="#FF171717" RenderTransformOrigin="0.5,0.5" x:Name="grid">
+        <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1" Visibility="{Binding ProgressBarVisibility}" State="{Binding ProgressBarState}"/>
+        <!--<Grid Grid.Row="2" Panel.ZIndex="2" Background="#FF171717" RenderTransformOrigin="0.5,0.5" x:Name="grid">
 			<Grid.RenderTransform>
         		<TransformGroup>
         			<ScaleTransform/>
@@ -79,27 +83,8 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<!--<Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="0" Name="btnGoogle" Click="btnGoogle_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>	
-				</Button>-->
-                <my:BookmarkButton DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-1.png"/>
-                
+                <my:BookmarkButton DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-1.png" CommandParam="www.google.com"/>
+                <Button Command="{Binding BookmarkCommand}" CommandParameter="www.google.com"/>
                 <Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="1" Name="btnGooglePlus" Click="btnGooglePlus_Click">
 					<Image>
 						<Image.Style>
@@ -386,8 +371,8 @@
 					</Button.Triggers>		
 				</Button>
 			</Grid>
-        </Grid>
-        <awesomium:WebControl Grid.Row="2" Name="webBrowserMain" LoadingFrameComplete="webBrowserMain_LoadingFrameComplete" AddressChanged="webBrowserMain_AddressChanged"  Panel.ZIndex="1"/>
+        </Grid>-->
+        <awesomium:WebControl Grid.Row="2" Source="{Binding URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="webBrowserMain" LoadingFrameComplete="webBrowserMain_LoadingFrameComplete" AddressChanged="webBrowserMain_AddressChanged" Panel.ZIndex="1"/>
         <Label Content="X Position =; Y Position =" Name="xyPosition" Foreground="White" Grid.Row="3" FontSize="10"/>
     </Grid>
 </UserControl>

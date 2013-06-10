@@ -15,12 +15,11 @@ using Elysium;
 
 namespace UWIC.FinalProject.WebBrowser.ViewModel
 {
-    public class TabItemViewModel : INotifyPropertyChanged
+    public class TabItemViewModel : MainViewModel
     {
         # region Commands
 
         public ICommand ClickCommand { get; set; }
-        public ICommand RemoveTabCommand { get; set; }
 
         # endregion
 
@@ -60,8 +59,8 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             myItem.Content = new Controller.BrowserContainer();
             TabItems.Add(myItem);
 
-            this.ClickCommand = new RelayCommand(Execute);
-            this.RemoveTabCommand = new RelayCommand(RemoveTabItem);
+            this.ClickCommand = new RelayCommand(AddTabItem);
+            TabItemHeader.setViewModel(this);
         }
 
         private TabItemHeader getNewTabItemHeader()
@@ -75,11 +74,13 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             image.BeginInit();
             image.UriSource = new Uri("/Images/icon-page.png", UriKind.RelativeOrAbsolute);
             image.EndInit();
-
             return image;
         }
 
-        public void Execute()
+        /// <summary>
+        /// This method is used to add a new tab item to the tab control
+        /// </summary>
+        public void AddTabItem()
         {
             TabItem myItem = new TabItem();
             myItem.Header = getNewTabItemHeader();
@@ -88,26 +89,15 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             SelectedIndex = TabItems.Count - 1;
         }
 
+        /// <summary>
+        /// This method is used to Remove a particular tabitem by providing the HashCode of it
+        /// </summary>
+        /// <param name="HashCode">Hash-Code of the tabitem</param>
         public void RemoveTabItem(object HashCode)
         {
             var res = TabItems.First(rec => rec.GetHashCode() == (int)HashCode);
             TabItems.Remove(res);
         }
 
-        # region INRC
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        # endregion
     }
 }

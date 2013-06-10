@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UWIC.FinalProject.WebBrowser.ViewModel;
 
 namespace UWIC.FinalProject.WebBrowser.Controller
 {
@@ -20,17 +21,27 @@ namespace UWIC.FinalProject.WebBrowser.Controller
     /// </summary>
     public partial class TabItemHeader : UserControl
     {
+        private static TabItemViewModel _ViewModel { get; set; }
+
         public TabItemHeader(BitmapImage image, string title)
         {
             InitializeComponent();
             pageIcon.Source = image;
             PageTitle.Text = title;
+            ToolTipService.SetToolTip(PageTitle, PageTitle.Text);
         }
 
-        private void btnClose_Click(object sender, RoutedEventArgs e)
+        private void btnClose_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var parent = (UIElement)this.Parent;
             var _parent = (TabItem)parent;
+            int hashCode = _parent.GetHashCode();
+            _ViewModel.RemoveTabItem(hashCode);
+        }
+
+        public static void setViewModel(TabItemViewModel vm)
+        {
+            _ViewModel = vm;
         }
     }
 }
