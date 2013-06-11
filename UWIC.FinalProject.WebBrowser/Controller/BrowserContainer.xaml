@@ -8,7 +8,7 @@
              xmlns:awesomium="http://schemas.awesomium.com/winfx" 
              xmlns:my ="clr-namespace:UWIC.FinalProject.WebBrowser.Controller"
              xmlns:vm ="clr-namespace:UWIC.FinalProject.WebBrowser.ViewModel"
-             mc:Ignorable="d">
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
     <UserControl.DataContext>
         <vm:BrowserContainerViewModel/>
     </UserControl.DataContext>
@@ -35,10 +35,11 @@
 				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
-	</UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisiblity"/>
+    </UserControl.Resources>
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1.25*"/>
             <RowDefinition Height="0.2*"/>
             <RowDefinition Height="20*"/>
             <RowDefinition Height="0.8*"/>
@@ -57,11 +58,15 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Name="txtURL" Text="{Binding URLText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Content="Go" Grid.Column="1" Margin="2,0,0,0" Command="{Binding GoCommand}"/>
+            <TextBox Grid.Column="0" Name="txtURL" Text="{Binding URLText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="18" VerticalContentAlignment="Stretch"/>
+            <my:NavigationButton Grid.Column="1" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/go-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/go-2.png" CommandType="Go"/>
+            <my:NavigationButton Grid.Column="2" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-2.png" CommandType="Forward"/>
+            <my:NavigationButton Grid.Column="3" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-2.png"  CommandType="Backward"/>
+            <my:NavigationButton Grid.Column="4" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/refresh-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/refresh-2.png" CommandType="Refresh" />
+            <my:NavigationButton Grid.Column="5" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/stop-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/stop-2.png"  CommandType="Stop" />
         </Grid>
-        <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1" Visibility="{Binding ProgressBarVisibility}" State="{Binding ProgressBarState}"/>
-        <!--<Grid Grid.Row="2" Panel.ZIndex="2" Background="#FF171717" RenderTransformOrigin="0.5,0.5" x:Name="grid">
+        <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1" Visibility="{Binding ProgressBarVisibility, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisiblity}}" State="{Binding ProgressBarState}"/>
+        <Grid Grid.Row="2" Panel.ZIndex="2" Background="#FF171717" RenderTransformOrigin="0.5,0.5" x:Name="grid">
 			<Grid.RenderTransform>
         		<TransformGroup>
         			<ScaleTransform/>
@@ -83,295 +88,24 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-                <my:BookmarkButton DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-1.png" CommandParam="www.google.com"/>
-                <Button Command="{Binding BookmarkCommand}" CommandParameter="www.google.com"/>
-                <Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="1" Name="btnGooglePlus" Click="btnGooglePlus_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/google-plus-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/google-plus-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="2" Name="btnGmail" Click="btnGmail_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/gmail-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/gmail-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="0" Grid.Column="3" Name="btnYoutube" Click="btnYoutube_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/youtube-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/youtube-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="1" Grid.Column="0" Name="btnFacebook" Click="btnFacebook_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/facebook-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/facebook-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="1" Grid.Column="1" Name="btnTwitter" Click="btnTwitter_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/twitter-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/twitter-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="1" Grid.Column="2" Name="btnLinkedIn" Click="btnLinkedIn_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/linkedin-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/linkedin-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="1" Grid.Column="3" Name="btnImdb" Click="btnImdb_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/imdb-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/imdb-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="2" Grid.Column="0" Name="btnMicrosoft" Click="btnMicrosoft_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/microsoft-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/microsoft-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="2" Grid.Column="1" Name="btnMSN" Click="btnMSN_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/msn-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/msn-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="2" Grid.Column="2" Name="btnYahoo" Click="btnYahoo_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/yahoo-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/yahoo-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="2" Grid.Column="3" Name="btnDropbox" Click="btnDropbox_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/dropbox-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/dropbox-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="3" Grid.Column="0" Name="btnEbay" Click="btnEbay_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/ebay-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/ebay-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>	
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>	
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="3" Grid.Column="1" Name="btnAmazon" Click="btnAmazon_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/amazon-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/amazon-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>	
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>	
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="3" Grid.Column="2" Name="btnApple" Click="btnApple_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/apple-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/apple-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>	
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>	
-				</Button>
-				<Button Margin="5" Background="#17171700" Grid.Row="3" Grid.Column="3" Name="btnWikipedia" Click="btnWikipedia_Click">
-					<Image>
-						<Image.Style>
-							<Style TargetType="{x:Type Image}">
-							  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/wikipedia-bnw-2.png"/>
-							  <Style.Triggers>
-								<Trigger Property="IsMouseOver" Value="True">
-								  <Setter Property="Source" Value="/UWIC.FinalProject.WebBrowser;component/Images/wikipedia-bnw-1.png"/>
-								</Trigger>
-							  </Style.Triggers>
-							</Style>
-						  </Image.Style>
-					</Image>
-					<Button.Triggers>
-						<EventTrigger RoutedEvent="Button.Click">
-							<BeginStoryboard Storyboard="{StaticResource DownAnimation}"/>
-						</EventTrigger>
-					</Button.Triggers>		
-				</Button>
+                <my:BookmarkButton Grid.Column="0" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-1.png" CommandParam="http://www.google.com"/>
+                <my:BookmarkButton Grid.Column="1" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-plus-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-plus-bnw-1.png" CommandParam="http://plus.google.com"/>
+                <my:BookmarkButton Grid.Column="2" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/gmail-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/gmail-bnw-1.png" CommandParam="http://mail.google.com"/>
+                <my:BookmarkButton Grid.Column="3" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/youtube-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/youtube-bnw-1.png" CommandParam="http://www.youtube.com"/>
+                <my:BookmarkButton Grid.Column="0" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/facebook-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/facebook-bnw-1.png" CommandParam="http://www.facebook.com"/>
+                <my:BookmarkButton Grid.Column="1" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/twitter-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/twitter-bnw-1.png" CommandParam="http://www.twitter.com"/>
+                <my:BookmarkButton Grid.Column="2" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/linkedin-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/linkedin-bnw-1.png" CommandParam="http://www.linkedin.com"/>
+                <my:BookmarkButton Grid.Column="3" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/imdb-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/imdb-bnw-1.png" CommandParam="http://www.imdb.com"/>
+                <my:BookmarkButton Grid.Column="0" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/microsoft-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/microsoft-bnw-1.png" CommandParam="http://www.microsoft.com"/>
+                <my:BookmarkButton Grid.Column="1" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/msn-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/msn-bnw-1.png" CommandParam="http://www.msn.com"/>
+                <my:BookmarkButton Grid.Column="2" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/yahoo-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/yahoo-bnw-1.png" CommandParam="http://www.yahoo.com"/>
+                <my:BookmarkButton Grid.Column="3" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/dropbox-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/dropbox-bnw-1.png" CommandParam="http://www.dropbox.com"/>
+                <my:BookmarkButton Grid.Column="0" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/ebay-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/ebay-bnw-1.png" CommandParam="http://www.ebay.com"/>
+                <my:BookmarkButton Grid.Column="1" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/amazon-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/amazon-bnw-1.png" CommandParam="http://www.amazon.com"/>
+                <my:BookmarkButton Grid.Column="2" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/apple-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/apple-bnw-1.png" CommandParam="http://www.apple.com"/>
+                <my:BookmarkButton Grid.Column="3" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/wikipedia-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/wikipedia-bnw-1.png" CommandParam="http://www.wikipedia.com"/>
 			</Grid>
-        </Grid>-->
+        </Grid>
         <awesomium:WebControl Grid.Row="2" Source="{Binding URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="webBrowserMain" LoadingFrameComplete="webBrowserMain_LoadingFrameComplete" AddressChanged="webBrowserMain_AddressChanged" Panel.ZIndex="1"/>
         <Label Content="X Position =; Y Position =" Name="xyPosition" Foreground="White" Grid.Row="3" FontSize="10"/>
     </Grid>

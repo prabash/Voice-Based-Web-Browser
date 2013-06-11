@@ -41,6 +41,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Log" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -65,6 +66,9 @@
     <Compile Include="Controller\BrowserContainer.xaml.cs">
       <DependentUpon>BrowserContainer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controller\NavigationButton.xaml.cs">
+      <DependentUpon>NavigationButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controller\TabItemHeader.xaml.cs">
       <DependentUpon>TabItemHeader.xaml</DependentUpon>
     </Compile>
@@ -84,6 +88,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controller\BrowserContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controller\NavigationButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -160,6 +168,32 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon-add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\right-arrow-1.png" />
+    <Resource Include="Images\right-arrow-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\left-arrow-1.png" />
+    <Resource Include="Images\left-arrow-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh-1.png" />
+    <Resource Include="Images\refresh-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\stop-1.png" />
+    <Resource Include="Images\stop-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\go-1.png" />
+    <Resource Include="Images\go-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UWIC.FinalProject.Common\UWIC.FinalProject.Common.csproj">
+      <Project>{4c6d83e7-1d78-4405-8b8f-15b64ba0dc05}</Project>
+      <Name>UWIC.FinalProject.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

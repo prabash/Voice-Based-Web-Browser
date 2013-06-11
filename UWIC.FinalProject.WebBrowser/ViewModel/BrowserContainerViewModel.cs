@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using UWIC.FinalProject.WebBrowser.Controller;
 using UWIC.FinalProject.WebBrowser.Model;
@@ -16,9 +17,41 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
     public class BrowserContainerViewModel : MainViewModel
     {
         BrowserContainerModel browserContainerModel = new BrowserContainerModel();
+
+        public bool WebBrowserVisible { get; set; }
+        public static BrowserContainer _browserContainer;
+
         public BrowserContainerViewModel()
         {
+            WebBrowserVisible = false;
             BrowserContainer.setViewModel(this);
+            BookmarkButton.SetBrowserContainerViewModel(this);
+            NavigationButton.SetBrowserContainerViewModel(this);
+            
+        }
+
+        void DownAnimation_Completed(object sender, EventArgs e)
+        {
+            WebBrowserVisible = true;
+        }
+
+        public void SetView(BrowserContainer bc)
+        {
+            _browserContainer = bc;
+        }
+
+        public Storyboard _downAnimation;
+        public Storyboard DownAnimation
+        {
+            get
+            {
+                return _downAnimation;
+            }
+            set
+            {
+                _downAnimation = value;
+                DownAnimation.Completed += DownAnimation_Completed;
+            }
         }
 
         private Uri _url;
@@ -77,8 +110,8 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             }
         }
 
-        private Visibility _progressBarVisibility;
-        public Visibility ProgressBarVisibility
+        private bool _progressBarVisibility;
+        public bool ProgressBarVisibility
         {
             get { return _progressBarVisibility; }
             set
@@ -93,39 +126,49 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             return Uri.TryCreate(uriString, UriKind.Relative, out uri);
         }
 
-        private ICommand _goCommand;
-        public ICommand GoCommand
+        public void NavigateToURL(Uri _URL = null)
         {
-            get
-            {
-                if (_goCommand == null)
-                {
-                    _goCommand = new RelayCommand(NavigateToURL);
-                }
-                return _goCommand;
-            }
-        }
+            Uri _tempUri;
+            if (_URL != null)
+                _tempUri = _URL;
+            else
+                TryParseURL(URLText, out _tempUri);
 
-        private void NavigateToURL()
-        {
-            if (!String.IsNullOrEmpty(URLText))
+            if (!WebBrowserVisible)
             {
-                Uri _tempUri;
-                if (TryParseURL(URLText, out _tempUri))
-                {
-                    URL = _tempUri;
-                    ProgressBarVisibility = Visibility.Visible;
-                    ProgressBarState = Elysium.Controls.ProgressState.Indeterminate;
-                }
+                DownAnimation.Begin();
             }
+            URL = _tempUri;
+            ProgressBarVisibility = true;
+            ProgressBarState = Elysium.Controls.ProgressState.Indeterminate;
         }
 
         public void SetWebPageTitleNFavicon()
         {
-            ProgressBarVisibility = Visibility.Collapsed;
+            ProgressBarVisibility = false;
             ProgressBarState = Elysium.Controls.ProgressState.Normal;
             Favicon = browserContainerModel.getFavicon(browserContainerModel.getImageSource(URL));
             WebPageTitle = browserContainerModel.getWebPageTitle(URL.AbsoluteUri.ToString());
+        }
+
+        public void RefreshBrowserWindow()
+        {
+            _browserContainer.RefreshBrowser();
+        }
+
+        public void MoveBackward()
+        {
+            _browserContainer.MoveBackward();
+        }
+
+        public void MoveForward()
+        {
+            _browserContainer.MoveForward();
+        }
+
+        public void StopBrowser()
+        {
+            _browserContainer.StopBrowser();
         }
     }
 }

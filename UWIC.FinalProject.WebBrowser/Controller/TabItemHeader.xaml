@@ -8,21 +8,32 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:awesomium="http://schemas.awesomium.com/winfx" 
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="RoundCorner" TargetType="{x:Type Label}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Label}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="10" BorderBrush="#171717" BorderThickness="2">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontWeight="Bold" x:Name="contentPresenter"></ContentPresenter>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#FFFF1D1D"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="#FFFF1D1D"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <StackPanel Orientation="Horizontal">
         <Image Margin="3,0,0,0" VerticalAlignment="Center" Width="15" Name="pageIcon"/>
         <TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Name="PageTitle" Foreground="White" FontSize="13" Text="New Tab" MaxWidth="80" TextTrimming="WordEllipsis"/>
-        <Label Content="x" Margin="5,0,0,0" Name="btnClose" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="15" MouseLeftButtonUp="btnClose_MouseLeftButtonUp">
-            <Label.Style>
-                <Style TargetType="Label">
-                    <Setter Property="Background" Value="#171717"/>
-                    <Setter Property="Foreground" Value="Aqua"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="Red"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Label.Style>
-        </Label>
+        <Label Content="X" Margin="5,0,0,0" Name="btnClose" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Width="18" MouseLeftButtonUp="btnClose_MouseLeftButtonUp" Style="{DynamicResource RoundCorner}"/>
     </StackPanel>
 </UserControl>

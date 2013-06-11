@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.IO.Log;
 using System.Text.RegularExpressions;
+using UWIC.FinalProject.Common;
 
 namespace UWIC.FinalProject.WebBrowser.Model
 {
@@ -39,6 +40,7 @@ namespace UWIC.FinalProject.WebBrowser.Model
             }
             catch (Exception ex)
             {
+                Log.ErrorLog(ex);
                 throw ex;
             }
             
@@ -70,6 +72,7 @@ namespace UWIC.FinalProject.WebBrowser.Model
             }
             catch (Exception ex)
             {
+                Log.ErrorLog(ex);
                 throw ex;
             }
         }
@@ -119,6 +122,7 @@ namespace UWIC.FinalProject.WebBrowser.Model
             }
             catch (Exception ex)
             {
+                Log.ErrorLog(ex);
                 throw ex;
             }
         }

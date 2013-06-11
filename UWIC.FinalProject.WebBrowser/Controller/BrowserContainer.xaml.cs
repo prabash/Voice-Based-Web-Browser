@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -43,11 +44,18 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             InitializeComponent();
             webBrowserMain.PreviewMouseMove += webBrowserMain_PreviewMouseMove; // Initialize Preview Mouse Move Event
+            AcquireStoryboardAnimation();
         }
 
         public static void setViewModel(BrowserContainerViewModel vm)
         {
             ViewModel = vm;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel != null)
+                ViewModel.SetView(this);
         }
 
         #endregion
@@ -104,7 +112,37 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             mouse_event(MOUSEEVENTF_LEFTUP, xpos, ypos, 0, 0);
         }
         # endregion
-        
+
+        # region Web Browser Basic Navigation
+
+        public void RefreshBrowser()
+        {
+            webBrowserMain.Reload(false);
+        }
+
+        public void MoveBackward()
+        {
+            if (webBrowserMain.CanGoBack())
+                webBrowserMain.GoBack();
+        }
+
+        public void MoveForward()
+        {
+            if (webBrowserMain.CanGoForward())
+                webBrowserMain.GoForward();
+        }
+
+        public void StopBrowser()
+        {
+            webBrowserMain.Stop();
+            ViewModel.ProgressBarVisibility = false;
+            ViewModel.ProgressBarState = Elysium.Controls.ProgressState.Normal;
+        }
+
+        #endregion
+
+        # region Web Browser Events & Methods
+
         /// <summary>
         /// This event will fire once a parituclar page has been loaded successfully
         /// </summary>
@@ -116,8 +154,6 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             {
                 if (webBrowserMain.IsDocumentReady)
                 {
-                    pbWebPageLoad.State = Elysium.Controls.ProgressState.Normal;
-                    pbWebPageLoad.Visibility = System.Windows.Visibility.Collapsed;
                     ViewModel.SetWebPageTitleNFavicon();
                     SetHeaderAndIcon();
                     //if (this.PageLoadCompleted != null)
@@ -155,89 +191,15 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             ViewModel.URL = webBrowserMain.Source;
         }
 
-        # region Bookmark Buttons
-
-        /*
-        private void btnGoogle_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// This method will set the DownAnimation Storyboard on the ViewModel
+        /// </summary>
+        public void AcquireStoryboardAnimation()
         {
-            navigateToPage("www.google.com");
+            Storyboard sb = (Storyboard)FindResource("DownAnimation");
+            ViewModel.DownAnimation = sb;
         }
 
-        private void btnGooglePlus_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("plus.google.com");
-        }
-
-        private void btnGmail_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("mail.google.com");
-        }
-
-        private void btnYoutube_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.youtube.com");
-        }
-
-        private void btnFacebook_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.facebook.com");
-        }
-
-        private void btnTwitter_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.twitter.com");
-        }
-
-        private void btnLinkedIn_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.linkedin.com");
-        }
-
-        private void btnImdb_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.imdb.com");
-        }
-
-        private void btnMicrosoft_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.microsoft.com");
-        }
-
-        private void btnMSN_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.msn.com");
-        }
-
-        private void btnYahoo_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.yahoo.com");
-        }
-
-        private void btnDropbox_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.dropbox.com");
-        }
-
-        private void btnEbay_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.ebay.com");
-        }
-
-        private void btnAmazon_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.amazon.com");
-        }
-
-        private void btnApple_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.apple.com");
-        }
-
-        private void btnWikipedia_Click(object sender, RoutedEventArgs e)
-        {
-            navigateToPage("www.wikipedia.com");
-        }
-        */
         #endregion
     }
 }

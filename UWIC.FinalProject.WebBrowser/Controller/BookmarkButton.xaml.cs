@@ -14,13 +14,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UWIC.FinalProject.WebBrowser.ViewModel;
 
 namespace UWIC.FinalProject.WebBrowser.Controller
 {
     /// <summary>
     /// Interaction logic for BookmarkButton.xaml
     /// </summary>
-    public partial class BookmarkButton : Button
+    public partial class BookmarkButton : UserControl
     {
         public BookmarkButton()
         {
@@ -47,7 +48,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         ///// <summary>
         ///// The text displayed by the button.
         ///// </summary>
-        [Description("The text displayed by the button."), Category("Common Properties")]
+        [Description("The hover image displayed by the button."), Category("Common Properties")]
         public ImageSource HoverImage
         {
             get { return (ImageSource)GetValue(ImageProperty2); }
@@ -78,9 +79,18 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             }
         }
 
+        public static BrowserContainerViewModel _browserContainerVM;
+
+        public static void SetBrowserContainerViewModel(BrowserContainerViewModel bcViewModel)
+        {
+            _browserContainerVM = bcViewModel;
+        }
+
         private void moveToBookmark(object url)
         {
-            MessageBox.Show(url.ToString());
+            Uri URL;
+            Uri.TryCreate(url.ToString(), UriKind.RelativeOrAbsolute, out URL);
+            _browserContainerVM.NavigateToURL(URL);
         }
 
         #endregion
