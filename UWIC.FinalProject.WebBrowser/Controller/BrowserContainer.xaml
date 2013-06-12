@@ -47,18 +47,18 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*"/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="0.6*"/>
+                <ColumnDefinition Width="0.6*"/>
+                <ColumnDefinition Width="0.6*"/>
+                <ColumnDefinition Width="0.6*"/>
+                <ColumnDefinition Width="0.6*"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Name="txtURL" Text="{Binding URLText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="18" VerticalContentAlignment="Stretch"/>
+            <TextBox Grid.Column="0" Name="txtURL" Text="{Binding URLText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="18" VerticalContentAlignment="Stretch" Margin="0,0,0,5"/>
             <my:NavigationButton Grid.Column="1" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/go-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/go-2.png" CommandType="Go"/>
             <my:NavigationButton Grid.Column="2" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-2.png" CommandType="Forward"/>
             <my:NavigationButton Grid.Column="3" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-2.png"  CommandType="Backward"/>

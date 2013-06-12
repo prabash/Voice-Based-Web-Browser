@@ -83,6 +83,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="View\TestEmulator.xaml.cs">
+      <DependentUpon>TestEmulator.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controller\BookmarkButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -100,6 +103,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\BrowserWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TestEmulator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -193,6 +200,10 @@
     <ProjectReference Include="..\UWIC.FinalProject.Common\UWIC.FinalProject.Common.csproj">
       <Project>{4c6d83e7-1d78-4405-8b8f-15b64ba0dc05}</Project>
       <Name>UWIC.FinalProject.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UWIC.FinalProject.SpeechRecognitionEngine\UWIC.FinalProject.SpeechRecognitionEngine.csproj">
+      <Project>{a27e6035-ecae-4118-aa5f-a5f89a19dfa6}</Project>
+      <Name>UWIC.FinalProject.SpeechRecognitionEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />

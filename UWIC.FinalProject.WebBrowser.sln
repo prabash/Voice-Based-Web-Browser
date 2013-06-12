@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWIC.FinalProject.UnitTests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWIC.FinalProject.Common", "UWIC.FinalProject.Common\UWIC.FinalProject.Common.csproj", "{4C6D83E7-1D78-4405-8B8F-15B64BA0DC05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWIC.FinalProject.SpeechRecognitionEngine", "UWIC.FinalProject.SpeechRecognitionEngine\UWIC.FinalProject.SpeechRecognitionEngine.csproj", "{A27E6035-ECAE-4118-AA5F-A5F89A19DFA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{4C6D83E7-1D78-4405-8B8F-15B64BA0DC05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C6D83E7-1D78-4405-8B8F-15B64BA0DC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C6D83E7-1D78-4405-8B8F-15B64BA0DC05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A27E6035-ECAE-4118-AA5F-A5F89A19DFA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A27E6035-ECAE-4118-AA5F-A5F89A19DFA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A27E6035-ECAE-4118-AA5F-A5F89A19DFA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A27E6035-ECAE-4118-AA5F-A5F89A19DFA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
