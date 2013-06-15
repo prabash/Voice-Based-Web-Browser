@@ -7,11 +7,24 @@ using System.Threading.Tasks;
 
 namespace UWIC.FinalProject.SpeechRecognitionEngine
 {
-    public static class RecognitionEngine
+    public class RecognitionEngine
     {
         public static void getNavigationCommand(string word)
         {
-            Match match = Regex.Match(word, @"go to [a-zA-Z]*", RegexOptions.IgnoreCase);
+            var websiteName = "";
+            Match match = null;
+            match = Regex.Match(word, @"go to [a-zA-Z]*", RegexOptions.IgnoreCase);
+            if (match == null)
+            {
+                match = Regex.Match(word, @"move to [a-zA-Z]*", RegexOptions.IgnoreCase);
+                var words = match.Value.ToString();
+                websiteName = words.Replace("move to ", String.Empty);
+            }
+            else
+            {
+                var words = match.Value.ToString();
+                websiteName = words.Replace("go to ", String.Empty);
+            }
         }
     }
 }

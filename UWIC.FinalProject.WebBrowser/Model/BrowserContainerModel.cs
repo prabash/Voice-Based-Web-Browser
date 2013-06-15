@@ -29,7 +29,7 @@ namespace UWIC.FinalProject.WebBrowser.Model
                 // Winforms Image we want to get the WPF Image from...
                 var bitmap = new System.Windows.Media.Imaging.BitmapImage();
                 bitmap.BeginInit();
-                MemoryStream memoryStream = new MemoryStream();
+                var memoryStream = new MemoryStream();
                 // Save to a memory stream...
                 image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
                 // Rewind the stream...
@@ -55,7 +55,7 @@ namespace UWIC.FinalProject.WebBrowser.Model
         {
             try
             {
-                String iconurl = "http://" + url.Host + "/favicon.ico";
+                var iconurl = "http://" + url.Host + "/favicon.ico";
 
                 try
                 {

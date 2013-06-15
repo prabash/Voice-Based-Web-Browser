@@ -38,8 +38,10 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
             recognizer.RequestRecognizerUpdate();
             //recognizer.LoadGrammar(new Grammar(GrammarManager.getNavigationGrammar())); // load speech grammar
             //recognizer.LoadGrammar(GrammarManager.getDictationGrammar());
-            recognizer.LoadGrammar(new DictationGrammar());
+            //recognizer.LoadGrammar(new DictationGrammar());
             //recognizer.LoadGrammar(GrammarManager.getDictGrammarTest());
+            //recognizer.LoadGrammar(new Grammar(GrammarManager.getAlphabet()));
+            recognizer.LoadGrammar(new Grammar(GrammarManager.getWebsitenames()));
             recognizer.SpeechRecognized += recognizer_SpeechRecognized;
         }
 

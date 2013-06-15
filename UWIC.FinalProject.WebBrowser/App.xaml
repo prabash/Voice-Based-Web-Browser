@@ -1,7 +1,7 @@
 ﻿<Application x:Class="UWIC.FinalProject.WebBrowser.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="View/TestEmulator.xaml" Startup="StartupHandler">
+             StartupUri="View/BrowserWindow.xaml" Startup="StartupHandler">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

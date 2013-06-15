@@ -30,6 +30,8 @@ namespace UWIC.FinalProject.WebBrowser.View
             speechEngine = new SpeechRecognitionEngine.SpeechEngine(SpeechRecognitionEngine.SpeechRecognitionMode.Emulator);
             string val = txtSpeech.Text;
             speechEngine.startEmulatorRecognition(val);
+
+            
         }
     }
 }

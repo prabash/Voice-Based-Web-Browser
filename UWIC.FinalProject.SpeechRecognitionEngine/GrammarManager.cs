@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Text;
@@ -7,8 +8,13 @@ using System.Threading.Tasks;
 
 namespace UWIC.FinalProject.SpeechRecognitionEngine
 {
-    public static class GrammarManager
+    public class GrammarManager
     {
+        public GrammarManager()
+        {
+            Settings.CultureInfo = "en-GB";
+        }
+
         public static GrammarBuilder getNavigationGrammar()
         {
             Settings.CultureInfo = "en-GB";
@@ -60,16 +66,48 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
             GrammarBuilder dictaphoneGB = new GrammarBuilder();
             dictaphoneGB.Culture = new System.Globalization.CultureInfo(Settings.CultureInfo);
             dictaphoneGB.Append(new Choices("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"));
-            GrammarBuilder dictation = new GrammarBuilder();
+
+            GrammarBuilder dictation = new GrammarBuilder((GrammarBuilder)dictaphoneGB, 1, 200);
             dictation.Culture = new System.Globalization.CultureInfo(Settings.CultureInfo);
-            dictation.AppendDictation();
 
-            GrammarBuilder both = GrammarBuilder.Add(dictaphoneGB, dictation);
-            both.Culture = new System.Globalization.CultureInfo(Settings.CultureInfo);
-
-            Grammar grammar = new Grammar(both);
+            Grammar grammar = new Grammar(dictation);
 
             return grammar;
+        }
+
+        public static GrammarBuilder getAlphabet()
+        {
+            Settings.CultureInfo = "en-GB";
+
+            GrammarBuilder dictaphoneGB = new GrammarBuilder();
+            dictaphoneGB.Culture = new System.Globalization.CultureInfo(Settings.CultureInfo);
+            dictaphoneGB.Append(new Choices("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"));
+            
+            return dictaphoneGB;
+        }
+
+        public static GrammarBuilder getWebsitenames()
+        {
+            Settings.CultureInfo = "en-GB";
+            List<string> webSiteNames = new List<string>();
+
+            using (FileStream fs = File.Open("..//..//data//Websites" + ".txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (BufferedStream bs = new BufferedStream(fs))
+            using (StreamReader sr = new StreamReader(bs))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    webSiteNames.Add(line);
+                }
+            }
+
+            GrammarBuilder dictaphoneGB = new GrammarBuilder();
+            dictaphoneGB.Culture = new System.Globalization.CultureInfo(Settings.CultureInfo);
+            dictaphoneGB.Append(new Choices("go", "move"));
+            dictaphoneGB.Append(new Choices("to"));
+            dictaphoneGB.Append(new Choices(webSiteNames.ToArray()));
+            return dictaphoneGB;
         }
     }
 }
