@@ -9,22 +9,24 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
 {
     public class RecognitionEngine
     {
-        public static void getNavigationCommand(string word)
+        public static string getNavigationCommand(string word)
         {
             var websiteName = "";
+            var words = "";
             Match match = null;
             match = Regex.Match(word, @"go to [a-zA-Z]*", RegexOptions.IgnoreCase);
-            if (match == null)
+            if (String.IsNullOrEmpty(match.Value))
             {
                 match = Regex.Match(word, @"move to [a-zA-Z]*", RegexOptions.IgnoreCase);
-                var words = match.Value.ToString();
+                words = match.Value.ToString();
                 websiteName = words.Replace("move to ", String.Empty);
             }
             else
             {
-                var words = match.Value.ToString();
+                words = match.Value.ToString();
                 websiteName = words.Replace("go to ", String.Empty);
             }
+            return websiteName;
         }
     }
 }

@@ -66,6 +66,9 @@
     <Compile Include="Controller\BrowserContainer.xaml.cs">
       <DependentUpon>BrowserContainer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controller\EmulatorWindow.xaml.cs">
+      <DependentUpon>EmulatorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controller\NavigationButton.xaml.cs">
       <DependentUpon>NavigationButton.xaml</DependentUpon>
     </Compile>
@@ -91,6 +94,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controller\BrowserContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controller\EmulatorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

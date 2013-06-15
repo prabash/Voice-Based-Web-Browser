@@ -22,6 +22,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
     public partial class TabItemHeader : UserControl
     {
         private static TabItemViewModel _ViewModel { get; set; }
+        public CharacterCasing Casing = CharacterCasing.Upper;
 
         public TabItemHeader(BitmapImage image, string title)
         {
@@ -29,6 +30,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             pageIcon.Source = image;
             PageTitle.Text = title;
             ToolTipService.SetToolTip(PageTitle, PageTitle.Text);
+            this.Resources.Add("ConvertUpperCase", Casing);
         }
 
         private void btnClose_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

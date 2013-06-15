@@ -10,6 +10,10 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
 {
     public class SpeechEngine
     {
+        public event EventHandler SpeechRecognized;
+
+        public string RecognizedWebsite { get; set; }
+        
         public SpeechEngine(SpeechRecognitionMode mode)
         {
             switch (mode)
@@ -53,7 +57,10 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
         void recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             string val = e.Result.Text;
-            RecognitionEngine.getNavigationCommand(val);
+            RecognizedWebsite = RecognitionEngine.getNavigationCommand(val);
+
+            if (this.SpeechRecognized != null)
+                this.SpeechRecognized(this, e); 
         }
     }
 }

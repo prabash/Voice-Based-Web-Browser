@@ -56,6 +56,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             if (ViewModel != null)
                 ViewModel.SetView(this);
+            closeEmulator();
         }
 
         #endregion
@@ -198,6 +199,30 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             Storyboard sb = (Storyboard)FindResource("DownAnimation");
             ViewModel.DownAnimation = sb;
+        }
+
+        private void UserControl_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                openEmulator();
+            }
+            else if (e.Key == Key.L && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                closeEmulator();
+            }
+        }
+
+        private void openEmulator()
+        {
+            Storyboard sb = (Storyboard)FindResource("EmulatorOpen");
+            sb.Begin();
+        }
+
+        private void closeEmulator()
+        {
+            Storyboard sb = (Storyboard)FindResource("EmulatorClose");
+            sb.Begin();
         }
 
         #endregion

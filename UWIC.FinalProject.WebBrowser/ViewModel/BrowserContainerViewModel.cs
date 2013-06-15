@@ -27,7 +27,7 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             BrowserContainer.setViewModel(this);
             BookmarkButton.SetBrowserContainerViewModel(this);
             NavigationButton.SetBrowserContainerViewModel(this);
-            
+            EmulatorWindow.SetBrowserContainerViewModel(this);
         }
 
         void DownAnimation_Completed(object sender, EventArgs e)
