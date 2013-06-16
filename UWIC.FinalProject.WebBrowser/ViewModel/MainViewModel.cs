@@ -21,6 +21,7 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+
         }
 
         # endregion
