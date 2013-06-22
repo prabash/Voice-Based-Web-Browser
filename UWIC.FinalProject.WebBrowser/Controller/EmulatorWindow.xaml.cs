@@ -1,4 +1,5 @@
-﻿using Microsoft.TeamFoundation.MVVM;
+﻿using JetBrains.Annotations;
+using Microsoft.TeamFoundation.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,59 +24,48 @@ namespace UWIC.FinalProject.WebBrowser.Controller
     /// </summary>
     public partial class EmulatorWindow : UserControl
     {
-        public static BrowserContainerViewModel _bcViewModel;
+        public static BrowserContainerViewModel BcViewModel;
 
         public EmulatorWindow()
         {
             InitializeComponent();
         }
 
-        public string _Command;
+        private string _command;
         public string EmulatorCommand 
         {
-            get { return _Command; }
-            set { _Command = value; }
+            get { return _command; }
+            set { _command = value; }
         }
 
-        public ICommand _functionCommand;
+        [CanBeNull] private ICommand _functionCommand;
         public ICommand FunctionCommand
         {
-            get
-            {
-                if (_functionCommand == null)
-                {
-                    _functionCommand = new RelayCommand(ExecuteFunction);
-                }
-                return _functionCommand;
-            }
+            get { return _functionCommand ?? (_functionCommand = new RelayCommand(ExecuteFunction)); }
         }
 
         public static void SetBrowserContainerViewModel(BrowserContainerViewModel ob)
         {
-            _bcViewModel = ob;
+            BcViewModel = ob;
         }
 
         private void ExecuteFunction()
         {
             var speechEngine = new SpeechEngine(SpeechRecognitionMode.Emulator);
-            if (!String.IsNullOrEmpty(EmulatorCommand))
-            {
-                speechEngine.startEmulatorRecognition(EmulatorCommand);
-                speechEngine.SpeechRecognized += speechEngine_SpeechRecognized;
-            }
+            if (String.IsNullOrEmpty(EmulatorCommand)) return;
+            speechEngine.StartEmulatorRecognition(EmulatorCommand);
+            speechEngine.SpeechRecognized += speechEngine_SpeechRecognized;
         }
 
         void speechEngine_SpeechRecognized(object sender, EventArgs e)
         {
             var speechEngine = (SpeechEngine)sender;
             var recognizedWebsite = speechEngine.RecognizedWebsite;
-            if (!String.IsNullOrEmpty(recognizedWebsite))
+            if (String.IsNullOrEmpty(recognizedWebsite)) return;
+            Uri url;
+            if (Uri.TryCreate("http://www."+recognizedWebsite+".com", UriKind.RelativeOrAbsolute, out url))
             {
-                Uri url;
-                if (Uri.TryCreate("http://www."+recognizedWebsite+".com", UriKind.RelativeOrAbsolute, out url))
-                {
-                    _bcViewModel.NavigateToURL(url);
-                }
+                BcViewModel.NavigateToURL(url);
             }
         }
     }

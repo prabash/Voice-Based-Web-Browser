@@ -10,57 +10,73 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
 {
     public class SpeechEngine
     {
+        #region Events
+
         public event EventHandler SpeechRecognized;
 
+        #endregion
+
+        # region Variables
+
         public string RecognizedWebsite { get; set; }
-        
+
+        #endregion
+
+        #region Objects
+
+        public GrammarManager GrammarManager;
+        static System.Speech.Recognition.SpeechRecognitionEngine _recognizer;
+
+        #endregion
+
         public SpeechEngine(SpeechRecognitionMode mode)
         {
+            GrammarManager = new GrammarManager();
             switch (mode)
             {
                 case SpeechRecognitionMode.Emulator:
-                    {
-                        initializeEmulator();
-                        break;
-                    }
+                {
+                    InitializeEmulator();
+                    break;
+                }
                 case SpeechRecognitionMode.Recognition:
-                    {
-                        break;
-                    }
+                {
+                    break;
+                }
             }
         }
-        
-        static System.Speech.Recognition.SpeechRecognitionEngine recognizer = null;
-        static ManualResetEvent manualResetEvent = null;
 
-        private void initializeEmulator()
+        private void InitializeEmulator()
         {
-            GrammarBuilder builder = new GrammarBuilder();
+            var builder = new GrammarBuilder();
             builder.AppendDictation();
 
-            recognizer = new System.Speech.Recognition.SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-GB"));
-            recognizer.RequestRecognizerUpdate();
-            //recognizer.LoadGrammar(new Grammar(GrammarManager.getNavigationGrammar())); // load speech grammar
-            //recognizer.LoadGrammar(GrammarManager.getDictationGrammar());
-            //recognizer.LoadGrammar(new DictationGrammar());
-            //recognizer.LoadGrammar(GrammarManager.getDictGrammarTest());
-            //recognizer.LoadGrammar(new Grammar(GrammarManager.getAlphabet()));
-            recognizer.LoadGrammar(new Grammar(GrammarManager.getWebsitenames()));
-            recognizer.SpeechRecognized += recognizer_SpeechRecognized;
+            _recognizer = new System.Speech.Recognition.SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-GB"));
+            _recognizer.RequestRecognizerUpdate();
+            LoadGrammars(_recognizer);
+            _recognizer.SpeechRecognized += recognizer_SpeechRecognized;
         }
 
-        public void startEmulatorRecognition(string word)
+        private void LoadGrammars(System.Speech.Recognition.SpeechRecognitionEngine recognizer)
         {
-            recognizer.EmulateRecognizeAsync(word);
+            recognizer.LoadGrammar(new DictationGrammar());
+            recognizer.LoadGrammar(new Grammar(GrammarManager.GetSpellGrammar()));
+            recognizer.LoadGrammar(new Grammar(GrammarManager.GetWebsiteNamesGrammar()));
+        }
+
+        public void StartEmulatorRecognition(string word)
+        {
+            _recognizer.EmulateRecognizeAsync(word);
         }
 
         void recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-            string val = e.Result.Text;
-            RecognizedWebsite = RecognitionEngine.getNavigationCommand(val);
-
-            if (this.SpeechRecognized != null)
-                this.SpeechRecognized(this, e); 
+            var val = e.Result.Text;
+            //RecognizedWebsite = RecognitionEngine.getNavigationCommand(val);
+            new ProcessorEngine().CalculateProbabilityOfCommand(val);
+            
+            if (SpeechRecognized != null)
+                SpeechRecognized(this, e); 
         }
     }
 }
