@@ -30,7 +30,7 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
         {
             Settings.CultureInfo = "en-GB";
             var webSiteNames = new List<string>();
-            using (var fs = File.Open("..//..//data//Browser_Func" + ".txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var fs = File.Open("..//..//data//fnc_browser_websites" + ".txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var bs = new BufferedStream(fs))
             using (var sr = new StreamReader(bs))
             {
