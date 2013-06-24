@@ -10,7 +10,10 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
 {
     public class SecondLevelCategorization
     {
-
+        private List<string> Func_Browser_CommandList;
+        private List<string> Func_Interface_CommandList;
+        private List<string> Func_Mouse_CommandList;
+        private List<string> Func_Page_CommandList;
 
         private readonly List<string> SpeechText;
         private SecondLevelCategorization SecondLvlCategorization { get; set; }
@@ -34,7 +37,13 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
 
         private void LoadSecondLevelCategorizations()
         {
-            
+            if (_firstLevelProbabilityIndex == FirstLevelProbabilityIndex.FunctionalCommand)
+                AcquireTestFiles();
+            else if (_firstLevelProbabilityIndex == FirstLevelProbabilityIndex.KeyboardCommand)
+            {
+
+            }
+
         }
 
         /// <summary>
@@ -45,7 +54,10 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             var testFiles = Directory.GetFiles("..//..//data//", "*.txt");
             foreach (var testFile in testFiles)
             {
-                GetTestData(testFile);
+                var explicitFileName = testFile.Replace("..//..//data//", String.Empty);
+                var prefix = explicitFileName.Substring(0, 3);
+                if (prefix == "fnc")
+                    GetTestData(testFile);
             }
         }
 
@@ -83,16 +95,16 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             switch (prefix)
             {
                 case "fnc_brwsr":
-                    //AssignDataToTestSet(FunctionalCommands, testData);
+                    AssignDataToTestSet(Func_Browser_CommandList, testData);
                     break;
                 case "fnc_intfc":
-                    //AssignDataToTestSet(MouseCommands, testData);
+                    AssignDataToTestSet(Func_Interface_CommandList, testData);
+                    break;
+                case "fnc_mouse":
+                    AssignDataToTestSet(Func_Mouse_CommandList, testData);
                     break;
                 case "fnc_wpage":
-                    //AssignDataToTestSet(KeyboardCommands, testData);
-                    break;
-                case "key_control":
-                    //AssignDataToTestSet(KeyboardCommands, testData);
+                    AssignDataToTestSet(Func_Page_CommandList, testData);
                     break;
             }
         }

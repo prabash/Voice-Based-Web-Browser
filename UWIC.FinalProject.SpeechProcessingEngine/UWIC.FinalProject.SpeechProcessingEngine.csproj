@@ -39,6 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICommandManager.cs" />
+    <Compile Include="FunctionalCommandManager.cs" />
+    <Compile Include="KeyboardCommandManager.cs" />
+    <Compile Include="MouseCommandManager.cs" />
     <Compile Include="ProcessorEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecondLevelCategorization.cs" />

@@ -23,6 +23,7 @@
         KeyControl,
         ChangeForeColor,
         ChangeBackColor,
+        OpenNewTab,
         PageScrollUp,
         PageScrollDown,
         PageScrollRight,
