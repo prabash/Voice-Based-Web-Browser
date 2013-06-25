@@ -74,7 +74,7 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
         {
             var val = e.Result.Text;
             //RecognizedWebsite = RecognitionEngine.getNavigationCommand(val);
-            new ProcessorEngine().CalculateProbabilityOfCommand(val);
+            new FirstLevelCategorization().CalculateProbabilityOfCommand(val);
             
             if (SpeechRecognized != null)
                 SpeechRecognized(this, e); 

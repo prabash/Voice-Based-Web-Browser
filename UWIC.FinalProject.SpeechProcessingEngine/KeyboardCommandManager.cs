@@ -9,6 +9,18 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
 {
     class KeyboardCommandManager : ICommandManager
     {
+        private List<string> alterCommands;
+        private List<string> capslockCommands;
+        private List<string> controlCommands;
+        private List<string> downArrowCommands;
+        private List<string> enterCommands;
+        private List<string> f5Commands;
+        private List<string> leftArrowCommands;
+        private List<string> rightArrowCommands;
+        private List<string> spaceCommands;
+        private List<string> tabCommands;
+        private List<string> upArrowCommands;
+
         public Common.CommandType GetCommandType(List<string> commandSegments)
         {
             foreach (var commandSegment in commandSegments)
@@ -26,7 +38,9 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             var testFiles = Directory.GetFiles("..//..//data//", "*.txt");
             foreach (var testFile in testFiles)
             {
-                GetTestData(testFile);
+                var explicitFileName = testFile.Replace("..//..//data//", String.Empty);
+                if (explicitFileName.Substring(0,3) == "key")
+                    GetTestData(testFile);
             }
         }
 
