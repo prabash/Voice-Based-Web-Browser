@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UWIC.FinalProject.SpeechProcessingEngine
 {
@@ -10,6 +8,8 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
     {
         private readonly List<CategoryCollection> _categoryCollection;
         private List<ProbabilityScoreIndex> _probabilityScoreIndices; 
+
+        public NaiveCommandCategorization(){}
 
         public NaiveCommandCategorization(List<CategoryCollection> categoryCollection)
         {
@@ -37,7 +37,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                 {
                     var booleanProbabilities = (from category in _categoryCollection
                                                 where category.List.Contains(segment.ToLower())
-                                                select new BooleanProbability
+                                                select new BooleanProbabilityIndex
                                                     {
                                                         Available = true, 
                                                         ReferenceId = category.Id
@@ -62,6 +62,12 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             {
                 probabilityScoreIndices = _probabilityScoreIndices;
             }
+        }
+
+        public List<ProbabilityScoreIndex> GetHighestProbabilityScoreIndeces(List<ProbabilityScoreIndex> probabilityScoreIndices)
+        {
+            var maximumValue = probabilityScoreIndices.Select(row => row.ProbabilityScore).Max();
+            return probabilityScoreIndices.Where(row => Math.Abs(row.ProbabilityScore - maximumValue) < Double.Epsilon).ToList();
         }
     }
 }

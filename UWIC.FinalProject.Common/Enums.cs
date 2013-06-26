@@ -11,9 +11,18 @@
     public class FirstLevelCategory : LevelCategory
     {
         public const int Default = 0;
-        public const int Functionalcommand = 1;
-        public const int Mousecommand = 2;
-        public const int Keyboardcommand = 3;
+        public const int FunctionalCommand = 1;
+        public const int MouseCommand = 2;
+        public const int KeyboardCommand = 3;
+    }
+
+    public class SecondLevelCategory : LevelCategory
+    {
+        public const int Default = 0;
+        public const int BrowserCommand = 1;
+        public const int InterfaceCommand = 2;
+        public const int MouseCommand = 3;
+        public const int WebPageCommand = 4;
     }
 
     public class LevelCategory {}

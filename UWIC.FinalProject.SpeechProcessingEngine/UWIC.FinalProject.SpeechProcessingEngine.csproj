@@ -40,11 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts.cs" />
+    <Compile Include="Managers\DataManager.cs" />
+    <Compile Include="Managers\FileManager.cs" />
     <Compile Include="FirstLevelCategorization.cs" />
-    <Compile Include="ICommandManager.cs" />
-    <Compile Include="FunctionalCommandManager.cs" />
-    <Compile Include="KeyboardCommandManager.cs" />
-    <Compile Include="MouseCommandManager.cs" />
     <Compile Include="NaiveCommandCategorization.cs" />
     <Compile Include="ProcessorEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

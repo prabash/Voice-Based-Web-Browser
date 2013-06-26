@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UWIC.FinalProject.Common;
+using UWIC.FinalProject.SpeechProcessingEngine.Managers;
 
 namespace UWIC.FinalProject.SpeechProcessingEngine
 {
@@ -29,21 +30,21 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                 {
                     new CategoryCollection
                         {
-                            Category = FirstLevelCategory.Functionalcommand,
+                            Category = FirstLevelCategory.FunctionalCommand,
                             Id = 1,
                             List = new List<string>(),
                             Name = "FunctionalCommandList"
                         },
                     new CategoryCollection
                         {
-                            Category = FirstLevelCategory.Keyboardcommand,
+                            Category = FirstLevelCategory.KeyboardCommand,
                             Id = 2,
                             List = new List<string>(),
                             Name = "KeyboardCommandList"
                         },
                     new CategoryCollection
                         {
-                            Category = FirstLevelCategory.Mousecommand,
+                            Category = FirstLevelCategory.MouseCommand,
                             Id = 3,
                             List = new List<string>(),
                             Name = "MouseCommandList"
@@ -56,7 +57,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// </summary>
         private void AcquireTestFiles()
         {
-            var testFiles = Directory.GetFiles("..//..//data//", "*.txt");
+            var testFiles = FileManager.GetTestFiles();
             foreach (var testFile in testFiles)
             {
                 GetTestSet(testFile);
@@ -107,33 +108,19 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                 case "fnc":
                     var funcCommand = _categoryCollection.FirstOrDefault(rec => rec.Id == 1);
                     if (funcCommand != null)
-                        AssignDataToTestSet(funcCommand.List, testData);
+                        DataManager.AssignDataToTestSet(funcCommand.List, testData);
                     break;
                 case "key":
                     var keyCommand = _categoryCollection.FirstOrDefault(rec => rec.Id == 2);
                     if (keyCommand != null)
-                        AssignDataToTestSet(keyCommand.List, testData);
+                        DataManager.AssignDataToTestSet(keyCommand.List, testData);
                     break;
                 case "mse":
                     var mouseCommand = _categoryCollection.FirstOrDefault(rec => rec.Id == 2);
                     if (mouseCommand != null)
-                        AssignDataToTestSet(mouseCommand.List, testData);
+                        DataManager.AssignDataToTestSet(mouseCommand.List, testData);
                     break;
             }
-        }
-
-        /// <summary>
-        /// This method is used to assign test data to each category without redundancy
-        /// </summary>
-        /// <param name="set">The training set to which the data should be added</param>
-        /// <param name="currentList">the current data list acquired from the local file</param>
-        private static void AssignDataToTestSet(ICollection<string> set, IEnumerable<string> currentList)
-        {
-            if (currentList != null)
-                foreach (var item in currentList.Where(item => !set.Contains(item)))
-                {
-                    set.Add(item);
-                }
         }
 
         /// <summary>
@@ -143,15 +130,14 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         public void CalculateProbabilityOfCommand(string command)
         {
             new NaiveCommandCategorization(_categoryCollection).CalculateProbabilityOfSegments(command.Split(' ').ToList(), out _probabilityScoreIndices);
-            if(_probabilityScoreIndices != null)
-                if(_probabilityScoreIndices.Count > 0)
-                    foreach (var probabilityScoreIndex in _probabilityScoreIndices)
-                    {
-                        var firstOrDefault = _categoryCollection.FirstOrDefault(rec => rec.Id == probabilityScoreIndex.ReferenceId);
-                        if (firstOrDefault !=
-                            null)
-                            Console.WriteLine(probabilityScoreIndex.ReferenceId + " - " + firstOrDefault.Name + " - " +probabilityScoreIndex.ProbabilityScore);
-                    }
-        }   
+            if (_probabilityScoreIndices == null) return;
+            var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_probabilityScoreIndices);
+            if (highestProbabilityCategories.Count == 1)
+            {
+                var firstLevelHighestProbabilityCategory = highestProbabilityCategories.First();
+                if (firstLevelHighestProbabilityCategory.ReferenceId == FirstLevelCategory.FunctionalCommand)
+                new SecondLevelCategorization().CalculateSecondLevelProbabilityOfCommand(command);
+            }
+        } 
     }
 }

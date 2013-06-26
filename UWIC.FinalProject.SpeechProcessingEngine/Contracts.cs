@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UWIC.FinalProject.Common;
+﻿using System.Collections.Generic;
 
 namespace UWIC.FinalProject.SpeechProcessingEngine
 {
@@ -15,7 +10,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         public List<string> List { get; set; }
     }
 
-    public class BooleanProbability
+    public class BooleanProbabilityIndex
     {
         public int ReferenceId { get; set; }
         public bool Available { get; set; }

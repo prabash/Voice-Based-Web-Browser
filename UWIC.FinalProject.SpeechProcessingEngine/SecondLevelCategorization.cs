@@ -2,48 +2,61 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UWIC.FinalProject.Common;
+using UWIC.FinalProject.SpeechProcessingEngine.Managers;
 
 namespace UWIC.FinalProject.SpeechProcessingEngine
 {
     public class SecondLevelCategorization
     {
-        private List<string> Func_Browser_CommandList;
-        private List<string> Func_Interface_CommandList;
-        private List<string> Func_Mouse_CommandList;
-        private List<string> Func_Page_CommandList;
+        private List<CategoryCollection> _secondLevelCategoryCollection;
+        private List<ProbabilityScoreIndex> _secondLevelProbabilityScoreIndices; 
 
-        private readonly List<string> SpeechText;
-        private SecondLevelCategorization SecondLvlCategorization { get; set; }
-        private readonly FirstLevelProbabilityIndex _firstLevelProbabilityIndex;
-
-        private SecondLevelCategorization(List<string> speechText, FirstLevelProbabilityIndex firstlevelProbabilityIndex)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public SecondLevelCategorization()
         {
-            SpeechText = speechText;
-            _firstLevelProbabilityIndex = firstlevelProbabilityIndex;
+            DefineSecondaryCategories();
+            AcquireTestFiles();
         }
 
-        public SecondLevelCategorization GetSecondLevelCategorization(List<string> speechText,
-                                                                      FirstLevelProbabilityIndex
-                                                                          firstlevelProbabilityIndex)
+        /// <summary>
+        /// This method will define the Second level Categories for the Naive Command Categorization
+        /// </summary>
+        private void DefineSecondaryCategories()
         {
-            return
-                SecondLvlCategorization != null
-                    ? new SecondLevelCategorization(speechText, firstlevelProbabilityIndex)
-                    : SecondLvlCategorization;
-        }
-
-        private void LoadSecondLevelCategorizations()
-        {
-            if (_firstLevelProbabilityIndex == FirstLevelProbabilityIndex.FunctionalCommand)
-                AcquireTestFiles();
-            else if (_firstLevelProbabilityIndex == FirstLevelProbabilityIndex.KeyboardCommand)
-            {
-
-            }
-
+            _secondLevelCategoryCollection = new List<CategoryCollection>
+                {
+                    new CategoryCollection
+                        {
+                            Category = SecondLevelCategory.BrowserCommand,
+                            Id = 1,
+                            List = new List<string>(),
+                            Name = "BrowserCommandList"
+                        },
+                    new CategoryCollection
+                        {
+                            Category = SecondLevelCategory.InterfaceCommand,
+                            Id = 2,
+                            List = new List<string>(),
+                            Name = "InterfaceCommandList"
+                        },
+                    new CategoryCollection
+                        {
+                            Category = SecondLevelCategory.MouseCommand,
+                            Id = 3,
+                            List = new List<string>(),
+                            Name = "MouseCommandList"
+                        },
+                    new CategoryCollection
+                        {
+                            Category = SecondLevelCategory.WebPageCommand,
+                            Id = 4,
+                            List = new List<string>(),
+                            Name = "WebPageCommand"
+                        }
+                };
         }
 
         /// <summary>
@@ -51,13 +64,10 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// </summary>
         private void AcquireTestFiles()
         {
-            var testFiles = Directory.GetFiles("..//..//data//", "*.txt");
+            var testFiles = FileManager.GetTestFiles();
             foreach (var testFile in testFiles)
             {
-                var explicitFileName = testFile.Replace("..//..//data//", String.Empty);
-                var prefix = explicitFileName.Substring(0, 3);
-                if (prefix == "fnc")
-                    GetTestData(testFile);
+                GetTestSet(testFile);
             }
         }
 
@@ -65,23 +75,31 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// this method is used to acquire and assign test data to relevant test sets by passing the file path
         /// </summary>
         /// <param name="filepath">the path of the file</param>
-        private void GetTestData(string filepath)
+        private void GetTestSet(string filepath)
         {
-            var tempList = new List<string>();
-            using (var fs = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var bs = new BufferedStream(fs))
-            using (var sr = new StreamReader(bs))
+            try
             {
-                string line;
-                while ((line = sr.ReadLine()) != null)
+                var explicitFileName = filepath.Replace("..//..//data//", String.Empty);
+                if (explicitFileName.Substring(0, 3) != "fnc") return;
+                var tempList = new List<string>();
+                using (var fs = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var bs = new BufferedStream(fs))
+                using (var sr = new StreamReader(bs))
                 {
-                    tempList.Add(line.ToLower());
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        tempList.Add(line.ToLower());
+                    }
                 }
+                var prefix = explicitFileName.Substring(4, 5);
+                CheckFunctionalCategory(prefix, tempList);
             }
-
-            var explicitFileName = filepath.Replace("..//..//data//", String.Empty);
-            var prefix = explicitFileName.Substring(0, 9);
-            CheckFunctionalCategory(prefix, tempList);
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -94,56 +112,45 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         {
             switch (prefix)
             {
-                case "fnc_brwsr":
-                    AssignDataToTestSet(Func_Browser_CommandList, testData);
+                case "brwsr":
+                    var browserCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == SecondLevelCategory.BrowserCommand);
+                    if (browserCommand != null)
+                        DataManager.AssignDataToTestSet(browserCommand.List, testData);
                     break;
-                case "fnc_intfc":
-                    AssignDataToTestSet(Func_Interface_CommandList, testData);
+                case "intfc":
+                    var interfaceCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == SecondLevelCategory.InterfaceCommand);
+                    if (interfaceCommand != null)
+                        DataManager.AssignDataToTestSet(interfaceCommand.List, testData);
                     break;
-                case "fnc_mouse":
-                    AssignDataToTestSet(Func_Mouse_CommandList, testData);
+                case "mouse":
+                    var mouseCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == SecondLevelCategory.MouseCommand);
+                    if (mouseCommand != null)
+                        DataManager.AssignDataToTestSet(mouseCommand.List, testData);
                     break;
-                case "fnc_wpage":
-                    AssignDataToTestSet(Func_Page_CommandList, testData);
+                case "wpage":
+                    var webPageCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == SecondLevelCategory.WebPageCommand);
+                    if (webPageCommand != null)
+                        DataManager.AssignDataToTestSet(webPageCommand.List, testData);
                     break;
             }
         }
-
+        
         /// <summary>
-        /// This method is used to assign test data to each category without redundancy
+        /// This method is used to calculate the Second level of probability of a given command
         /// </summary>
-        /// <param name="set">The training set to which the data should be added</param>
-        /// <param name="currentList">the current data list acquired from the local file</param>
-        private static void AssignDataToTestSet(ICollection<string> set, IEnumerable<string> currentList)
+        /// <param name="command"></param>
+        public void CalculateSecondLevelProbabilityOfCommand(string command)
         {
-            if (currentList != null)
-                foreach (var item in currentList.Where(item => !set.Contains(item)))
+            new NaiveCommandCategorization(_secondLevelCategoryCollection).CalculateProbabilityOfSegments(command.Split(' ').ToList(), out _secondLevelProbabilityScoreIndices);
+            if (_secondLevelProbabilityScoreIndices == null) return;
+            var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_secondLevelProbabilityScoreIndices);
+            if (highestProbabilityCategories != null)
+            {
+                foreach (var highestProbabilityCategory in highestProbabilityCategories)
                 {
-                    set.Add(item);
+                    Console.WriteLine(highestProbabilityCategory.ReferenceId + " - " + highestProbabilityCategory.ProbabilityScore);
                 }
-        }
-
-        public void GetSecondLevelProbabilityIndex()
-        {
-            switch (_firstLevelProbabilityIndex)
-            {
-                case FirstLevelProbabilityIndex.FunctionalCommand:
-                    InitializeSecondLevelFunctionalCommandCalculation();
-                    break;
-            }   
-        }
-
-        private void InitializeSecondLevelFunctionalCommandCalculation()
-        {
-            foreach (var segment in SpeechText)
-            {
-                CalculateSecondLevelProbabilityBySegment(segment);
             }
-        }
-
-        private void CalculateSecondLevelProbabilityBySegment(string segment)
-        {
-           
         }
     }
 }
