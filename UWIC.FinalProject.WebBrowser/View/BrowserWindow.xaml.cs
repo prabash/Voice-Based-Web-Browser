@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using UWIC.FinalProject.WebBrowser.Controller;
 using UWIC.FinalProject.WebBrowser.ViewModel;
+using UWIC.FinalProject.Common;
 
 namespace UWIC.FinalProject.WebBrowser.View
 {
@@ -25,12 +26,14 @@ namespace UWIC.FinalProject.WebBrowser.View
         public BrowserWindow()
         {
             InitializeComponent();
-            
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            var url = "";
+            if (new UpdateManager().CheckForUpdates(
+                System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, out url))
+                System.Diagnostics.Process.Start(url);
         }
     }
 }
