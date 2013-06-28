@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UWIC.FinalProject.Common;
+using UWIC.FinalProject.SpeechProcessingEngine.Commands;
 using UWIC.FinalProject.SpeechProcessingEngine.Managers;
 
 namespace UWIC.FinalProject.SpeechProcessingEngine
@@ -30,29 +30,25 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                 {
                     new CategoryCollection
                         {
-                            Category = SecondLevelCategory.BrowserCommand,
-                            Id = 1,
+                            Category = Conversions.ConvertEnumToInt(SecondLevelCategory.BrowserCommand),
                             List = new List<string>(),
                             Name = "BrowserCommandList"
                         },
                     new CategoryCollection
                         {
-                            Category = SecondLevelCategory.InterfaceCommand,
-                            Id = 2,
+                            Category = Conversions.ConvertEnumToInt(SecondLevelCategory.InterfaceCommand),
                             List = new List<string>(),
                             Name = "InterfaceCommandList"
                         },
                     new CategoryCollection
                         {
-                            Category = SecondLevelCategory.MouseCommand,
-                            Id = 3,
+                            Category = Conversions.ConvertEnumToInt(SecondLevelCategory.MouseCommand),
                             List = new List<string>(),
                             Name = "MouseCommandList"
                         },
                     new CategoryCollection
                         {
-                            Category = SecondLevelCategory.WebPageCommand,
-                            Id = 4,
+                            Category = Conversions.ConvertEnumToInt(SecondLevelCategory.WebPageCommand),
                             List = new List<string>(),
                             Name = "WebPageCommand"
                         }
@@ -81,17 +77,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             {
                 var explicitFileName = filepath.Replace("..//..//data//", String.Empty);
                 if (explicitFileName.Substring(0, 3) != "fnc") return;
-                var tempList = new List<string>();
-                using (var fs = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var bs = new BufferedStream(fs))
-                using (var sr = new StreamReader(bs))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        tempList.Add(line.ToLower());
-                    }
-                }
+                var tempList = DataManager.GetFileData(filepath);
                 var prefix = explicitFileName.Substring(4, 5);
                 CheckFunctionalCategory(prefix, tempList);
             }
@@ -113,22 +99,22 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             switch (prefix)
             {
                 case "brwsr":
-                    var browserCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == SecondLevelCategory.BrowserCommand);
+                    var browserCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.BrowserCommand));
                     if (browserCommand != null)
                         DataManager.AssignDataToTestSet(browserCommand.List, testData);
                     break;
                 case "intfc":
-                    var interfaceCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == SecondLevelCategory.InterfaceCommand);
+                    var interfaceCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.InterfaceCommand));
                     if (interfaceCommand != null)
                         DataManager.AssignDataToTestSet(interfaceCommand.List, testData);
                     break;
                 case "mouse":
-                    var mouseCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == SecondLevelCategory.MouseCommand);
+                    var mouseCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.MouseCommand));
                     if (mouseCommand != null)
                         DataManager.AssignDataToTestSet(mouseCommand.List, testData);
                     break;
                 case "wpage":
-                    var webPageCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == SecondLevelCategory.WebPageCommand);
+                    var webPageCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.WebPageCommand));
                     if (webPageCommand != null)
                         DataManager.AssignDataToTestSet(webPageCommand.List, testData);
                     break;
@@ -139,18 +125,51 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// This method is used to calculate the Second level of probability of a given command
         /// </summary>
         /// <param name="command"></param>
-        public void CalculateSecondLevelProbabilityOfCommand(string command)
+        public List<CommandType> CalculateSecondLevelProbabilityOfCommand(string command)
         {
             new NaiveCommandCategorization(_secondLevelCategoryCollection).CalculateProbabilityOfSegments(command.Split(' ').ToList(), out _secondLevelProbabilityScoreIndices);
-            if (_secondLevelProbabilityScoreIndices == null) return;
+            if (_secondLevelProbabilityScoreIndices == null) return null;
             var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_secondLevelProbabilityScoreIndices);
-            if (highestProbabilityCategories != null)
+            if (highestProbabilityCategories == null) return null;
+            if (highestProbabilityCategories.Count != 1)
             {
-                foreach (var highestProbabilityCategory in highestProbabilityCategories)
-                {
-                    Console.WriteLine(highestProbabilityCategory.ReferenceId + " - " + highestProbabilityCategory.ProbabilityScore);
-                }
+                return null;
             }
+            var secondLevelHighestProbabilityCategory = highestProbabilityCategories.First();
+            var secondLevelCategory =
+                Conversions.ConvertIntegerToEnum<SecondLevelCategory>(
+                    secondLevelHighestProbabilityCategory.ReferenceId);
+            return GetCommand(command, secondLevelCategory);
+        }
+
+        /// <summary>
+        /// This method will get the most probable command types by command category
+        /// </summary>
+        /// <param name="command">command</param>
+        /// <param name="category">category</param>
+        /// <returns>probable command list</returns>
+        private static List<CommandType> GetCommand(string command, SecondLevelCategory category)
+        {
+            switch (category)
+            {
+                case SecondLevelCategory.BrowserCommand:
+                    {
+                        return new FunctionalBrowserCommands(command).GetCommand();
+                    }
+                case SecondLevelCategory.InterfaceCommand:
+                    {
+                        return new FunctionalInterfaceCommands(command).GetCommand();
+                    }
+                case SecondLevelCategory.MouseCommand:
+                    {
+                        return new FunctionalMouseCommands(command).GetCommand();
+                    }
+                case SecondLevelCategory.WebPageCommand:
+                    {
+                        return new FunctionalWebpageCommands(command).GetCommand();
+                    }
+            }
+            return null;
         }
     }
 }

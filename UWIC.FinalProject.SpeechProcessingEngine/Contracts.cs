@@ -4,7 +4,6 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
 {
     public class CategoryCollection
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Category { get; set; }
         public List<string> List { get; set; }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UWIC.FinalProject.Common;
 using UWIC.FinalProject.SpeechProcessingEngine.Managers;
@@ -30,22 +29,19 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                 {
                     new CategoryCollection
                         {
-                            Category = FirstLevelCategory.FunctionalCommand,
-                            Id = 1,
+                            Category = Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand),
                             List = new List<string>(),
                             Name = "FunctionalCommandList"
                         },
                     new CategoryCollection
                         {
-                            Category = FirstLevelCategory.KeyboardCommand,
-                            Id = 2,
+                            Category = Conversions.ConvertEnumToInt(FirstLevelCategory.KeyboardCommand),
                             List = new List<string>(),
                             Name = "KeyboardCommandList"
                         },
                     new CategoryCollection
                         {
-                            Category = FirstLevelCategory.MouseCommand,
-                            Id = 3,
+                            Category = Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand),
                             List = new List<string>(),
                             Name = "MouseCommandList"
                         }
@@ -72,18 +68,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         {
             try
             {
-                var tempList = new List<string>();
-                using (var fs = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var bs = new BufferedStream(fs))
-                using (var sr = new StreamReader(bs))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        tempList.Add(line.ToLower());
-                    }
-                }
-
+                var tempList = DataManager.GetFileData(filepath);
                 var explicitFileName = filepath.Replace("..//..//data//", String.Empty);
                 var prefix = explicitFileName.Substring(0, 3);
                 CheckFunctionalCategory(prefix, tempList);
@@ -106,17 +91,23 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             switch (prefix)
             {
                 case "fnc":
-                    var funcCommand = _categoryCollection.FirstOrDefault(rec => rec.Id == 1);
+                    var funcCommand =
+                        _categoryCollection.FirstOrDefault(
+                            rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand));
                     if (funcCommand != null)
                         DataManager.AssignDataToTestSet(funcCommand.List, testData);
                     break;
                 case "key":
-                    var keyCommand = _categoryCollection.FirstOrDefault(rec => rec.Id == 2);
+                    var keyCommand =
+                        _categoryCollection.FirstOrDefault(
+                            rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.KeyboardCommand));
                     if (keyCommand != null)
                         DataManager.AssignDataToTestSet(keyCommand.List, testData);
                     break;
                 case "mse":
-                    var mouseCommand = _categoryCollection.FirstOrDefault(rec => rec.Id == 2);
+                    var mouseCommand =
+                        _categoryCollection.FirstOrDefault(
+                            rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand));
                     if (mouseCommand != null)
                         DataManager.AssignDataToTestSet(mouseCommand.List, testData);
                     break;
@@ -129,14 +120,26 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <param name="command"></param>
         public void CalculateProbabilityOfCommand(string command)
         {
+            var probableCommands = new List<CommandType>();
             new NaiveCommandCategorization(_categoryCollection).CalculateProbabilityOfSegments(command.Split(' ').ToList(), out _probabilityScoreIndices);
             if (_probabilityScoreIndices == null) return;
             var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_probabilityScoreIndices);
             if (highestProbabilityCategories.Count == 1)
             {
                 var firstLevelHighestProbabilityCategory = highestProbabilityCategories.First();
-                if (firstLevelHighestProbabilityCategory.ReferenceId == FirstLevelCategory.FunctionalCommand)
-                new SecondLevelCategorization().CalculateSecondLevelProbabilityOfCommand(command);
+                if (firstLevelHighestProbabilityCategory.ReferenceId == Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand))
+                    probableCommands = new SecondLevelCategorization().CalculateSecondLevelProbabilityOfCommand(command);
+                else if (firstLevelHighestProbabilityCategory.ReferenceId ==
+                         Conversions.ConvertEnumToInt(FirstLevelCategory.KeyboardCommand))
+                    probableCommands = new Commands.KeyboardCommands(command).GetCommand();
+                else if (firstLevelHighestProbabilityCategory.ReferenceId ==
+                         Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand))
+                    probableCommands = new Commands.MouseCommands(command).GetCommand();
+            }
+
+            foreach (var probableCommand in probableCommands)
+            {
+                Console.WriteLine(probableCommand);
             }
         } 
     }

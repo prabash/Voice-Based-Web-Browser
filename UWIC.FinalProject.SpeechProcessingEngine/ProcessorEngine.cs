@@ -180,39 +180,39 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
 
         private void CalculateSecondLevelProbability()
         {
-            var highestFirstLevelProbabilityIndex = GetHighestFirstLevelIndex(AssignFirstLevelIndecesToDictionary());
-            switch (highestFirstLevelProbabilityIndex)
-            {
-                case FirstLevelProbabilityIndex.FunctionalCommand:
-                    break;
-            }
+            //var highestFirstLevelProbabilityIndex = GetHighestFirstLevelIndex(AssignFirstLevelIndecesToDictionary());
+            //switch (highestFirstLevelProbabilityIndex)
+            //{
+            //    case FirstLevelProbabilityIndex.FunctionalCommand:
+            //        break;
+            //}
         }
 
-        private Dictionary<FirstLevelProbabilityIndex, double> AssignFirstLevelIndecesToDictionary()
-        {
-            var firstLeveIndecesDictionary = new Dictionary<FirstLevelProbabilityIndex, double>
-                {
-                    {FirstLevelProbabilityIndex.FunctionalCommand, _funcCommandProbabilityScore},
-                    {FirstLevelProbabilityIndex.KeyboardCommand, _keyboardCommandProbabilityScore},
-                    {FirstLevelProbabilityIndex.MouseCommand, _mouseCommandProbabilityScore},
-                };
-            return firstLeveIndecesDictionary;
-        }
+        //private Dictionary<FirstLevelProbabilityIndex, double> AssignFirstLevelIndecesToDictionary()
+        //{
+        //    var firstLeveIndecesDictionary = new Dictionary<FirstLevelProbabilityIndex, double>
+        //        {
+        //            {FirstLevelProbabilityIndex.FunctionalCommand, _funcCommandProbabilityScore},
+        //            {FirstLevelProbabilityIndex.KeyboardCommand, _keyboardCommandProbabilityScore},
+        //            {FirstLevelProbabilityIndex.MouseCommand, _mouseCommandProbabilityScore},
+        //        };
+        //    return firstLeveIndecesDictionary;
+        //}
 
-        /*Make this method return a list which contains the list of highest values*/
-        private static FirstLevelProbabilityIndex GetHighestFirstLevelIndex(
-            Dictionary<FirstLevelProbabilityIndex, double> indexList)
-        {
-            var currentHighestProbabilityIndex = FirstLevelProbabilityIndex.Default;
-            double previousValue = 0;
-            foreach (var item in indexList)
-            {
-                currentHighestProbabilityIndex = item.Value > previousValue
-                                                     ? item.Key
-                                                     : FirstLevelProbabilityIndex.Default;
-                previousValue = item.Value;
-            }
-            return currentHighestProbabilityIndex;
-        }
+        ///*Make this method return a list which contains the list of highest values*/
+        //private static FirstLevelProbabilityIndex GetHighestFirstLevelIndex(
+        //    Dictionary<FirstLevelProbabilityIndex, double> indexList)
+        //{
+        //    var currentHighestProbabilityIndex = FirstLevelProbabilityIndex.Default;
+        //    double previousValue = 0;
+        //    foreach (var item in indexList)
+        //    {
+        //        currentHighestProbabilityIndex = item.Value > previousValue
+        //                                             ? item.Key
+        //                                             : FirstLevelProbabilityIndex.Default;
+        //        previousValue = item.Value;
+        //    }
+        //    return currentHighestProbabilityIndex;
+        //}
     }
 }

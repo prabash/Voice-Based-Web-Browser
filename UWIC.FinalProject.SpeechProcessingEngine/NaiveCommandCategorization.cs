@@ -28,7 +28,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                     _probabilityScoreIndices.Add(new ProbabilityScoreIndex
                         {
                             ProbabilityScore = 0,
-                            ReferenceId = category.Id
+                            ReferenceId = category.Category
                         });
                 }
 
@@ -40,7 +40,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                                                 select new BooleanProbabilityIndex
                                                     {
                                                         Available = true, 
-                                                        ReferenceId = category.Id
+                                                        ReferenceId = category.Category
                                                     }).ToList();
                     // foreach list class, add boolean probability classes to the list
 

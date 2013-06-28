@@ -39,10 +39,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\FunctionalBrowserCommands.cs" />
+    <Compile Include="Commands\FunctionalInterfaceCommands.cs" />
+    <Compile Include="Commands\FunctionalMouseCommands.cs" />
+    <Compile Include="Commands\FunctionalWebpageCommands.cs" />
+    <Compile Include="Commands\KeyboardCommands.cs" />
+    <Compile Include="Commands\MouseCommands.cs" />
     <Compile Include="Contracts.cs" />
+    <Compile Include="Managers\CommandManager.cs" />
     <Compile Include="Managers\DataManager.cs" />
     <Compile Include="Managers\FileManager.cs" />
     <Compile Include="FirstLevelCategorization.cs" />
+    <Compile Include="Managers\ICommandManager.cs" />
     <Compile Include="NaiveCommandCategorization.cs" />
     <Compile Include="ProcessorEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
