@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Speech.Recognition;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using UWIC.FinalProject.Common;
 using UWIC.FinalProject.SpeechProcessingEngine;
 
 namespace UWIC.FinalProject.SpeechRecognitionEngine
@@ -19,7 +16,7 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
 
         # region Variables
 
-        public string RecognizedWebsite { get; set; }
+        public Dictionary<CommandType, object> ResultDictionary { get; set; } 
 
         #endregion
 
@@ -74,10 +71,26 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
         {
             var val = e.Result.Text;
             //RecognizedWebsite = RecognitionEngine.getNavigationCommand(val);
-            new FirstLevelCategorization().CalculateProbabilityOfCommand(val);
+            ResultDictionary =
+                new FirstLevelCategorization().CalculateProbabilityOfCommand(RemoveAnomalies(val).ToLower().Trim());
             
             if (SpeechRecognized != null)
                 SpeechRecognized(this, e); 
+        }
+
+        private static string RemoveAnomalies(string val)
+        {
+            return val.Replace("\t", " tab ")
+                      .Replace("1", "one ")
+                      .Replace("2", "two ")
+                      .Replace("3", "three ")
+                      .Replace("4", "four ")
+                      .Replace("5", "five ")
+                      .Replace("6", "six ")
+                      .Replace("7", "seven ")
+                      .Replace("8", "eight ")
+                      .Replace("9", "nine ")
+                      .Replace("0", "zero ");
         }
     }
 }

@@ -48,6 +48,10 @@
     <Compile Include="SpeechEngine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UWIC.FinalProject.Common\UWIC.FinalProject.Common.csproj">
+      <Project>{4c6d83e7-1d78-4405-8b8f-15b64ba0dc05}</Project>
+      <Name>UWIC.FinalProject.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UWIC.FinalProject.SpeechProcessingEngine\UWIC.FinalProject.SpeechProcessingEngine.csproj">
       <Project>{5c5e92b1-30ab-42c5-ac1c-a9a3bd9b17c6}</Project>
       <Name>UWIC.FinalProject.SpeechProcessingEngine</Name>

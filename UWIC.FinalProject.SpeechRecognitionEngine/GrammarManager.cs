@@ -30,6 +30,8 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
             dictation.Append(dictationBuilder, 0 /* minimum repeat */, 10 /* maximum repeat*/ );
             dictation.Append(dictaphoneGb, 0, 200);
             dictation.Append(dictationBuilder, 0 /* minimum repeat */, 10 /* maximum repeat*/ );
+            dictation.Append(dictaphoneGb, 0, 200);
+            dictation.Append(dictationBuilder, 0 /* minimum repeat */, 10 /* maximum repeat*/ );
             return dictation;
         }
 
