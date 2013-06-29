@@ -57,5 +57,15 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         {
             return fileNames.Select(item => item.Replace("..//..//data//", String.Empty).Replace(".txt", String.Empty)).Where(explicitFileName => explicitFileName.StartsWith(startsWithValue)).ToList();
         }
+
+        /// <summary>
+        /// This method will return the content of a given file name
+        /// </summary>
+        /// <param name="file">name of the file</param>
+        /// <returns>File content as a list of string</returns>
+        public static List<string> GetContentOfAFile(string file)
+        {
+            return DataManager.GetFileData("..//..//data//" + file + ".txt");
+        }
     }
 }

@@ -42,12 +42,6 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                         },
                     new CategoryCollection
                         {
-                            Category = Conversions.ConvertEnumToInt(SecondLevelCategory.MouseCommand),
-                            List = new List<string>(),
-                            Name = "MouseCommandList"
-                        },
-                    new CategoryCollection
-                        {
                             Category = Conversions.ConvertEnumToInt(SecondLevelCategory.WebPageCommand),
                             List = new List<string>(),
                             Name = "WebPageCommand"
@@ -108,11 +102,6 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                     if (interfaceCommand != null)
                         DataManager.AssignDataToTestSet(interfaceCommand.List, testData);
                     break;
-                case "mouse":
-                    var mouseCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.MouseCommand));
-                    if (mouseCommand != null)
-                        DataManager.AssignDataToTestSet(mouseCommand.List, testData);
-                    break;
                 case "wpage":
                     var webPageCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.WebPageCommand));
                     if (webPageCommand != null)
@@ -159,10 +148,6 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                 case SecondLevelCategory.InterfaceCommand:
                     {
                         return new FunctionalInterfaceCommands(command).GetCommand();
-                    }
-                case SecondLevelCategory.MouseCommand:
-                    {
-                        return new FunctionalMouseCommands(command).GetCommand();
                     }
                 case SecondLevelCategory.WebPageCommand:
                     {

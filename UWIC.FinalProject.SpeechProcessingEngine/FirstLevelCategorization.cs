@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UWIC.FinalProject.Common;
+using UWIC.FinalProject.SpeechProcessingEngine.Commands;
 using UWIC.FinalProject.SpeechProcessingEngine.Managers;
 
 namespace UWIC.FinalProject.SpeechProcessingEngine
@@ -118,29 +119,66 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// This method is used to calculate the First level of probability of a given command
         /// </summary>
         /// <param name="command"></param>
-        public void CalculateProbabilityOfCommand(string command)
+        public Dictionary<CommandType, object> CalculateProbabilityOfCommand(string command)
         {
             var probableCommands = new List<CommandType>();
             new NaiveCommandCategorization(_categoryCollection).CalculateProbabilityOfSegments(command.Split(' ').ToList(), out _probabilityScoreIndices);
-            if (_probabilityScoreIndices == null) return;
+            if (_probabilityScoreIndices == null) return null;
             var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_probabilityScoreIndices);
             if (highestProbabilityCategories.Count == 1)
             {
                 var firstLevelHighestProbabilityCategory = highestProbabilityCategories.First();
-                if (firstLevelHighestProbabilityCategory.ReferenceId == Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand))
+                if (firstLevelHighestProbabilityCategory.ReferenceId ==
+                    Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand))
                     probableCommands = new SecondLevelCategorization().CalculateSecondLevelProbabilityOfCommand(command);
                 else if (firstLevelHighestProbabilityCategory.ReferenceId ==
                          Conversions.ConvertEnumToInt(FirstLevelCategory.KeyboardCommand))
-                    probableCommands = new Commands.KeyboardCommands(command).GetCommand();
+                    probableCommands = new KeyboardCommands(command).GetCommand();
                 else if (firstLevelHighestProbabilityCategory.ReferenceId ==
                          Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand))
-                    probableCommands = new Commands.MouseCommands(command).GetCommand();
+                    probableCommands = new MouseCommands(command).GetCommand();
             }
+            return GetCommandDetails(probableCommands, command);
+        }
 
-            foreach (var probableCommand in probableCommands)
+        /// <summary>
+        /// This method will return the command type with/without parameters to be executed
+        /// </summary>
+        /// <param name="commandTypes"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        private static Dictionary<CommandType, object> GetCommandDetails(IReadOnlyCollection<CommandType> commandTypes, string command)
+        {
+            var resultDictionary = new Dictionary<CommandType, object>();
+            if (commandTypes == null) return null;
+            if (commandTypes.Count == 1)
             {
-                Console.WriteLine(probableCommand);
+                var commandType = commandTypes.FirstOrDefault();
+                switch (commandType)
+                {
+                    case CommandType.go:
+                        {
+                            resultDictionary.Add(commandType, CommandParametersManager.GetWebsiteNameForGoCommand(command.Split(' ').ToList()));
+                            break;
+                        }
+                    case CommandType.gototab:
+                        {
+                            resultDictionary.Add(commandType, CommandParametersManager.GetTabIndexForGoToTabCommand(command));
+                            break;
+                        }
+                    case CommandType.move:
+                        {
+                            resultDictionary.Add(commandType, CommandParametersManager.GetxyValuesToMouseMoveCommand(command));
+                            break;
+                        }
+                    default:
+                        {
+                            resultDictionary.Add(commandType, "");
+                            break;
+                        }
+                }
             }
-        } 
+            return resultDictionary;
+        }
     }
 }

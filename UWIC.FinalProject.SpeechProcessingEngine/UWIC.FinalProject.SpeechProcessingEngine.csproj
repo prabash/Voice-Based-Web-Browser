@@ -39,9 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandParametersManager.cs" />
     <Compile Include="Commands\FunctionalBrowserCommands.cs" />
     <Compile Include="Commands\FunctionalInterfaceCommands.cs" />
-    <Compile Include="Commands\FunctionalMouseCommands.cs" />
     <Compile Include="Commands\FunctionalWebpageCommands.cs" />
     <Compile Include="Commands\KeyboardCommands.cs" />
     <Compile Include="Commands\MouseCommands.cs" />
