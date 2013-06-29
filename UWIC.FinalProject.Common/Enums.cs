@@ -13,7 +13,6 @@
         Default,
         BrowserCommand,
         InterfaceCommand,
-        MouseCommand,
         WebPageCommand,
     }
 
@@ -31,7 +30,6 @@
         gototab,
         opennewtab,
         yes,
-        move,
         scrolldown,
         scrollleft,
         scrollright,
@@ -48,6 +46,7 @@
         space,
         tab,
         uparrow,
+        move,
         click,
         doubleclick,
         rightclick
