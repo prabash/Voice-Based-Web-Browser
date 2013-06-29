@@ -51,4 +51,13 @@
         doubleclick,
         rightclick
     }
+
+    public enum FunctionalCommandType
+    {
+        Go,
+        Forward,
+        Backward,
+        Refresh,
+        Stop
+    }
 }
