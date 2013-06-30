@@ -138,7 +138,19 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                          Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand))
                     probableCommands = new MouseCommands(command).GetCommand();
             }
-            return GetCommandDetails(probableCommands, command);
+            else
+            {
+                throw new Exception("Command Identification Failed From the First Level");
+            }
+            var returnDict = GetCommandDetails(probableCommands, command);
+            if (returnDict.Count == 1)
+            {
+                var identifiedCommandType = returnDict.First().Key;
+                if(LearningManager.UnIdentifiedWords.Count > 0)
+                    LearningManager.AddUnidentifiedWordsToCommandText(identifiedCommandType);
+                DataManager.AddToCommandCounter(identifiedCommandType);
+            }
+            return returnDict;
         }
 
         /// <summary>

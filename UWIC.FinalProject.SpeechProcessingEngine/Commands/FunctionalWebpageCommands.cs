@@ -19,7 +19,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Commands
 
         public List<CommandType> GetCommand()
         {
-            return new CommandManager(_command, "fnc_mouse", _functionalWebpageCommandCategories, _functionalWebpageCommandProbabilityScoreIndices)
+            return new CommandManager(_command, "fnc_wpage", _functionalWebpageCommandCategories, _functionalWebpageCommandProbabilityScoreIndices)
                 .GetCommand();
         }
     }

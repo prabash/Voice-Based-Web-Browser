@@ -122,7 +122,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             if (highestProbabilityCategories == null) return null;
             if (highestProbabilityCategories.Count != 1)
             {
-                return null;
+                throw new Exception("Command Identification Failed From the Second Level");
             }
             var secondLevelHighestProbabilityCategory = highestProbabilityCategories.First();
             var secondLevelCategory =

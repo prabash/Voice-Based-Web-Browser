@@ -123,5 +123,34 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
                 throw;
             }
         }
+
+        /// <summary>
+        /// this method will add counter to the counter text file
+        /// </summary>
+        /// <param name="commandType"></param>
+        public static void AddToCommandCounter(CommandType commandType)
+        {
+            const string fileName = "..//..//data//count_commandExecutionCounter.txt";
+            var data = GetFileData(fileName);
+            var valueToBeRemoved = "";
+            var valueToBeAdded = "";
+            foreach (var value in from value in data let command = value.Split('|').First() where command == commandType.ToString() select value)
+            {
+                valueToBeRemoved = value;
+                var count = Convert.ToInt32(value.Split('|').Last());
+                valueToBeAdded = commandType + "|" + ++count;
+            }
+
+            data.Remove(valueToBeRemoved);
+            data.Add(valueToBeAdded);
+
+            using (var writer = new StreamWriter(fileName))
+            {
+                foreach (var content in data)
+                {
+                    writer.WriteLine(content);
+                }
+            }
+        }
     }
 }

@@ -51,6 +51,7 @@
     <Compile Include="Managers\FileManager.cs" />
     <Compile Include="FirstLevelCategorization.cs" />
     <Compile Include="Managers\ICommandManager.cs" />
+    <Compile Include="Managers\LearningManager.cs" />
     <Compile Include="NaiveCommandCategorization.cs" />
     <Compile Include="ProcessorEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

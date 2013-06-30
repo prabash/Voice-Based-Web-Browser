@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UWIC.FinalProject.SpeechProcessingEngine.Managers;
 
 namespace UWIC.FinalProject.SpeechProcessingEngine
 {
@@ -20,6 +21,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         {
             try
             {
+                LearningManager.UnIdentifiedWords = new List<string>(); 
                 // Add Probability Score Classes to the Respective Sets before going through the loop
                 // So that their values can be concatenated after each loop
                 _probabilityScoreIndices = new List<ProbabilityScoreIndex>();
@@ -41,9 +43,9 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                                                     {
                                                         Available = true, 
                                                         ReferenceId = category.Category
-                                                    }).ToList();
-                    // foreach list class, add boolean probability classes to the list
+                                                    }).ToList(); // foreach list class, add boolean probability classes to the list
 
+                    if (booleanProbabilities.Count == 0) LearningManager.UnIdentifiedWords.Add(segment);
                     var availableCount = booleanProbabilities.Count(rec => rec.Available);
                     var probabilityOfBelongness = availableCount > 0 ? (1.0/Convert.ToDouble(availableCount)) : 0;
                     foreach (var obj in from booleanProbability in booleanProbabilities where booleanProbability.Available select _probabilityScoreIndices.FirstOrDefault(

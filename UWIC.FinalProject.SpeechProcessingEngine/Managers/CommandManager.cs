@@ -32,6 +32,10 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
                 var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_commandProbabilityScoreIndices);
                 if (highestProbabilityCategories != null)
                 {
+                    if (highestProbabilityCategories.Count != 1)
+                    {
+                        throw new Exception("Command Identification Failed From the Thrid Level");
+                    }
                     probableCommandTypes.AddRange(highestProbabilityCategories.Select(highestProbabilityCategory => Conversions.ConvertIntegerToEnum<CommandType>(highestProbabilityCategory.ReferenceId)));
                 }
                 return probableCommandTypes;
