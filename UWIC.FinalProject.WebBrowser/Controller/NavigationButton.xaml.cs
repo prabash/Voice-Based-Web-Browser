@@ -1,27 +1,13 @@
-﻿using Microsoft.TeamFoundation.MVVM;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using UWIC.FinalProject.WebBrowser.ViewModel;
 
 namespace UWIC.FinalProject.WebBrowser.Controller
 {
     /// <summary>
     /// Interaction logic for NavigationButton.xaml
     /// </summary>
-    public partial class NavigationButton : Button
+    public partial class NavigationButton
     {
         public NavigationButton()
         {
@@ -52,57 +38,5 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         }
         // Dependency property backing variables
         public static readonly DependencyProperty ImageProperty2 = DependencyProperty.Register("HoverNavigateImage", typeof(ImageSource), typeof(BookmarkButton), new UIPropertyMetadata(null));
-
-        [Description("The hover image displayed by the button."), Category("Common Properties")]
-        public CommandType CommandType
-        {
-            get { return (CommandType)GetValue(_CommandType); }
-            set { SetValue(_CommandType, value); }
-        }
-        // Dependency property backing variables
-        public static readonly DependencyProperty _CommandType = DependencyProperty.Register("CommandType", typeof(CommandType), typeof(BookmarkButton), new UIPropertyMetadata(null));
-
-        public static BrowserContainerViewModel _browserContainerViewModel;
-
-        public ICommand _functionCommand;
-        public ICommand FunctionCommand
-        {
-            get
-            {
-                if (_functionCommand == null)
-                {
-                    _functionCommand = new RelayCommand(ExecuteFunction);
-                }
-                return _functionCommand;
-            }
-        }
-
-        public static void SetBrowserContainerViewModel(BrowserContainerViewModel bcViewModel)
-        {
-            _browserContainerViewModel = bcViewModel;
-        }
-
-        private void ExecuteFunction()
-        {
-            if (CommandType == Controller.CommandType.Forward)
-                _browserContainerViewModel.MoveForward();
-            else if (CommandType == Controller.CommandType.Backward)
-                _browserContainerViewModel.MoveBackward();
-            else if (CommandType == Controller.CommandType.Refresh)
-                _browserContainerViewModel.RefreshBrowserWindow();
-            else if (CommandType == Controller.CommandType.Stop)
-                _browserContainerViewModel.StopBrowser();
-            else if (CommandType == Controller.CommandType.Go)
-                _browserContainerViewModel.NavigateToURL();
-        }
-    }
-
-    public enum CommandType
-    {
-        Go,
-        Forward,
-        Backward,
-        Refresh,
-        Stop
     }
 }
