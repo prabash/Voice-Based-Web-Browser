@@ -20,6 +20,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.TeamFoundation.MVVM;
 using UWIC.FinalProject.Common;
+using UWIC.FinalProject.SpeechRecognitionEngine;
+using UWIC.FinalProject.WebBrowser.Model;
 using UWIC.FinalProject.WebBrowser.ViewModel;
 using UWIC.FinalProject.WebBrowser.svcSendKeys;
 
@@ -39,6 +41,13 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         # region Public Variables
 
         public static BrowserContainerViewModel ViewModel { get; set; }
+
+        private string _commandText;
+        public string CommandText
+        {
+            get { return _commandText; }
+            set { _commandText = value; }
+        }
 
         # endregion
 
@@ -263,6 +272,20 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             }
         }
 
+        public ICommand EmulCommand;
+        public ICommand EmulatorCmd
+        {
+            get
+            {
+                return EmulCommand ??
+                       (EmulCommand = new RelayCommand(ExecuteEmulator));
+            }
+        }
+
+        #endregion
+
+        #region Emulator
+
         private void ExecuteFunction(string command)
         {
             FunctionalCommandType commandType;
@@ -290,6 +313,21 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                         break;
                     }
             }
+        }
+
+        private void ExecuteEmulator()
+        {
+            var speechEngine = new SpeechEngine(SpeechRecognitionMode.Emulator);
+            if (String.IsNullOrEmpty(CommandText)) return;
+            speechEngine.StartEmulatorRecognition(CommandText);
+            speechEngine.SpeechRecognized += speechEngine_SpeechRecognized;
+        }
+
+        void speechEngine_SpeechRecognized(object sender, EventArgs e)
+        {
+            var speechEngine = (SpeechEngine)sender;
+            var resultDictionary = speechEngine.ResultDictionary;
+            new CommandExecutionManager().ExecuteCommand(resultDictionary);
         }
 
         #endregion

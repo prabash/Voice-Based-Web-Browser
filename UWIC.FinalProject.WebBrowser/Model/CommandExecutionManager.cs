@@ -16,7 +16,9 @@ namespace UWIC.FinalProject.WebBrowser.Model
             _bcViewModel = bcViewModel;
         }
 
-        public static void SetTabItemViewModel(TabItemViewModel tabItemViewModel)
+        public CommandExecutionManager(){}
+
+    public static void SetTabItemViewModel(TabItemViewModel tabItemViewModel)
         {
             _tabItemViewModel = tabItemViewModel;
         }

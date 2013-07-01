@@ -27,7 +27,6 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
         {
             WebBrowserVisible = false;
             BrowserContainer.setViewModel(this);
-            EmulatorWindow.SetBrowserContainerViewModel(this);
         }
 
         void DownAnimation_Completed(object sender, EventArgs e)

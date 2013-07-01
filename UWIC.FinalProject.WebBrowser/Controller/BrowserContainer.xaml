@@ -87,16 +87,22 @@
             <my:NavigationButton Grid.Column="3" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-2.png"  CommandParameter="Backward" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
             <my:NavigationButton Grid.Column="4" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/refresh-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/refresh-2.png" CommandParameter="Refresh" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
             <my:NavigationButton Grid.Column="5" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/stop-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/stop-2.png"  CommandParameter="Stop" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
-            <Grid HorizontalAlignment="Right" Grid.Column="6" Grid.ColumnSpan="5"><my:EmulatorWindow x:Name="emulatorWindow" RenderTransformOrigin="0.5,0.5">
-	<my:EmulatorWindow.RenderTransform>
-		<TransformGroup>
-			<ScaleTransform/>
-			<SkewTransform/>
-			<RotateTransform/>
-			<TranslateTransform/>
-		</TransformGroup>
-	</my:EmulatorWindow.RenderTransform>
-</my:EmulatorWindow></Grid>
+            <Grid HorizontalAlignment="Right" Grid.Column="6" Grid.ColumnSpan="5">
+                <Grid x:Name="emulatorWindow" RenderTransformOrigin="0.5,0.5" Width="220" Height="40">
+                    <Grid.RenderTransform>
+		                <TransformGroup>
+			                <ScaleTransform/>
+			                <SkewTransform/>
+			                <RotateTransform/>
+			                <TranslateTransform/>
+		                </TransformGroup>
+	                </Grid.RenderTransform>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBox Width="140" Text="{Binding ElementName=BrowserContnr, Path=CommandText}"/>
+                        <Button Content="Emulate" Margin="5,0,0,0" Command="{Binding ElementName=BrowserContnr, Path=EmulatorCmd}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
         </Grid>
         <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1" Visibility="{Binding ProgressBarVisibility, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisiblity}}" State="{Binding ProgressBarState}"/>
 
