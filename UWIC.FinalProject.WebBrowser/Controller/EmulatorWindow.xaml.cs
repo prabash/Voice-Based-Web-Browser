@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.ComponentModel;
+using JetBrains.Annotations;
 using Microsoft.TeamFoundation.MVVM;
 using System;
 using System.Collections.Generic;
@@ -32,37 +33,40 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             InitializeComponent();
         }
 
-        private string _command;
-        public string EmulatorCommand 
+        /// <summary>
+        /// The image displayed by the button.
+        /// </summary>
+        /// <remarks>The image is specified in XAML as an absolute or relative path.</remarks>
+        [Description("The image displayed by the button"), Category("Common Properties")]
+        public string CommandText
         {
-            get { return _command; }
-            set { _command = value; }
+            get { return (string)GetValue(CommandTxt); }
+            set { SetValue(CommandTxt, value); }
         }
+        // Dependency property backing variables
+        public static readonly DependencyProperty CommandTxt = DependencyProperty.Register("CommandText", typeof(string), typeof(BookmarkButton), new UIPropertyMetadata(null));
 
-        [CanBeNull] private ICommand _functionCommand;
-        public ICommand FunctionCommand
+        [Description("The image displayed by the button"), Category("Common Properties")]
+        public ICommand EmulatorCommand
         {
-            get { return _functionCommand ?? (_functionCommand = new RelayCommand(ExecuteFunction)); }
+            get { return (ICommand)GetValue(EmulatorCmd); }
+            set { SetValue(EmulatorCmd, value); }
         }
+        // Dependency property backing variables
+        public static readonly DependencyProperty EmulatorCmd = DependencyProperty.Register("EmulatorCommand", typeof(ICommand), typeof(BookmarkButton), new UIPropertyMetadata(null));
 
-        public static void SetBrowserContainerViewModel(BrowserContainerViewModel ob)
-        {
-            BcViewModel = ob;
-        }
+        //public static void SetBrowserContainerViewModel(BrowserContainerViewModel ob)
+        //{
+        //    BcViewModel = ob;
+        //}
 
-        private void ExecuteFunction()
-        {
-            var speechEngine = new SpeechEngine(SpeechRecognitionMode.Emulator);
-            if (String.IsNullOrEmpty(EmulatorCommand)) return;
-            speechEngine.StartEmulatorRecognition(EmulatorCommand);
-            speechEngine.SpeechRecognized += speechEngine_SpeechRecognized;
-        }
+        
 
-        void speechEngine_SpeechRecognized(object sender, EventArgs e)
-        {
-            var speechEngine = (SpeechEngine)sender;
-            var resultDictionary = speechEngine.ResultDictionary;
-            new CommandExecutionManager(BcViewModel).ExecuteCommand(resultDictionary);
-        }
+        //void speechEngine_SpeechRecognized(object sender, EventArgs e)
+        //{
+        //    var speechEngine = (SpeechEngine)sender;
+        //    var resultDictionary = speechEngine.ResultDictionary;
+        //    new CommandExecutionManager(BcViewModel).ExecuteCommand(resultDictionary);
+        //}
     }
 }
