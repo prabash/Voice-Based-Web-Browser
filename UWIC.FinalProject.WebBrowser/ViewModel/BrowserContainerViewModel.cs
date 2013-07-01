@@ -1,4 +1,5 @@
-﻿using Microsoft.TeamFoundation.MVVM;
+﻿using JetBrains.Annotations;
+using Microsoft.TeamFoundation.MVVM;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using UWIC.FinalProject.Common;
 using UWIC.FinalProject.WebBrowser.Controller;
 using UWIC.FinalProject.WebBrowser.Model;
 
@@ -25,8 +27,6 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
         {
             WebBrowserVisible = false;
             BrowserContainer.setViewModel(this);
-            BookmarkButton.SetBrowserContainerViewModel(this);
-            NavigationButton.SetBrowserContainerViewModel(this);
             EmulatorWindow.SetBrowserContainerViewModel(this);
         }
 
@@ -123,14 +123,14 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
 
         private bool TryParseURL(string uriString, out Uri uri)
         {
-            return Uri.TryCreate(uriString, UriKind.Relative, out uri);
+            return Uri.TryCreate(uriString, UriKind.RelativeOrAbsolute, out uri);
         }
 
-        public void NavigateToURL(Uri _URL = null)
+        public void NavigateToURL(string _URL = null)
         {
             Uri _tempUri;
             if (_URL != null)
-                _tempUri = _URL;
+                TryParseURL(_URL, out _tempUri);
             else
                 TryParseURL(URLText, out _tempUri);
 
@@ -148,7 +148,7 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             ProgressBarVisibility = false;
             ProgressBarState = Elysium.Controls.ProgressState.Normal;
             Favicon = browserContainerModel.getFavicon(browserContainerModel.getImageSource(URL));
-            WebPageTitle = browserContainerModel.getWebPageTitle(URL.AbsoluteUri.ToString());
+            WebPageTitle = browserContainerModel.getWebPageTitle(URL.AbsoluteUri);
         }
 
         public void RefreshBrowserWindow()
@@ -169,6 +169,35 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
         public void StopBrowser()
         {
             _browserContainer.StopBrowser();
+        }
+
+        public ICommand BmCommand;
+        public ICommand BookmarkCommand
+        {
+            get { return BmCommand ?? (BmCommand = new RelayCommand(param => this.NavigateToURL(param.ToString()))); }
+        }
+
+        public ICommand NavCommand;
+        public ICommand NavigateCommand
+        {
+            get {
+                return NavCommand ??
+                       (NavCommand = new RelayCommand(param => ExecuteFunction(param.ToString())));
+            }
+        }
+
+        private void ExecuteFunction(string command)
+        {
+            FunctionalCommandType commandType;
+            if (!Enum.TryParse(command, out commandType)) return;
+            switch (commandType)
+            {
+                case FunctionalCommandType.Go:
+                    {
+                        NavigateToURL();
+                        break;
+                    }
+            }
         }
     }
 }

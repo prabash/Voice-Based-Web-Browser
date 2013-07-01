@@ -31,5 +31,44 @@ namespace UWIC.FinalProject.WebBrowser.View
             string val = txtSpeech.Text;
             speechEngine.StartEmulatorRecognition(val);
         }
+
+        private void TxtSpeech_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.U)
+                EmulateKeyPress();
+        }
+
+        private void EmulateKeyPress()
+        {
+            //var key = Key.Space;                    // Key to send
+            //var target = Keyboard.FocusedElement;    // Target element
+            //var routedEvent = Keyboard.KeyDownEvent; // Event to send
+
+            //if (Keyboard.PrimaryDevice.ActiveSource != null)
+            //    target.RaiseEvent(
+            //        new KeyEventArgs(
+            //            Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource,
+            //            0,
+            //            key) { RoutedEvent = routedEvent }
+            //        );
+
+            //if (Keyboard.PrimaryDevice != null)
+            //    if (Keyboard.PrimaryDevice.ActiveSource != null)
+            //        InputManager.Current.ProcessInput(
+            //            new KeyEventArgs(Keyboard.PrimaryDevice,
+            //                             Keyboard.PrimaryDevice.ActiveSource,
+            //                             0, Key.Space)
+            //                {
+            //                    RoutedEvent = Keyboard.KeyDownEvent
+            //                }
+            //            );
+
+            var args = new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, Key.X)
+            {
+                RoutedEvent = Keyboard.KeyDownEvent
+            };
+
+            InputManager.Current.ProcessInput(args);
+        }
     }
 }

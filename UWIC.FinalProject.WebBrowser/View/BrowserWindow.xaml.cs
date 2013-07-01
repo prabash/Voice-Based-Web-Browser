@@ -30,7 +30,7 @@ namespace UWIC.FinalProject.WebBrowser.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var url = "";
+            string url;
             if (new UpdateManager().CheckForUpdates(
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, out url))
                 System.Diagnostics.Process.Start(url);

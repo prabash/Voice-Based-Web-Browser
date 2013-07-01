@@ -8,7 +8,7 @@
               params:Design.ContrastBrush="White"
               Title="TestEmulator" Height="300" Width="300">
     <Grid>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="272" Name="txtSpeech" />
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="272" Name="txtSpeech" PreviewKeyDown="TxtSpeech_OnPreviewKeyDown" />
         <Button Content="Button" HorizontalAlignment="Left" Margin="207,38,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
     </Grid>
 </metro:Window>

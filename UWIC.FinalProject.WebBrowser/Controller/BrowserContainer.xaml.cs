@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -17,7 +18,10 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.TeamFoundation.MVVM;
+using UWIC.FinalProject.Common;
 using UWIC.FinalProject.WebBrowser.ViewModel;
+using UWIC.FinalProject.WebBrowser.svcSendKeys;
 
 namespace UWIC.FinalProject.WebBrowser.Controller
 {
@@ -44,7 +48,14 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             InitializeComponent();
             webBrowserMain.PreviewMouseMove += webBrowserMain_PreviewMouseMove; // Initialize Preview Mouse Move Event
+            webBrowserMain.PreviewKeyDown += webBrowserMain_PreviewKeyDown;
             AcquireStoryboardAnimation();
+        }
+
+        void webBrowserMain_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            //if (e.Key == Key.LeftCtrl)
+            //    EmulateTextInput();
         }
 
         public static void setViewModel(BrowserContainerViewModel vm)
@@ -52,11 +63,21 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             ViewModel = vm;
         }
 
+        Timer timer = new Timer(10000);
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             if (ViewModel != null)
                 ViewModel.SetView(this);
             closeEmulator();
+
+            timer.Elapsed += timer_Elapsed;
+            timer.Start();
+        }
+
+        void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //var svcClient = new SendKeysServiceClient();
+            //svcClient.PostMessage("post message");
         }
 
         #endregion
@@ -119,6 +140,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         public void RefreshBrowser()
         {
             webBrowserMain.Reload(false);
+            pbWebPageLoad.Visibility = Visibility.Visible;
+            pbWebPageLoad.State = Elysium.Controls.ProgressState.Indeterminate;
         }
 
         public void MoveBackward()
@@ -136,8 +159,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         public void StopBrowser()
         {
             webBrowserMain.Stop();
-            ViewModel.ProgressBarVisibility = false;
-            ViewModel.ProgressBarState = Elysium.Controls.ProgressState.Normal;
+            pbWebPageLoad.Visibility = Visibility.Hidden;
+            pbWebPageLoad.State = Elysium.Controls.ProgressState.Normal;
         }
 
         #endregion
@@ -189,7 +212,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// <param name="e"></param>
         private void webBrowserMain_AddressChanged(object sender, Awesomium.Core.UrlEventArgs e)
         {
-            ViewModel.URL = webBrowserMain.Source;
+            //ViewModel.URL = webBrowserMain.Source;
+            txtURL.Text = webBrowserMain.Source.AbsoluteUri;
         }
 
         /// <summary>
@@ -223,6 +247,49 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             Storyboard sb = (Storyboard)FindResource("EmulatorClose");
             sb.Begin();
+        }
+
+        #endregion
+
+        #region Commands
+
+        public ICommand FuncCommand;
+        public ICommand FunctionCommand
+        {
+            get
+            {
+                return FuncCommand ??
+                       (FuncCommand = new RelayCommand(param => ExecuteFunction(param.ToString())));
+            }
+        }
+
+        private void ExecuteFunction(string command)
+        {
+            FunctionalCommandType commandType;
+            if (!Enum.TryParse(command, out commandType)) return;
+            switch (commandType)
+            {
+                case FunctionalCommandType.Backward:
+                    {
+                        MoveBackward();
+                        break;
+                    }
+                case FunctionalCommandType.Forward:
+                    {
+                        MoveForward();
+                        break;
+                    }
+                case FunctionalCommandType.Refresh:
+                    {
+                        RefreshBrowser();
+                        break;
+                    }
+                case FunctionalCommandType.Stop:
+                    {
+                        StopBrowser();
+                        break;
+                    }
+            }
         }
 
         #endregion

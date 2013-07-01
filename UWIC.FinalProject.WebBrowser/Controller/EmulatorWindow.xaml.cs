@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UWIC.FinalProject.SpeechRecognitionEngine;
+using UWIC.FinalProject.WebBrowser.Model;
 using UWIC.FinalProject.WebBrowser.ViewModel;
 
 namespace UWIC.FinalProject.WebBrowser.Controller
@@ -60,13 +61,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         void speechEngine_SpeechRecognized(object sender, EventArgs e)
         {
             var speechEngine = (SpeechEngine)sender;
-            var recognizedWebsite = speechEngine.RecognizedWebsite;
-            if (String.IsNullOrEmpty(recognizedWebsite)) return;
-            Uri url;
-            if (Uri.TryCreate("http://www."+recognizedWebsite+".com", UriKind.RelativeOrAbsolute, out url))
-            {
-                BcViewModel.NavigateToURL(url);
-            }
+            var resultDictionary = speechEngine.ResultDictionary;
+            new CommandExecutionManager(BcViewModel).ExecuteCommand(resultDictionary);
         }
     }
 }

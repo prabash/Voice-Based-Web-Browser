@@ -60,7 +60,7 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             TabItems.Add(myItem);
 
             this.ClickCommand = new RelayCommand(AddTabItem);
-            TabItemHeader.setViewModel(this);
+            TabItemHeader.SetViewModel(this);
         }
 
         private TabItemHeader getNewTabItemHeader()
@@ -86,7 +86,7 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             myItem.Header = getNewTabItemHeader();
             myItem.Content = new Controller.BrowserContainer();
             TabItems.Add(myItem);
-            SelectedIndex = TabItems.Count - 1;
+            //SelectedIndex = TabItems.Count - 1;
         }
 
         /// <summary>

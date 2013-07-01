@@ -41,6 +41,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Log" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -76,6 +78,12 @@
       <DependentUpon>TabItemHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\BrowserContainerModel.cs" />
+    <Compile Include="Model\CommandExecutionManager.cs" />
+    <Compile Include="Service References\svcSendKeys\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\BrowserContainerViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\TabItemViewModel.cs" />
@@ -141,6 +149,13 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Service References\svcSendKeys\SendKeysService.wsdl" />
+    <None Include="Service References\svcSendKeys\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\svcSendKeys\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -212,6 +227,27 @@
       <Project>{a27e6035-ecae-4118-aa5f-a5f89a19dfa6}</Project>
       <Name>UWIC.FinalProject.SpeechRecognitionEngine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\svcSendKeys\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\svcSendKeys\service.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\svcSendKeys\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\svcSendKeys\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\svcSendKeys\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
