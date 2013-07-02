@@ -34,7 +34,10 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
                 {
                     if (highestProbabilityCategories.Count != 1)
                     {
-                        throw new Exception("Command Identification Failed From the Thrid Level");
+                        throw new Exception("Command Identification Failed From the Final Level. There are " +
+                                            highestProbabilityCategories.Count + " probable categories which are " +
+                                            DataManager.GetHighestProbableCommandTypesForException<CommandType>(
+                                                highestProbabilityCategories));
                     }
                     probableCommandTypes.AddRange(highestProbabilityCategories.Select(highestProbabilityCategory => Conversions.ConvertIntegerToEnum<CommandType>(highestProbabilityCategory.ReferenceId)));
                 }

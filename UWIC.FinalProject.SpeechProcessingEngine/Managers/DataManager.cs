@@ -152,5 +152,27 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
                 }
             }
         }
+
+        /// <summary>
+        /// Get the highest probability categories for printing the exception
+        /// </summary>
+        /// <param name="highestProbabilityCategories"></param>
+        /// <returns></returns>
+        public static string GetHighestProbableCommandTypesForException<T>(IEnumerable<ProbabilityScoreIndex> highestProbabilityCategories) where T : struct, IConvertible
+        {
+            var highProbableCategories = "";
+            var counter = 0;
+            var probabilityScoreIndices = highestProbabilityCategories as ProbabilityScoreIndex[] ?? highestProbabilityCategories.ToArray();
+            
+            foreach (var highestProbabilityCategory in probabilityScoreIndices)
+            {
+                counter++;
+                if (counter < probabilityScoreIndices.Count())
+                    highProbableCategories += (T)Enum.ToObject(typeof(T), highestProbabilityCategory.ReferenceId) + ", ";
+                else
+                    highProbableCategories += (T)Enum.ToObject(typeof(T), highestProbabilityCategory.ReferenceId);
+            }
+            return highProbableCategories;
+        }
     }
 }

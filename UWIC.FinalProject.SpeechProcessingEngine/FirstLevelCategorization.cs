@@ -140,7 +140,8 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             }
             else
             {
-                throw new Exception("Command Identification Failed From the First Level");
+                throw new Exception("Command Identification Failed From the First Level. There are " +
+                                    highestProbabilityCategories.Count + " probable categories which are " + DataManager.GetHighestProbableCommandTypesForException<FirstLevelCategory>(highestProbabilityCategories));
             }
             var returnDict = GetCommandDetails(probableCommands, command);
             if (returnDict.Count == 1)

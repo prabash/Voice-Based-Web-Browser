@@ -122,7 +122,8 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             if (highestProbabilityCategories == null) return null;
             if (highestProbabilityCategories.Count != 1)
             {
-                throw new Exception("Command Identification Failed From the Second Level");
+                throw new Exception("Command Identification Failed From the Second Level. There are " +
+                                    highestProbabilityCategories.Count + " probable categories which are " + DataManager.GetHighestProbableCommandTypesForException<SecondLevelCategory>(highestProbabilityCategories));
             }
             var secondLevelHighestProbabilityCategory = highestProbabilityCategories.First();
             var secondLevelCategory =
@@ -130,6 +131,8 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                     secondLevelHighestProbabilityCategory.ReferenceId);
             return GetCommand(command, secondLevelCategory);
         }
+
+        
 
         /// <summary>
         /// This method will get the most probable command types by command category
