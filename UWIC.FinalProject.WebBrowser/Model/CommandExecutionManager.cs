@@ -15,52 +15,6 @@ namespace UWIC.FinalProject.WebBrowser.Model
             _tabItemViewModel = tabItemViewModel;
         }
 
-        public void ExecuteCommand(Dictionary<CommandType, object> identifiedCommand)
-        {
-            try
-            {
-                var command = identifiedCommand.First();
-                switch (command.Key)
-                {
-                    case CommandType.go:
-                        {
-                            ExecuteGoCommand(command.Value.ToString());
-                            break;
-                        }
-                    case CommandType.back:
-                        {
-                            ExecuteBackCommand();
-                            break;
-                        }
-                    case CommandType.forth:
-                        {
-                            ExecuteForwardCommand();
-                            break;
-                        }
-                    case CommandType.refresh:
-                        {
-                            ExecuteRefershCommand();
-                            break;
-                        }
-                    case CommandType.stop:
-                        {
-                            ExecuteStopCommand();
-                            break;
-                        }
-                    case CommandType.opennewtab:
-                        {
-                            _tabItemViewModel.AddTabItem();
-                            break;
-                        }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.ErrorLog(ex);
-                throw;
-            }
-        }
-
         private static void ExecuteGoCommand(string identifiedWebSite)
         {
             if (!identifiedWebSite.Contains(".com"))

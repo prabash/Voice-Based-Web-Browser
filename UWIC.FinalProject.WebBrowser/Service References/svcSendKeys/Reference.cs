@@ -16,10 +16,10 @@ namespace UWIC.FinalProject.WebBrowser.svcSendKeys {
     public interface ISendKeysService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISendKeysService/PostMessage", ReplyAction="http://tempuri.org/ISendKeysService/PostMessageResponse")]
-        string PostMessage(string message);
+        void PostMessage(string message, double delay);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ISendKeysService/PostMessage", ReplyAction="http://tempuri.org/ISendKeysService/PostMessageResponse")]
-        System.Threading.Tasks.Task<string> PostMessageAsync(string message);
+        System.Threading.Tasks.Task PostMessageAsync(string message, double delay);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,12 +49,12 @@ namespace UWIC.FinalProject.WebBrowser.svcSendKeys {
                 base(binding, remoteAddress) {
         }
         
-        public string PostMessage(string message) {
-            return base.Channel.PostMessage(message);
+        public void PostMessage(string message, double delay) {
+            base.Channel.PostMessage(message, delay);
         }
         
-        public System.Threading.Tasks.Task<string> PostMessageAsync(string message) {
-            return base.Channel.PostMessageAsync(message);
+        public System.Threading.Tasks.Task PostMessageAsync(string message, double delay) {
+            return base.Channel.PostMessageAsync(message, delay);
         }
     }
 }

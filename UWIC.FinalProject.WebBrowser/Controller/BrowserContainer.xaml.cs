@@ -154,8 +154,9 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         [DllImport("user32.dll")]
         public static extern void mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
 
-        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
-        public const int MOUSEEVENTF_LEFTUP = 0x04;
+        public const int MOUSEEVENTF_LEFTDOWN = 0x02; /* left button down */
+        public const int MOUSEEVENTF_LEFTUP = 0x04; /* left button up */
+        private const int MOUSEEVENTF_RIGHTDOWN = 0x0008; /* right button down */
 
         //This simulates a left mouse click
         private void LeftMouseClick(int xpos, int ypos)
@@ -164,6 +165,27 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             mouse_event(MOUSEEVENTF_LEFTDOWN, xpos, ypos, 0, 0);
             mouse_event(MOUSEEVENTF_LEFTUP, xpos, ypos, 0, 0);
         }
+
+        private void LeftMouseClick()
+        {
+            //Call the imported function with the cursor's current position
+            var currentPosition = GetMousePosition();
+            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+        }
+
+        private void RightMouseClick()
+        {
+            var currentPosition = GetMousePosition();
+            mouse_event(MOUSEEVENTF_RIGHTDOWN, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+        }
+
+        private void DoubleClick()
+        {
+            var currentPosition = GetMousePosition();
+            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+        }
+
         # endregion
 
         # region Web Browser Basic Navigation
@@ -405,9 +427,180 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             var speechEngine = (SpeechEngine)sender;
             var resultDictionary = speechEngine.ResultDictionary;
-            new CommandExecutionManager().ExecuteCommand(resultDictionary);
+            ExecuteCommand(resultDictionary);
         }
 
         #endregion
+
+        # region Command Execution
+
+        public void ExecuteCommand(Dictionary<CommandType, object> identifiedCommand)
+        {
+            try
+            {
+                var command = identifiedCommand.First();
+                switch (command.Key)
+                {
+                    case CommandType.go:
+                        {
+                            var identifiedWebSite = command.Value.ToString();
+                            if (!identifiedWebSite.Contains(".com"))
+                                identifiedWebSite += ".com";
+                            var websiteName = "http://www." + identifiedWebSite;
+                            NavigateToUrl(websiteName);
+                            break;
+                        }
+                    case CommandType.back:
+                        {
+                            MoveBackward();
+                            break;
+                        }
+                    case CommandType.forth:
+                        {
+                            MoveForward();
+                            break;
+                        }
+                    case CommandType.refresh:
+                        {
+                            RefreshBrowser();
+                            break;
+                        }
+                    case CommandType.stop:
+                        {
+                            StopBrowser();
+                            break;
+                        }
+                    case CommandType.alter:
+                        {
+                            InvokePostMessageService("%");
+                            break;
+                        }
+                    case CommandType.backspace:
+                        {
+                            InvokePostMessageService("{BS}");
+                            break;
+                        }
+                    case CommandType.capslock:
+                        {
+                            InvokePostMessageService("{CAPSLOCK}");
+                            break;
+                        }
+                    case CommandType.control:
+                        {
+                            InvokePostMessageService("^");
+                            break;
+                        }
+                    case CommandType.downarrow:
+                        {
+                            InvokePostMessageService("{DOWN}");
+                            break;
+                        }
+                    case CommandType.enter:
+                        {
+                            InvokePostMessageService("{ENTER}");
+                            break;
+                        }
+                    case CommandType.f5:
+                        {
+                            InvokePostMessageService("{F5}");
+                            break;
+                        }
+                    case CommandType.leftarrow:
+                        {
+                            InvokePostMessageService("{LEFT}");
+                            break;
+                        }
+                    case CommandType.rightarrow:
+                        {
+                            InvokePostMessageService("{RIGHT}");
+                            break;
+                        }
+                    case CommandType.space:
+                        {
+                            InvokePostMessageService(" ");
+                            break;
+                        }
+                    case CommandType.tab:
+                        {
+                            InvokePostMessageService("{TAB}");
+                            break;
+                        }
+                    case CommandType.uparrow:
+                        {
+                            InvokePostMessageService("{UP}");
+                            break;
+                        }
+                    case CommandType.scrollup:
+                        {
+                            InvokePostMessageService("{PGUP}");
+                            break;
+                        }
+                    case CommandType.scrolldown:
+                        {
+                            InvokePostMessageService("{PGDN}");
+                            break;
+                        }
+                    case CommandType.scrollleft:
+                        {
+                            InvokePostMessageService("{LEFT}");
+                            break;
+                        }
+                    case CommandType.scrollright:
+                        {
+                            InvokePostMessageService("{RIGHT}");
+                            break;
+                        }
+                    case CommandType.move:
+                        {
+                            var coordinates = command.Value.ToString();
+                            var seperatedCoordinates = coordinates.Split(',').ToList();
+                            SetCursorPos(Convert.ToInt32(seperatedCoordinates.First()), Convert.ToInt32(seperatedCoordinates.Last()));
+                            break;
+                        }
+                    case CommandType.click:
+                        {
+                            LeftMouseClick();
+                            break;
+                        }
+                    case CommandType.rightclick:
+                        {
+                            RightMouseClick();
+                            break;
+                        }
+                    case CommandType.doubleclick:
+                        {
+                            DoubleClick();
+                            break;
+                        }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
+        }
+
+        private static void InvokePostMessageService(string message)
+        {
+            SendKeysServiceClient svcClient = null;
+            try
+            {
+                svcClient = new SendKeysServiceClient();
+                svcClient.PostMessage(message, 3);
+            }
+            catch (Exception ex)
+            {
+                if (svcClient != null) svcClient.Close();
+                Log.ErrorLog(ex);
+                throw;
+            }
+            finally
+            {
+                if (svcClient != null) svcClient.Abort();
+            }
+        }
+
+        # endregion
     }
 }
