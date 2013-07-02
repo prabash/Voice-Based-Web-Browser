@@ -8,17 +8,9 @@ namespace UWIC.FinalProject.WebBrowser.Model
 {
     public class CommandExecutionManager
     {
-        private static BrowserContainerViewModel _bcViewModel;
         private static TabItemViewModel _tabItemViewModel;
 
-        public CommandExecutionManager(BrowserContainerViewModel bcViewModel)
-        {
-            _bcViewModel = bcViewModel;
-        }
-
-        public CommandExecutionManager(){}
-
-    public static void SetTabItemViewModel(TabItemViewModel tabItemViewModel)
+        public static void SetTabItemViewModel(TabItemViewModel tabItemViewModel)
         {
             _tabItemViewModel = tabItemViewModel;
         }
@@ -83,22 +75,22 @@ namespace UWIC.FinalProject.WebBrowser.Model
 
         private static void ExecuteBackCommand()
         {
-            _bcViewModel.MoveBackward();
+            //_bcViewModel.MoveBackward();
         }
 
         private static void ExecuteForwardCommand()
         {
-            _bcViewModel.MoveForward();
+            //_bcViewModel.MoveForward();
         }
 
         private static void ExecuteRefershCommand()
         {
-            _bcViewModel.RefreshBrowserWindow();
+            //_bcViewModel.RefreshBrowserWindow();
         }
 
         private static void ExecuteStopCommand()
         {
-            _bcViewModel.StopBrowser();
+            //_bcViewModel.StopBrowser();
         }
     }
 }

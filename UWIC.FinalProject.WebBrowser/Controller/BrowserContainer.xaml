@@ -10,9 +10,6 @@
              xmlns:vm ="clr-namespace:UWIC.FinalProject.WebBrowser.ViewModel"
              x:Name="BrowserContnr"
              mc:Ignorable="d" Loaded="UserControl_Loaded" KeyDown="UserControl_KeyDown">
-    <UserControl.DataContext>
-        <vm:BrowserContainerViewModel/>
-    </UserControl.DataContext>
 	<UserControl.Resources>
 		<Storyboard x:Key="DownAnimation">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="grid">
@@ -81,10 +78,10 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Name="txtURL" Text="{Binding URLText, Mode=TwoWay}" FontSize="18" VerticalContentAlignment="Stretch" Margin="0,0,0,5" />
-            <my:NavigationButton Grid.Column="1" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/go-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/go-2.png" CommandParameter="Go" Command="{Binding NavigateCommand}"/>
-            <my:NavigationButton Grid.Column="2" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-2.png" CommandParameter="Forward" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
-            <my:NavigationButton Grid.Column="3" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-2.png"  CommandParameter="Backward" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
+            <TextBox Grid.Column="0" Name="txtURL" Text="{Binding ElementName=BrowserContnr, Path=UrlText, Mode=TwoWay}" FontSize="18" VerticalContentAlignment="Stretch" Margin="0,0,0,5" />
+            <my:NavigationButton Grid.Column="1" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/go-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/go-2.png" CommandParameter="Go" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
+            <my:NavigationButton Grid.Column="2" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/left-arrow-2.png"  CommandParameter="Backward" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
+            <my:NavigationButton Grid.Column="3" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-2.png" CommandParameter="Forward" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
             <my:NavigationButton Grid.Column="4" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/refresh-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/refresh-2.png" CommandParameter="Refresh" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
             <my:NavigationButton Grid.Column="5" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/stop-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/stop-2.png"  CommandParameter="Stop" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
             <Grid HorizontalAlignment="Right" Grid.Column="6" Grid.ColumnSpan="5">
@@ -104,7 +101,7 @@
                 </Grid>
             </Grid>
         </Grid>
-        <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1" Visibility="{Binding ProgressBarVisibility, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisiblity}}" State="{Binding ProgressBarState}"/>
+        <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1"/>
 
         <Grid Grid.Row="2" Panel.ZIndex="2" Background="#FF171717" RenderTransformOrigin="0.5,0.5" x:Name="grid">
 			<Grid.RenderTransform>
@@ -128,25 +125,25 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-                <my:BookmarkButton Grid.Column="0" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.google.com"/>
-                <my:BookmarkButton Grid.Column="1" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-plus-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-plus-bnw-1.png"  Command="{Binding BookmarkCommand}" CommandParameter="http://plus.google.com"/>
-                <my:BookmarkButton Grid.Column="2" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/gmail-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/gmail-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://mail.google.com"/>
-                <my:BookmarkButton Grid.Column="3" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/youtube-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/youtube-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.youtube.com"/>
-                <my:BookmarkButton Grid.Column="0" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/facebook-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/facebook-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.facebook.com"/>
-                <my:BookmarkButton Grid.Column="1" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/twitter-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/twitter-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.twitter.com"/>
-                <my:BookmarkButton Grid.Column="2" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/linkedin-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/linkedin-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.linkedin.com"/>
-                <my:BookmarkButton Grid.Column="3" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/imdb-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/imdb-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.imdb.com"/>
-                <my:BookmarkButton Grid.Column="0" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/microsoft-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/microsoft-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.microsoft.com"/>
-                <my:BookmarkButton Grid.Column="1" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/msn-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/msn-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.msn.com"/>
-                <my:BookmarkButton Grid.Column="2" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/yahoo-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/yahoo-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.yahoo.com"/>
-                <my:BookmarkButton Grid.Column="3" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/dropbox-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/dropbox-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.dropbox.com"/>
-                <my:BookmarkButton Grid.Column="0" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/ebay-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/ebay-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.ebay.com"/>
-                <my:BookmarkButton Grid.Column="1" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/amazon-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/amazon-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.amazon.com"/>
-                <my:BookmarkButton Grid.Column="2" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/apple-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/apple-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.apple.com"/>
-                <my:BookmarkButton Grid.Column="3" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/wikipedia-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/wikipedia-bnw-1.png" Command="{Binding BookmarkCommand}" CommandParameter="http://www.wikipedia.com"/>
+                <my:BookmarkButton Grid.Column="0" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.google.com"/>
+                <my:BookmarkButton Grid.Column="1" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/google-plus-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/google-plus-bnw-1.png"  Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://plus.google.com"/>
+                <my:BookmarkButton Grid.Column="2" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/gmail-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/gmail-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://mail.google.com"/>
+                <my:BookmarkButton Grid.Column="3" Grid.Row="0" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/youtube-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/youtube-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.youtube.com"/>
+                <my:BookmarkButton Grid.Column="0" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/facebook-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/facebook-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.facebook.com"/>
+                <my:BookmarkButton Grid.Column="1" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/twitter-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/twitter-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.twitter.com"/>
+                <my:BookmarkButton Grid.Column="2" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/linkedin-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/linkedin-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.linkedin.com"/>
+                <my:BookmarkButton Grid.Column="3" Grid.Row="1" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/imdb-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/imdb-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.imdb.com"/>
+                <my:BookmarkButton Grid.Column="0" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/microsoft-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/microsoft-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.microsoft.com"/>
+                <my:BookmarkButton Grid.Column="1" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/msn-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/msn-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.msn.com"/>
+                <my:BookmarkButton Grid.Column="2" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/yahoo-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/yahoo-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.yahoo.com"/>
+                <my:BookmarkButton Grid.Column="3" Grid.Row="2" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/dropbox-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/dropbox-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.dropbox.com"/>
+                <my:BookmarkButton Grid.Column="0" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/ebay-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/ebay-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.ebay.com"/>
+                <my:BookmarkButton Grid.Column="1" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/amazon-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/amazon-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.amazon.com"/>
+                <my:BookmarkButton Grid.Column="2" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/apple-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/apple-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.apple.com"/>
+                <my:BookmarkButton Grid.Column="3" Grid.Row="3" DefaultImage="/UWIC.FinalProject.WebBrowser;component/Images/wikipedia-bnw-2.png" HoverImage="/UWIC.FinalProject.WebBrowser;component/Images/wikipedia-bnw-1.png" Command="{Binding ElementName=BrowserContnr, Path=BookmarkCommand}" CommandParameter="http://www.wikipedia.com"/>
 			</Grid>
         </Grid>
-        <awesomium:WebControl Grid.Row="2" Source="{Binding URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="webBrowserMain" LoadingFrameComplete="webBrowserMain_LoadingFrameComplete" AddressChanged="webBrowserMain_AddressChanged" Panel.ZIndex="1"/>
+        <awesomium:WebControl Grid.Row="2" Name="webBrowserMain" LoadingFrameComplete="webBrowserMain_LoadingFrameComplete" AddressChanged="webBrowserMain_AddressChanged" Panel.ZIndex="1"/>
         <Label Content="X Position =; Y Position =" Name="xyPosition" Foreground="White" Grid.Row="3" FontSize="10"/>
     </Grid>
 </UserControl>
