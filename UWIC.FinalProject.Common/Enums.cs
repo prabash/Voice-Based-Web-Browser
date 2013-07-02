@@ -19,6 +19,8 @@
     public enum CommandType
     {
         back,
+        finishdictationmode,
+        startdictationmode,
         forth,
         go,
         refresh,
