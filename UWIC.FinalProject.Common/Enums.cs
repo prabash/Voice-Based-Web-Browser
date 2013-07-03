@@ -62,4 +62,11 @@
         Refresh,
         Stop
     }
+
+    public enum Mode
+    {
+        CommandMode,
+        DictationMode,
+        SpellMode
+    }
 }
