@@ -6,6 +6,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -53,6 +54,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         public Uri Url { get; set; }
 
         public bool WebBrowserVisible { get; set; }
+
+        private static TabItemViewModel TabItemViewModel { get; set; }
 
         # endregion
 
@@ -148,6 +151,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void SetPosition(int a, int b)
         {
+            Thread.Sleep(TimeSpan.FromSeconds(3));
             SetCursorPos(a, b);
         }
 
@@ -168,6 +172,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void LeftMouseClick()
         {
+            Thread.Sleep(TimeSpan.FromSeconds(3));
             //Call the imported function with the cursor's current position
             var currentPosition = GetMousePosition();
             mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
@@ -175,12 +180,14 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void RightMouseClick()
         {
-            var currentPosition = GetMousePosition();
-            mouse_event(MOUSEEVENTF_RIGHTDOWN, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+            //Thread.Sleep(TimeSpan.FromSeconds(3));
+            //var currentPosition = GetMousePosition();
+            //mouse_event(MOUSEEVENTF_RIGHTDOWN, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
         }
 
         private void DoubleClick()
         {
+            Thread.Sleep(TimeSpan.FromSeconds(3));
             var currentPosition = GetMousePosition();
             mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
             mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
@@ -432,6 +439,35 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         #endregion
 
+        # region Tab Item
+
+        public static void SetTabItemViewModel(TabItemViewModel tabItemViewModel)
+        {
+            TabItemViewModel = tabItemViewModel;
+        }
+
+        private void AddNewTab()
+        {
+            TabItemViewModel.AddTabItem();
+        }
+
+        private void RemoveTabByIndex(int index)
+        {
+            TabItemViewModel.RemoveTabItemByIndex(index);
+        }
+
+        private void GoToTabByIndex(int index)
+        {
+            TabItemViewModel.SetFocusOnTabItem(index);
+        }
+
+        private void RemoveCurrentTab()
+        {
+            TabItemViewModel.RemoveCurrentTabItem();
+        }
+
+        # endregion
+
         # region Command Execution
 
         public void ExecuteCommand(Dictionary<CommandType, object> identifiedCommand)
@@ -554,7 +590,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                         {
                             var coordinates = command.Value.ToString();
                             var seperatedCoordinates = coordinates.Split(',').ToList();
-                            SetCursorPos(Convert.ToInt32(seperatedCoordinates.First()), Convert.ToInt32(seperatedCoordinates.Last()));
+                            SetPosition(Convert.ToInt32(seperatedCoordinates.First()), Convert.ToInt32(seperatedCoordinates.Last()));
                             break;
                         }
                     case CommandType.click:
@@ -570,6 +606,22 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                     case CommandType.doubleclick:
                         {
                             DoubleClick();
+                            break;
+                        }
+                    case CommandType.opennewtab:
+                        {
+                            AddNewTab();
+                            break;
+                        }
+                    case CommandType.gototab:
+                        {
+                            var index = command.Value.ToString();
+                            GoToTabByIndex(Convert.ToInt32(index));
+                            break;
+                        }
+                    case CommandType.closetab:
+                        {
+                            RemoveCurrentTab();
                             break;
                         }
                 }

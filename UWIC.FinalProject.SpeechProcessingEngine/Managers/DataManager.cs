@@ -168,9 +168,12 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
             {
                 counter++;
                 if (counter < probabilityScoreIndices.Count())
-                    highProbableCategories += (T)Enum.ToObject(typeof(T), highestProbabilityCategory.ReferenceId) + ", ";
+                    highProbableCategories += (T) Enum.ToObject(typeof (T), highestProbabilityCategory.ReferenceId) +
+                                              " - Probability Score : " + highestProbabilityCategory.ProbabilityScore +
+                                              ", ";
                 else
-                    highProbableCategories += (T)Enum.ToObject(typeof(T), highestProbabilityCategory.ReferenceId);
+                    highProbableCategories += (T) Enum.ToObject(typeof (T), highestProbabilityCategory.ReferenceId) +
+                                              " - Probability Score : " + highestProbabilityCategory.ProbabilityScore;
             }
             return highProbableCategories;
         }

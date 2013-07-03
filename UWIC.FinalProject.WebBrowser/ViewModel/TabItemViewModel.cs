@@ -56,11 +56,12 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
         {
             TabItem myItem = new TabItem();
             myItem.Header = getNewTabItemHeader();
-            myItem.Content = new Controller.BrowserContainer();
+            myItem.Content = new BrowserContainer();
             TabItems.Add(myItem);
 
             this.ClickCommand = new RelayCommand(AddTabItem);
             TabItemHeader.SetViewModel(this);
+            BrowserContainer.SetTabItemViewModel(this);
         }
 
         private TabItemHeader getNewTabItemHeader()
@@ -86,7 +87,7 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             myItem.Header = getNewTabItemHeader();
             myItem.Content = new Controller.BrowserContainer();
             TabItems.Add(myItem);
-            //SelectedIndex = TabItems.Count - 1;
+            SelectedIndex = TabItems.Count - 1;
         }
 
         /// <summary>
@@ -99,5 +100,31 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             TabItems.Remove(res);
         }
 
+        /// <summary>
+        /// This method is used to Remove a particular tabitem by providing the index of it
+        /// </summary>
+        /// <param name="index">Index of the tabitem</param>
+        public void RemoveTabItemByIndex(int index)
+        {
+            TabItems.RemoveAt(index);
+        }
+
+        /// <summary>
+        /// This method is used to Remove a particular tabitem by providing the index of it
+        /// </summary>
+        /// <param name="index">Index of the tabitem</param>
+        public void RemoveCurrentTabItem()
+        {
+            TabItems.RemoveAt(SelectedIndex);
+        }
+
+        /// <summary>
+        /// Set Focus on a given tab item index
+        /// </summary>
+        /// <param name="index"></param>
+        public void SetFocusOnTabItem(int index)
+        {
+            SelectedIndex = index;
+        }
     }
 }
