@@ -16,7 +16,9 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
 
         # region Variables
 
-        public Dictionary<CommandType, object> ResultDictionary { get; set; } 
+        public Dictionary<CommandType, object> ResultDictionary { get; set; }
+
+        public Mode CommandMode { get; set; }
 
         #endregion
 
@@ -27,8 +29,9 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
 
         #endregion
 
-        public SpeechEngine(SpeechRecognitionMode mode)
+        public SpeechEngine(SpeechRecognitionMode mode, Mode commandMode)
         {
+            CommandMode = commandMode;
             GrammarManager = new GrammarManager();
             switch (mode)
             {
@@ -71,9 +74,16 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
         {
             var val = e.Result.Text;
             //RecognizedWebsite = RecognitionEngine.getNavigationCommand(val);
-            ResultDictionary =
-                new FirstLevelCategorization().CalculateProbabilityOfCommand(RemoveAnomalies(val).ToLower().Trim());
-            
+            if (CommandMode == Mode.CommandMode)
+            {
+                ResultDictionary =
+                    new FirstLevelCategorization().CalculateProbabilityOfCommand(RemoveAnomalies(val).ToLower().Trim());
+            }
+            else if (CommandMode == Mode.DictationMode)
+            {
+                ResultDictionary = new Dictionary<CommandType, object> {{CommandType.alter, e.Result.Text}};
+            }
+
             if (SpeechRecognized != null)
                 SpeechRecognized(this, e); 
         }

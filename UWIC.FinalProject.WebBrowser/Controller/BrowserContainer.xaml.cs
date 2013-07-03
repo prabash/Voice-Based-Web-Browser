@@ -57,6 +57,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private static TabItemViewModel TabItemViewModel { get; set; }
 
+        public static Mode CommandMode { get; set; }
+
         # endregion
 
         # region Main Page Events & Methods
@@ -79,6 +81,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             CloseEmulator();
             AcquireStoryboardAnimation();
+            CommandMode = Mode.CommandMode;
             //timer.Elapsed += timer_Elapsed;
             //timer.Start();
         }
@@ -424,7 +427,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void ExecuteEmulator()
         {
-            var speechEngine = new SpeechEngine(SpeechRecognitionMode.Emulator);
+            var speechEngine = new SpeechEngine(SpeechRecognitionMode.Emulator, CommandMode);
             if (String.IsNullOrEmpty(CommandText)) return;
             speechEngine.StartEmulatorRecognition(CommandText);
             speechEngine.SpeechRecognized += SpeechEngine_SpeechRecognized;
@@ -434,7 +437,16 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             var speechEngine = (SpeechEngine)sender;
             var resultDictionary = speechEngine.ResultDictionary;
-            ExecuteCommand(resultDictionary);
+            switch (CommandMode)
+            {
+                case Mode.CommandMode:
+                    ExecuteCommand(resultDictionary);
+                    break;
+                case Mode.DictationMode:
+                    ExecuteDictationCommand(resultDictionary);
+                    CommandMode = Mode.CommandMode;
+                    break;
+            }
         }
 
         #endregion
@@ -624,12 +636,25 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             RemoveCurrentTab();
                             break;
                         }
+                    case CommandType.startdictationmode:
+                        {
+                            CommandMode = Mode.DictationMode;
+                            break;
+                        }
                 }
             }
             catch (Exception ex)
             {
                 Log.ErrorLog(ex);
                 throw;
+            }
+        }
+
+        public void ExecuteDictationCommand(Dictionary<CommandType, object> dictationCommand)
+        {
+            foreach (var pair in dictationCommand)
+            {
+                InvokePostMessageService(pair.Value.ToString());
             }
         }
 

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using UWIC.FinalProject.Common;
 
 namespace UWIC.FinalProject.WebBrowser.View
 {
@@ -27,7 +28,7 @@ namespace UWIC.FinalProject.WebBrowser.View
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            speechEngine = new SpeechRecognitionEngine.SpeechEngine(SpeechRecognitionEngine.SpeechRecognitionMode.Emulator);
+            speechEngine = new SpeechRecognitionEngine.SpeechEngine(SpeechRecognitionEngine.SpeechRecognitionMode.Emulator, Mode.CommandMode);
             string val = txtSpeech.Text;
             speechEngine.StartEmulatorRecognition(val);
         }
