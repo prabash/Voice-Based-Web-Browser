@@ -68,4 +68,10 @@
         DictationMode,
         SpellMode
     }
+
+    public enum MessageBoxIcon
+    {
+        Error,
+        Information
+    }
 }
