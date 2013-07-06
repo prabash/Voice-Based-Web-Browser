@@ -24,7 +24,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
                 {
                     textFile = testFile;
                 }
-                DataManager.AppendToTextFile(textFile, UnIdentifiedWords);
+                DataManager.AppendToFile(textFile, UnIdentifiedWords);
             }
             catch (Exception ex)
             {

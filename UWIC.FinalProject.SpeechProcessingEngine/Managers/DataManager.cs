@@ -102,26 +102,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <returns>File data as a list of string</returns>
         public static List<string> GetFileData(string filePath)
         {
-            try
-            {
-                var tempList = new List<string>();
-                using (var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var bs = new BufferedStream(fs))
-                using (var sr = new StreamReader(bs))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        tempList.Add(line.ToLower());
-                    }
-                }
-                return tempList;
-            }
-            catch (Exception ex)
-            {
-                Log.ErrorLog(ex);
-                throw;
-            }
+            return TextFileManager.GetTextFileData(filePath);
         }
 
         /// <summary>
@@ -183,23 +164,9 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// </summary>
         /// <param name="fileName">Name of the Text File</param>
         /// <param name="data">List of strings</param>
-        public static void AppendToTextFile(string fileName, List<string> data)
+        public static void AppendToFile(string fileName, List<string> data)
         {
-            try
-            {
-                foreach (var item in data)
-                {
-                    using (var writer = File.AppendText(fileName))
-                    {
-                        writer.WriteLine(item);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.ErrorLog(ex);
-                throw;
-            }
+            TextFileManager.AppendToTextFile(fileName, data);
         }
     }
 }
