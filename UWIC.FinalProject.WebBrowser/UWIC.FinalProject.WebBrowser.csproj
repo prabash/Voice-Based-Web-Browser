@@ -43,6 +43,7 @@
     <Reference Include="System.IO.Log" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +71,9 @@
     </Compile>
     <Compile Include="Controller\EmulatorWindow.xaml.cs">
       <DependentUpon>EmulatorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controller\MessageBoxWindow.xaml.cs">
+      <DependentUpon>MessageBoxWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controller\NavigationButton.xaml.cs">
       <DependentUpon>NavigationButton.xaml</DependentUpon>
@@ -105,6 +109,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controller\EmulatorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controller\MessageBoxWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

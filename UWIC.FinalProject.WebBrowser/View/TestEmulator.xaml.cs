@@ -28,7 +28,7 @@ namespace UWIC.FinalProject.WebBrowser.View
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            speechEngine = new SpeechRecognitionEngine.SpeechEngine(SpeechRecognitionEngine.SpeechRecognitionMode.Emulator, Mode.CommandMode);
+            speechEngine = new SpeechRecognitionEngine.SpeechEngine();
             string val = txtSpeech.Text;
             speechEngine.StartEmulatorRecognition(val);
         }

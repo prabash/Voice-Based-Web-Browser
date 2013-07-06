@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Speech.Recognition;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -58,6 +59,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         private static TabItemViewModel TabItemViewModel { get; set; }
 
         public static Mode CommandMode { get; set; }
+
+        public System.Speech.Recognition.SpeechRecognitionEngine speechRecognizerEngine { get; set; }
 
         # endregion
 
@@ -427,26 +430,57 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void ExecuteEmulator()
         {
-            var speechEngine = new SpeechEngine(SpeechRecognitionMode.Emulator, CommandMode);
+            var speechEngine = new SpeechEngine();
+            speechEngine.InitializeEmulator();
             if (String.IsNullOrEmpty(CommandText)) return;
             speechEngine.StartEmulatorRecognition(CommandText);
-            speechEngine.SpeechRecognized += SpeechEngine_SpeechRecognized;
+            speechEngine.SpeechProcessed += SpeechEngine_SpeechProcessed;
         }
 
-        void SpeechEngine_SpeechRecognized(object sender, EventArgs e)
+        void SpeechEngine_SpeechProcessed(object sender, EventArgs e)
         {
             var speechEngine = (SpeechEngine)sender;
             var resultDictionary = speechEngine.ResultDictionary;
-            switch (CommandMode)
+            StartCommandExecution(resultDictionary);
+        }
+
+        #endregion
+
+        #region Voice Recognizer
+
+        private void InitializeSpeechRecognizer()
+        {
+            var result = "";
+            speechRecognizerEngine = new SpeechEngine().CreateSpeechEngine("en-GB", out result);
+            speechRecognizerEngine.LoadGrammar(new DictationGrammar());
+            speechRecognizerEngine.LoadGrammar(new SpeechEngine().GetSpellingGrammar());
+            speechRecognizerEngine.LoadGrammar(new SpeechEngine().GetWebSiteNamesGrammar());
+            speechRecognizerEngine.AudioLevelUpdated += SpeechRecognizerEngine_AudioLevelUpdated;
+            speechRecognizerEngine.SpeechRecognized += SpeechRecognizerEngine_SpeechRecognized;
+
+            // use the system's default microphone
+            speechRecognizerEngine.SetInputToDefaultAudioDevice();
+
+            // start listening
+            speechRecognizerEngine.RecognizeAsync(RecognizeMode.Multiple);
+        }
+
+        private void SpeechRecognizerEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            if (e.Result.Confidence >= 0.7)
             {
-                case Mode.CommandMode:
-                    ExecuteCommand(resultDictionary);
-                    break;
-                case Mode.DictationMode:
-                    ExecuteDictationCommand(resultDictionary);
-                    CommandMode = Mode.CommandMode;
-                    break;
+                var resultDictionary = new SpeechEngine().InitializeSpeechProcessing(e.Result.Text);
+                StartCommandExecution(resultDictionary);
             }
+            else
+            {
+                MessageBox.Show("Your words cannot be recognized properly!");
+            }
+        }
+
+        private void SpeechRecognizerEngine_AudioLevelUpdated(object sender, AudioLevelUpdatedEventArgs e)
+        {
+            PbAudioLevel.Value = e.AudioLevel;
         }
 
         #endregion
@@ -481,6 +515,28 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         # endregion
 
         # region Command Execution
+
+        private void StartCommandExecution(Dictionary<CommandType, object> resultDictionary)
+        {
+            switch (CommandMode)
+            {
+                case Mode.CommandMode:
+                    ExecuteCommand(resultDictionary);
+                    break;
+                case Mode.DictationMode:
+                    ExecuteDictationCommand(resultDictionary);
+                    CommandMode = Mode.CommandMode;
+                    break;
+                case Mode.WebsiteSpellMode:
+                    ExecuteSpellingCommand(true, resultDictionary);
+                    CommandMode = Mode.CommandMode;
+                    break;
+                case Mode.GeneralSpellMode:
+                    ExecuteSpellingCommand(false, resultDictionary);
+                    CommandMode = Mode.CommandMode;
+                    break;
+            }
+        }
 
         public void ExecuteCommand(Dictionary<CommandType, object> identifiedCommand)
         {
@@ -641,6 +697,16 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             CommandMode = Mode.DictationMode;
                             break;
                         }
+                    case CommandType.startwebsitespelling:
+                        {
+                            CommandMode = Mode.WebsiteSpellMode;
+                            break;
+                        }
+                    case CommandType.startgeneralspelling:
+                        {
+                            CommandMode = Mode.GeneralSpellMode;
+                            break;
+                        }
                 }
             }
             catch (Exception ex)
@@ -652,10 +718,41 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         public void ExecuteDictationCommand(Dictionary<CommandType, object> dictationCommand)
         {
-            foreach (var pair in dictationCommand)
+            try
             {
-                InvokePostMessageService(pair.Value.ToString());
+                foreach (var pair in dictationCommand)
+                {
+                    InvokePostMessageService(pair.Value.ToString());
+                }
             }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
+        }
+
+        public void ExecuteSpellingCommand(bool webSiteSpelling, Dictionary<CommandType, object> dictationCommand)
+        {
+            try
+            {
+                var firstPair = dictationCommand.First();
+                var word = AcquireSpelledWord(firstPair.Value.ToString());
+                if (webSiteSpelling)
+                    AppendWebsiteToTextFile(word);
+                else
+                    InvokePostMessageService(word);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
+        }
+
+        public void AppendWebsiteToTextFile(string website)
+        {
+            TextFileManager.AppendToTextFile("..//..//data//fnc_brwsr_websites" + ".txt", new List<string> { website.ToLower() });
         }
 
         private static void InvokePostMessageService(string message)
@@ -676,6 +773,12 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             {
                 if (svcClient != null) svcClient.Abort();
             }
+        }
+
+        private static string AcquireSpelledWord(string spelledWord)
+        {
+            var letters = spelledWord.Split(' ');
+            return letters.Aggregate("", (current, letter) => current + letter);
         }
 
         # endregion

@@ -144,6 +144,17 @@
 			</Grid>
         </Grid>
         <awesomium:WebControl Grid.Row="2" Name="webBrowserMain" LoadingFrameComplete="webBrowserMain_LoadingFrameComplete" AddressChanged="webBrowserMain_AddressChanged" Panel.ZIndex="1"/>
-        <Label Content="X Position =; Y Position =" Name="xyPosition" Foreground="White" Grid.Row="3" FontSize="10"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Content="X Position =; Y Position =" Name="xyPosition" Foreground="White" FontSize="10" Grid.Column="0"/>
+            <metro:ProgressBar Name="PbAudioLevel" Grid.Column="5" Height="30" Margin="0,0,10,0"/>
+        </Grid>
     </Grid>
 </UserControl>
