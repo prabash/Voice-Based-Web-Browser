@@ -19,8 +19,9 @@
     public enum CommandType
     {
         back,
-        startwebsitedictation,
-        startgeneraldictation,
+        startdictationmode,
+        startgeneralspelling,
+        startwebsitespelling,
         forth,
         go,
         refresh,
