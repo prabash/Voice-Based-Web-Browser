@@ -111,7 +111,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <param name="commandType"></param>
         public static void AddToCommandCounter(CommandType commandType)
         {
-            const string fileName = "..//..//data//count_commandExecutionCounter.txt";
+            const string fileName = "..//..//data//count_commandExecutionCounter" + ".txt";
             var data = GetFileData(fileName);
             var valueToBeRemoved = "";
             var valueToBeAdded = "";
