@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Speech.Synthesis;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using UWIC.FinalProject.Common;
 
 namespace UWIC.FinalProject.WebBrowser.Controller
@@ -18,14 +9,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
     /// <summary>
     /// Interaction logic for MessageBoxWindow.xaml
     /// </summary>
-    public partial class MessageBoxWindow : Elysium.Controls.Window
+    public partial class MessageBoxWindow
     {
-        private string Message { get; set; }
-        private string MessageTitle { get; set; }
-        private Visibility OkButtonVisibility { get; set; }
-        private Visibility YesButtonVisibility { get; set; }
-        private Visibility NoButtonVisibility { get; set; }
-        private MessageBoxIcon MessageIcon { get; set; }
 
         public MessageBoxWindow()
         {
@@ -34,10 +19,53 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         public MessageBoxWindow(string message, string messageTitle, Visibility yesButtonVisible, Visibility noButtonVisible, MessageBoxIcon icon)
         {
+            InitializeComponent();
+            SetImage(icon);
+            LblTitle.Content = messageTitle;
+            TxtMessage.Text = message;
+            BtnYes.Visibility = yesButtonVisible;
+            BtnNo.Visibility = noButtonVisible;
         }
 
         public MessageBoxWindow(string message, string messageTitle, Visibility okButtonVisible, MessageBoxIcon icon)
         {
+            InitializeComponent();
+            SetImage(icon);
+            LblTitle.Content = messageTitle;
+            TxtMessage.Text = message;
+            BtnOk.Visibility = okButtonVisible;
+        }
+
+        private void SetImage(MessageBoxIcon icon)
+        {
+            var logo = new BitmapImage();
+            logo.BeginInit();
+            switch (icon)
+            {
+                case MessageBoxIcon.Error:
+                    logo.UriSource = new Uri("pack://application:,,,/UWIC.FinalProject.WebBrowser;component/Images/error-white.png");
+                    break;
+                case MessageBoxIcon.Information:
+                    logo.UriSource = new Uri("pack://application:,,,/UWIC.FinalProject.WebBrowser;component/Images/info-white.png");
+                    break;
+            }
+            logo.EndInit();
+            ImgIcon.Source = logo;
+        }
+
+        private void MessageBoxWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var voice = new SpeechSynthesizer();
+            try
+            {
+                voice.Volume = 100;
+                voice.Rate = 0;
+                voice.SpeakAsync(TxtMessage.Text);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+            }
         }
     }
 }

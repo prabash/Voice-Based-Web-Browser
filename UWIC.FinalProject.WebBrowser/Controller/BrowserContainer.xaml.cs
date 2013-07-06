@@ -60,7 +60,9 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         public static Mode CommandMode { get; set; }
 
-        public System.Speech.Recognition.SpeechRecognitionEngine speechRecognizerEngine { get; set; }
+        public System.Speech.Recognition.SpeechRecognitionEngine SpeechRecognizerEngine { get; set; }
+
+        public MessageBoxWindow MessageWindow { get; set; }
 
         # endregion
 
@@ -451,18 +453,18 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         private void InitializeSpeechRecognizer()
         {
             var result = "";
-            speechRecognizerEngine = new SpeechEngine().CreateSpeechEngine("en-GB", out result);
-            speechRecognizerEngine.LoadGrammar(new DictationGrammar());
-            speechRecognizerEngine.LoadGrammar(new SpeechEngine().GetSpellingGrammar());
-            speechRecognizerEngine.LoadGrammar(new SpeechEngine().GetWebSiteNamesGrammar());
-            speechRecognizerEngine.AudioLevelUpdated += SpeechRecognizerEngine_AudioLevelUpdated;
-            speechRecognizerEngine.SpeechRecognized += SpeechRecognizerEngine_SpeechRecognized;
+            SpeechRecognizerEngine = new SpeechEngine().CreateSpeechEngine("en-GB", out result);
+            SpeechRecognizerEngine.LoadGrammar(new DictationGrammar());
+            SpeechRecognizerEngine.LoadGrammar(new SpeechEngine().GetSpellingGrammar());
+            SpeechRecognizerEngine.LoadGrammar(new SpeechEngine().GetWebSiteNamesGrammar());
+            SpeechRecognizerEngine.AudioLevelUpdated += SpeechRecognizerEngine_AudioLevelUpdated;
+            SpeechRecognizerEngine.SpeechRecognized += SpeechRecognizerEngine_SpeechRecognized;
 
             // use the system's default microphone
-            speechRecognizerEngine.SetInputToDefaultAudioDevice();
+            SpeechRecognizerEngine.SetInputToDefaultAudioDevice();
 
             // start listening
-            speechRecognizerEngine.RecognizeAsync(RecognizeMode.Multiple);
+            SpeechRecognizerEngine.RecognizeAsync(RecognizeMode.Multiple);
         }
 
         private void SpeechRecognizerEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
@@ -707,6 +709,16 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             CommandMode = Mode.GeneralSpellMode;
                             break;
                         }
+                    case CommandType.yes:
+                        {
+                            ExecuteYesNoCommand(CommandType.yes);
+                            break;
+                        }
+                    case CommandType.no:
+                        {
+                            ExecuteYesNoCommand(CommandType.no);
+                            break;
+                        }
                 }
             }
             catch (Exception ex)
@@ -716,7 +728,20 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             }
         }
 
-        public void ExecuteDictationCommand(Dictionary<CommandType, object> dictationCommand)
+        private void ExecuteYesNoCommand(CommandType type)
+        {
+            switch (type)
+            {
+                case CommandType.yes:
+                    if (MessageWindow != null) MessageWindow.Close();
+                    break;
+                case CommandType.no:
+                    if (MessageWindow != null) MessageWindow.Close();
+                    break;
+            }
+        }
+
+        private void ExecuteDictationCommand(Dictionary<CommandType, object> dictationCommand)
         {
             try
             {
@@ -732,7 +757,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             }
         }
 
-        public void ExecuteSpellingCommand(bool webSiteSpelling, Dictionary<CommandType, object> dictationCommand)
+        private void ExecuteSpellingCommand(bool webSiteSpelling, Dictionary<CommandType, object> dictationCommand)
         {
             try
             {
@@ -750,7 +775,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             }
         }
 
-        public void AppendWebsiteToTextFile(string website)
+        private void AppendWebsiteToTextFile(string website)
         {
             TextFileManager.AppendToTextFile("..//..//data//fnc_brwsr_websites" + ".txt", new List<string> { website.ToLower() });
         }
@@ -782,5 +807,12 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         }
 
         # endregion
+
+        private void BtnTest_OnClick(object sender, RoutedEventArgs e)
+        {
+            MessageWindow = new MessageBoxWindow("Sample Information Message. Are you sure you want to continue? Google Facebook Flickr Youtube", "Error", Visibility.Visible,
+                                               MessageBoxIcon.Information);
+            MessageWindow.Show();
+        }
     }
 }

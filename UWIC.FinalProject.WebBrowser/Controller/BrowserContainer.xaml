@@ -154,6 +154,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Label Content="X Position =; Y Position =" Name="xyPosition" Foreground="White" FontSize="10" Grid.Column="0"/>
+            <Button Width="50" Height="20" Grid.Column="4" Name="BtnTest" Click="BtnTest_OnClick"/>
             <metro:ProgressBar Name="PbAudioLevel" Grid.Column="5" Height="30" Margin="0,0,10,0"/>
         </Grid>
     </Grid>
