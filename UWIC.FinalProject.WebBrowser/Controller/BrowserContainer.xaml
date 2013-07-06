@@ -103,8 +103,11 @@
         </Grid>
         <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1"/>
 
-        <Grid Grid.Row="2" Panel.ZIndex="2" Background="#FF171717" RenderTransformOrigin="0.5,0.5" x:Name="grid">
-			<Grid.RenderTransform>
+        <Grid Grid.Row="2" Panel.ZIndex="2" RenderTransformOrigin="0.5,0.5" x:Name="grid">
+            <Grid.Background>
+                <ImageBrush ImageSource="/UWIC.FinalProject.WebBrowser;component/Images/metro-back.png"></ImageBrush>
+            </Grid.Background>
+            <Grid.RenderTransform>
         		<TransformGroup>
         			<ScaleTransform/>
         			<SkewTransform/>
@@ -113,7 +116,7 @@
         		</TransformGroup>
         	</Grid.RenderTransform>
 			<Grid Width="600" Height="600">
-				<Grid.RowDefinitions>
+                <Grid.RowDefinitions>
 					<RowDefinition/>
 					<RowDefinition/>
 					<RowDefinition/>

@@ -262,6 +262,9 @@
     <Resource Include="Images\info-black.png" />
     <Resource Include="Images\info-white.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\metro-back.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
