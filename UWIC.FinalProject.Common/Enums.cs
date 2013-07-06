@@ -66,7 +66,8 @@
     {
         CommandMode,
         DictationMode,
-        SpellMode
+        WebsiteSpellMode,
+        GeneralSpellMode,
     }
 
     public enum MessageBoxIcon
