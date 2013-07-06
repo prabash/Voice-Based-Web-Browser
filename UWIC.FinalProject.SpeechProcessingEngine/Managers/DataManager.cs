@@ -177,5 +177,29 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
             }
             return highProbableCategories;
         }
+
+        /// <summary>
+        /// This method will append a given list of strings to a text file
+        /// </summary>
+        /// <param name="fileName">Name of the Text File</param>
+        /// <param name="data">List of strings</param>
+        public static void AppendToTextFile(string fileName, List<string> data)
+        {
+            try
+            {
+                foreach (var item in data)
+                {
+                    using (var writer = File.AppendText(fileName))
+                    {
+                        writer.WriteLine(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
+        }
     }
 }

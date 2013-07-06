@@ -24,14 +24,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
                 {
                     textFile = testFile;
                 }
-
-                foreach (var unIdentifiedWord in UnIdentifiedWords)
-                {
-                    using (var writer = File.AppendText(textFile))
-                    {
-                        writer.WriteLine(unIdentifiedWord);
-                    }
-                }
+                DataManager.AppendToTextFile(textFile, UnIdentifiedWords);
             }
             catch (Exception ex)
             {
