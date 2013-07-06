@@ -50,6 +50,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="TextFileManager.cs" />
     <Compile Include="UpdateManager.cs" />
   </ItemGroup>
   <ItemGroup>
