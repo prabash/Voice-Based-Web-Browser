@@ -132,8 +132,6 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             return GetCommand(command, secondLevelCategory);
         }
 
-        
-
         /// <summary>
         /// This method will get the most probable command types by command category
         /// </summary>

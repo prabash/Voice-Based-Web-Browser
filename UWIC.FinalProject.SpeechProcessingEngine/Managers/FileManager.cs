@@ -13,7 +13,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// </summary>
         public static string[] GetTestFiles()
         {
-            return Directory.GetFiles("..//..//data//", "*.txt");
+            return Directory.GetFiles("..//..//data//", "*" + VbwFileManager.FileExtension());
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <returns></returns>
         public static List<string> GetExplicitFileNamesByPrefix(string[] fileNames, string startsWithValue)
         {
-            return fileNames.Select(item => item.Replace("..//..//data//", String.Empty).Replace(".txt", String.Empty)).Where(explicitFileName => explicitFileName.StartsWith(startsWithValue)).ToList();
+            return fileNames.Select(item => item.Replace("..//..//data//", String.Empty).Replace(VbwFileManager.FileExtension(), String.Empty)).Where(explicitFileName => explicitFileName.StartsWith(startsWithValue)).ToList();
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <returns>File content as a list of string</returns>
         public static List<string> GetContentOfAFile(string file)
         {
-            return DataManager.GetFileData("..//..//data//" + file + ".txt");
+            return DataManager.GetFileData("..//..//data//" + file + VbwFileManager.FileExtension());
         }
     }
 }

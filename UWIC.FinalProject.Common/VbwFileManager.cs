@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace UWIC.FinalProject.Common
 {
-    public class TextFileManager
+    public class VbwFileManager
     {
         /// <summary>
         /// This method will return data available in a given file as a string array;
@@ -60,6 +61,11 @@ namespace UWIC.FinalProject.Common
                 Log.ErrorLog(ex);
                 throw;
             }
+        }
+
+        public static string FileExtension()
+        {
+            return ConfigurationManager.AppSettings.Get("FileExtension");
         }
     }
 }

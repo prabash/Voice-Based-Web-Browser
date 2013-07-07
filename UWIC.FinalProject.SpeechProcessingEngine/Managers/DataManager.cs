@@ -44,7 +44,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
                 foreach (var fileName in fileNames)
                 {
                     var explicitFileName = fileName.Replace("..//..//data//", String.Empty)
-                                                   .Replace(".txt", String.Empty); // Get the proper file name, without extensions or the directory
+                                                   .Replace(VbwFileManager.FileExtension(), String.Empty); // Get the proper file name, without extensions or the directory
                     if (!explicitFileName.StartsWith(prefix)) continue; // if the file doesn't belong to the command category meant by the given prefix, continue to the next item of the loop
                     var fileData = GetFileData(fileName); // else get the file data
                     var fileNameWithoutPrefix = explicitFileName.Replace(prefix + "_", String.Empty); // get the file name without the prefix
@@ -102,7 +102,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <returns>File data as a list of string</returns>
         public static List<string> GetFileData(string filePath)
         {
-            return TextFileManager.GetTextFileData(filePath);
+            return VbwFileManager.GetTextFileData(filePath);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <param name="commandType"></param>
         public static void AddToCommandCounter(CommandType commandType)
         {
-            const string fileName = "..//..//data//count_commandExecutionCounter" + ".txt";
+            string fileName = "..//..//data//count_commandExecutionCounter" + VbwFileManager.FileExtension();
             var data = GetFileData(fileName);
             var valueToBeRemoved = "";
             var valueToBeAdded = "";
@@ -166,7 +166,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <param name="data">List of strings</param>
         public static void AppendToFile(string fileName, List<string> data)
         {
-            TextFileManager.AppendToTextFile(fileName, data);
+            VbwFileManager.AppendToTextFile(fileName, data);
         }
     }
 }
