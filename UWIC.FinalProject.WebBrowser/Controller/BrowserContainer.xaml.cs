@@ -89,6 +89,18 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             CommandMode = Mode.CommandMode;
             //timer.Elapsed += timer_Elapsed;
             //timer.Start();
+
+            #region Should be Added Later on
+            //if (!UriParser.IsKnownScheme("pack"))
+            //    UriParser.Register(new GenericUriParser(GenericUriParserOptions.GenericAuthority), "pack", -1);
+
+            //var dict = new ResourceDictionary();
+            //var uri = new Uri("/UWIC.FinalProject.WebBrowser;component/Resources/BackgroundImageResourceDictionary.xaml", UriKind.Relative);
+            //dict.Source = uri;
+            //Application.Current.Resources.MergedDictionaries.Add(dict);
+            //var backImageSource = (ImageSource)Application.Current.Resources["BackImage"];
+            //BImage.ImageSource = backImageSource;
+            # endregion
         }
 
         /// <summary>
@@ -813,6 +825,11 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             MessageWindow = new MessageBoxWindow("Sample Information Message. Are you sure you want to continue? Google Facebook Flickr Youtube", "Error", Visibility.Visible,
                                                MessageBoxIcon.Information);
             MessageWindow.Show();
+        }
+
+        private void ChangeBackground()
+        {
+            //BackgroundImage.ImageSource
         }
     }
 }

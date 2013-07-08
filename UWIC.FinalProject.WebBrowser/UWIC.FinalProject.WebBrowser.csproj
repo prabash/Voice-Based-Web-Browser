@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>WebBrowser.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Awesomium.Core, Version=1.7.1.0, Culture=neutral, PublicKeyToken=e1a0d7c8071a5214, processorArchitecture=x86" />
     <Reference Include="awesomium.windows.controls, Version=1.7.1.0, Culture=neutral, PublicKeyToken=7a34e179b8b61c39, processorArchitecture=x86" />
@@ -121,6 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controller\TabItemHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\BackgroundImageResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -263,7 +270,16 @@
     <Resource Include="Images\info-white.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\metro-back.png" />
+    <Resource Include="Images\metro-bird.png" />
+    <Resource Include="Images\metro-fish.png" />
+    <Resource Include="Images\metro-flowers.png" />
+    <Resource Include="Images\metro-garden.png" />
+    <Resource Include="Images\metro-mechanic.png" />
+    <Resource Include="Images\metro-pattern.png" />
+    <Resource Include="Images\metro-zoo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="WebBrowser.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

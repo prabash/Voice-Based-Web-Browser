@@ -11,7 +11,7 @@
              x:Name="BrowserContnr"
              mc:Ignorable="d" Loaded="UserControl_Loaded" KeyDown="UserControl_KeyDown">
 	<UserControl.Resources>
-		<Storyboard x:Key="DownAnimation">
+        <Storyboard x:Key="DownAnimation">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="grid">
 				<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0.496"/>
 				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
@@ -104,9 +104,11 @@
         <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1"/>
 
         <Grid Grid.Row="2" Panel.ZIndex="2" RenderTransformOrigin="0.5,0.5" x:Name="grid">
-            <Grid.Background>
-                <ImageBrush ImageSource="/UWIC.FinalProject.WebBrowser;component/Images/metro-back.png"></ImageBrush>
-            </Grid.Background>
+            <!-- SHOULD BE ADDED LATER ON -->
+            <!--<Grid.Background>
+                <ImageBrush x:Name="BImage"></ImageBrush>
+            </Grid.Background>-->
+            <!--  **********************  -->
             <Grid.RenderTransform>
         		<TransformGroup>
         			<ScaleTransform/>

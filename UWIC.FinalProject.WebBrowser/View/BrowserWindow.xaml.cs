@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Elysium.Controls;
 using UWIC.FinalProject.WebBrowser.Controller;
 using UWIC.FinalProject.WebBrowser.ViewModel;
 using UWIC.FinalProject.Common;
