@@ -4,6 +4,7 @@
               xmlns:metro="http://schemas.codeplex.com/elysium"
               xmlns:params="http://schemas.codeplex.com/elysium/params"
               xmlns:vm ="clr-namespace:UWIC.FinalProject.WebBrowser.ViewModel"
+              xmlns:my ="clr-namespace:UWIC.FinalProject.WebBrowser.Controller"
               params:Design.Theme="Dark"
               params:Design.AccentBrush="{x:Static metro:AccentBrushes.Blue}"
               params:Design.ContrastBrush="White"
@@ -20,6 +21,10 @@
     </metro:Window.ApplicationBar>
     <Grid>
         <Decorator metro:Window.IsApplicationBarHost="True"/>
+        
         <TabControl ItemsSource="{Binding TabItems}" Name="MainTabControl" SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay}" />
+        <StackPanel Width="40" VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
+            <my:CloseButton HorizontalAlignment="Right" Width="40" Height="40" MouseLeftButtonUp="CloseButton_OnMouseLeftButtonUp"/>
+        </StackPanel>
     </Grid>
 </metro:Window>

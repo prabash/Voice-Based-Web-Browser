@@ -36,5 +36,10 @@ namespace UWIC.FinalProject.WebBrowser.View
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, out url))
                 System.Diagnostics.Process.Start(url);
         }
+
+        private void CloseButton_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Close();
+        }
     }
 }

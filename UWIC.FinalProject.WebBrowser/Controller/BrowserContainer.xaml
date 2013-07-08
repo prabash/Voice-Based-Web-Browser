@@ -104,11 +104,9 @@
         <metro:ProgressBar Name="pbWebPageLoad" Grid.Row="1"/>
 
         <Grid Grid.Row="2" Panel.ZIndex="2" RenderTransformOrigin="0.5,0.5" x:Name="grid">
-            <!-- SHOULD BE ADDED LATER ON -->
-            <!--<Grid.Background>
+            <Grid.Background>
                 <ImageBrush x:Name="BImage"></ImageBrush>
-            </Grid.Background>-->
-            <!--  **********************  -->
+            </Grid.Background>
             <Grid.RenderTransform>
         		<TransformGroup>
         			<ScaleTransform/>

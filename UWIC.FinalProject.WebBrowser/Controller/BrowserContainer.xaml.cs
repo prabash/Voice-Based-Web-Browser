@@ -90,16 +90,16 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             //timer.Elapsed += timer_Elapsed;
             //timer.Start();
 
-            #region Should be Added Later on
-            //if (!UriParser.IsKnownScheme("pack"))
-            //    UriParser.Register(new GenericUriParser(GenericUriParserOptions.GenericAuthority), "pack", -1);
+            #region Background Image
+            if (!UriParser.IsKnownScheme("pack"))
+                UriParser.Register(new GenericUriParser(GenericUriParserOptions.GenericAuthority), "pack", -1);
 
-            //var dict = new ResourceDictionary();
-            //var uri = new Uri("/UWIC.FinalProject.WebBrowser;component/Resources/BackgroundImageResourceDictionary.xaml", UriKind.Relative);
-            //dict.Source = uri;
-            //Application.Current.Resources.MergedDictionaries.Add(dict);
-            //var backImageSource = (ImageSource)Application.Current.Resources["BackImage"];
-            //BImage.ImageSource = backImageSource;
+            var dict = new ResourceDictionary();
+            var uri = new Uri("/UWIC.FinalProject.WebBrowser;component/Resources/BackgroundImageResourceDictionary.xaml", UriKind.Relative);
+            dict.Source = uri;
+            Application.Current.Resources.MergedDictionaries.Add(dict);
+            var backImageSource = (ImageSource)Application.Current.Resources["BackImage"];
+            BImage.ImageSource = backImageSource;
             # endregion
         }
 

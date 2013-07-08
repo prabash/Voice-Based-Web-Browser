@@ -72,6 +72,9 @@
     <Compile Include="Controller\BrowserContainer.xaml.cs">
       <DependentUpon>BrowserContainer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controller\CloseButton.xaml.cs">
+      <DependentUpon>CloseButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controller\EmulatorWindow.xaml.cs">
       <DependentUpon>EmulatorWindow.xaml</DependentUpon>
     </Compile>
@@ -111,6 +114,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controller\CloseButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controller\EmulatorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -128,6 +135,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\BackgroundImageResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ButtonStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -280,6 +291,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="WebBrowser.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\close-w.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
