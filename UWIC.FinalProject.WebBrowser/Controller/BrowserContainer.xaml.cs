@@ -26,6 +26,7 @@ using UWIC.FinalProject.SpeechRecognitionEngine;
 using UWIC.FinalProject.WebBrowser.Model;
 using UWIC.FinalProject.WebBrowser.ViewModel;
 using UWIC.FinalProject.WebBrowser.svcSendKeys;
+using System.Speech.Synthesis;
 
 namespace UWIC.FinalProject.WebBrowser.Controller
 {
@@ -89,6 +90,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             CommandMode = Mode.CommandMode;
             //timer.Elapsed += timer_Elapsed;
             //timer.Start();
+
+            CloseMessageBox();
 
             #region Background Image
             if (!UriParser.IsKnownScheme("pack"))
@@ -334,8 +337,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// </summary>
         public void SetWebPageTitleNFavicon()
         {
-            Favicon = new BrowserContainerModel().getFavicon(new BrowserContainerModel().getImageSource(Url));
-            WebPageTitle = new BrowserContainerModel().getWebPageTitle(Url.AbsoluteUri);
+            Favicon = new BrowserContainerModel().GetFavicon(new BrowserContainerModel().GetImageSource(Url));
+            WebPageTitle = new BrowserContainerModel().GetWebPageTitle(Url.AbsoluteUri);
         }
 
         /// <summary>
@@ -456,6 +459,93 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             var speechEngine = (SpeechEngine)sender;
             var resultDictionary = speechEngine.ResultDictionary;
             StartCommandExecution(resultDictionary);
+        }
+
+        #endregion
+
+        # region MessageBox
+
+        private void CloseMessageBox()
+        {
+            try
+            {
+                var sb = (Storyboard)FindResource("MessageBoxClose");
+                sb.Begin();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
+        }
+
+        private void OpenMessageBox()
+        {
+            try
+            {
+                var sb = (Storyboard)FindResource("MessageBoxOpen");
+                sb.Begin();
+
+                SpeakMessage();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
+        }
+
+        private void ShowMessageBoxDetails(string message, string messageTitle, Visibility yesButtonVisible, Visibility noButtonVisible, MessageBoxIcon icon)
+        {
+            SetImage(icon);
+            LblTitle.Content = messageTitle;
+            TxtMessage.Text = message;
+            BtnYes.Visibility = yesButtonVisible;
+            BtnNo.Visibility = noButtonVisible;
+
+            OpenMessageBox();
+        }
+
+        private void ShowMessageBoxDetails(string message, string messageTitle, Visibility okButtonVisible, MessageBoxIcon icon)
+        {
+            SetImage(icon);
+            LblTitle.Content = messageTitle;
+            TxtMessage.Text = message;
+            BtnOk.Visibility = okButtonVisible;
+
+            OpenMessageBox();
+        }
+
+        private void SetImage(MessageBoxIcon icon)
+        {
+            var logo = new BitmapImage();
+            logo.BeginInit();
+            switch (icon)
+            {
+                case MessageBoxIcon.Error:
+                    logo.UriSource = new Uri("pack://application:,,,/UWIC.FinalProject.WebBrowser;component/Images/error-white.png");
+                    break;
+                case MessageBoxIcon.Information:
+                    logo.UriSource = new Uri("pack://application:,,,/UWIC.FinalProject.WebBrowser;component/Images/info-white.png");
+                    break;
+            }
+            logo.EndInit();
+            ImgIcon.Source = logo;
+        }
+
+        private void SpeakMessage()
+        {
+            var voice = new SpeechSynthesizer();
+            try
+            {
+                voice.Volume = 100;
+                voice.Rate = 0;
+                voice.SpeakAsync(TxtMessage.Text);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+            }
         }
 
         #endregion
@@ -822,9 +912,13 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void BtnTest_OnClick(object sender, RoutedEventArgs e)
         {
-            MessageWindow = new MessageBoxWindow("Sample Information Message. Are you sure you want to continue? Google Facebook Flickr Youtube", "Error", Visibility.Visible,
-                                               MessageBoxIcon.Information);
-            MessageWindow.Show();
+            ShowMessageBoxDetails("This is just a sample error message", "Sample Error Message", Visibility.Visible,
+                                  MessageBoxIcon.Error);
+        }
+
+        private void BtnTest1_OnClick(object sender, RoutedEventArgs e)
+        {
+            CloseMessageBox();
         }
 
         private void ChangeBackground()
