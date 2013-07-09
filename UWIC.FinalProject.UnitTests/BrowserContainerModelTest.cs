@@ -72,7 +72,7 @@ namespace UWIC.FinalProject.UnitTests
             Image value = null; // TODO: Initialize to an appropriate value
             BitmapImage expected = null; // TODO: Initialize to an appropriate value
             BitmapImage actual;
-            actual = target.getFavicon(value);
+            actual = target.GetFavicon(value);
             Assert.AreEqual(expected, actual);
             //Assert.Inconclusive("Verify the correctness of this test method.");
         }
