@@ -22,6 +22,7 @@
         startdictationmode,
         startgeneralspelling,
         startwebsitespelling,
+        startpasswordspelling,
         forth,
         go,
         refresh,
