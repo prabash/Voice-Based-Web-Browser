@@ -41,5 +41,10 @@ namespace UWIC.FinalProject.WebBrowser.View
         {
             Close();
         }
+
+        private void MinimizeButton_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
     }
 }
