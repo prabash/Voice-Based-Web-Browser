@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using System.IO.Log;
 using System.Text.RegularExpressions;
 using UWIC.FinalProject.Common;
 
@@ -19,21 +15,21 @@ namespace UWIC.FinalProject.WebBrowser.Model
         /// </summary>
         /// <param name="value">System.Drawing.Image image</param>
         /// <returns></returns>
-        public BitmapImage getFavicon(System.Drawing.Image value)
+        public BitmapImage GetFavicon(System.Drawing.Image value)
         {
             try
             {
                 if (value == null) { return null; }
 
-                var image = (System.Drawing.Image)value;
+                var image = value;
                 // Winforms Image we want to get the WPF Image from...
-                var bitmap = new System.Windows.Media.Imaging.BitmapImage();
+                var bitmap = new BitmapImage();
                 bitmap.BeginInit();
                 var memoryStream = new MemoryStream();
                 // Save to a memory stream...
                 image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Bmp);
                 // Rewind the stream...
-                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                memoryStream.Seek(0, SeekOrigin.Begin);
                 bitmap.StreamSource = memoryStream;
                 bitmap.EndInit();
                 return bitmap;
@@ -41,7 +37,7 @@ namespace UWIC.FinalProject.WebBrowser.Model
             catch (Exception ex)
             {
                 Log.ErrorLog(ex);
-                throw ex;
+                throw;
             }
             
         }
@@ -49,9 +45,9 @@ namespace UWIC.FinalProject.WebBrowser.Model
         /// <summary>
         /// This method is used to get the favicon from a particular website
         /// </summary>
-        /// <param name="u">string URL</param>
+        /// <param name="url">Url</param>
         /// <returns></returns>
-        public System.Drawing.Image getImageSource(Uri url)
+        public System.Drawing.Image GetImageSource(Uri url)
         {
             try
             {
@@ -59,10 +55,10 @@ namespace UWIC.FinalProject.WebBrowser.Model
 
                 try
                 {
-                    WebRequest request = WebRequest.Create(iconurl);
-                    WebResponse response = request.GetResponse();
-                    Stream s = response.GetResponseStream();
-                    return System.Drawing.Image.FromStream(s);
+                    var request = WebRequest.Create(iconurl);
+                    var response = request.GetResponse();
+                    var s = response.GetResponseStream();
+                    return s != null ? System.Drawing.Image.FromStream(s) : null;
                 }
                 catch (Exception)
                 {
@@ -73,7 +69,7 @@ namespace UWIC.FinalProject.WebBrowser.Model
             catch (Exception ex)
             {
                 Log.ErrorLog(ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -81,50 +77,60 @@ namespace UWIC.FinalProject.WebBrowser.Model
         /// This method is used to get the title of a particular webpage
         /// </summary>
         /// <param name="url"></param>
-        public string getWebPageTitle(string url)
+        public string GetWebPageTitle(string url)
         {
-            string Title = "";
+            var title = "";
             try
             {
-                HttpWebRequest request = (HttpWebRequest.Create(url) as HttpWebRequest);
-                HttpWebResponse response = (request.GetResponse() as HttpWebResponse);
-
-                using (Stream stream = response.GetResponseStream())
+                var request = (WebRequest.Create(url) as HttpWebRequest);
+                if (request != null)
                 {
-                    // compiled regex to check for <title></title> block
-                    Regex titleCheck = new Regex(@"<title>\s*(.+?)\s*</title>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                    int bytesToRead = 8092;
-                    byte[] buffer = new byte[bytesToRead];
-                    string contents = "";
-                    int length = 0;
-                    while ((length = stream.Read(buffer, 0, bytesToRead)) > 0)
-                    {
-                        // convert the byte-array to a string and add it to the rest of the
-                        // contents that have been downloaded so far
-                        contents += Encoding.UTF8.GetString(buffer, 0, length);
+                    var response = (request.GetResponse() as HttpWebResponse);
 
-                        Match m = titleCheck.Match(contents);
-                        if (m.Success)
+                    if (response != null)
+                        using (var stream = response.GetResponseStream())
                         {
-                            // we found a <title></title> match =]
-                            Title = m.Groups[1].Value.ToString();
-                            break;
+                            // compiled regex to check for <title></title> block
+                            var titleCheck = new Regex(@"<title>\s*(.+?)\s*</title>",
+                                                       RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                            const int bytesToRead = 8092;
+                            var buffer = new byte[bytesToRead];
+                            var contents = "";
+                            int length;
+                            while (stream != null && (length = stream.Read(buffer, 0, bytesToRead)) > 0)
+                            {
+                                // convert the byte-array to a string and add it to the rest of the
+                                // contents that have been downloaded so far
+                                contents += Encoding.UTF8.GetString(buffer, 0, length);
+
+                                var m = titleCheck.Match(contents);
+                                if (m.Success)
+                                {
+                                    // we found a <title></title> match =]
+                                    title = m.Groups[1].Value;
+                                    break;
+                                }
+                                if (contents.Contains("</head>"))
+                                {
+                                    title = "";
+                                    // reached end of head-block; no title found
+                                    break;
+                                }
+                            }
                         }
-                        else if (contents.Contains("</head>"))
-                        {
-                            Title = "";
-                            // reached end of head-block; no title found
-                            break;
-                        }
-                    }
                 }
-                return Title;
+            }
+            catch (WebException ex)
+            {
+                Log.ErrorLog(ex);
             }
             catch (Exception ex)
             {
                 Log.ErrorLog(ex);
-                throw ex;
+                throw;
             }
+
+            return title;
         }
     }
 }
