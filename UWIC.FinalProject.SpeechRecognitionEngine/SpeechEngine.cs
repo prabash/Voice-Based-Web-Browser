@@ -32,7 +32,7 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
 
         # region Emulator
 
-        public void InitializeEmulator()
+        public void InitializeEmulator(Mode commandMode)
         {
             var builder = new GrammarBuilder();
             builder.AppendDictation();
@@ -43,6 +43,8 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
             _recognizer.LoadGrammar(GetSpellingGrammar());
             _recognizer.LoadGrammar(GetWebSiteNamesGrammar());
             _recognizer.SpeechRecognized += recognizer_SpeechRecognized;
+
+            CommandMode = commandMode;
         }
 
         public void StartEmulatorRecognition(string word)
@@ -90,6 +92,7 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
                     case Mode.WebsiteSpellMode:
                     case Mode.GeneralSpellMode:
                     case Mode.DictationMode:
+                    case Mode.PasswordSpellMode:
                         ResultDictionary = new Dictionary<CommandType, object> { { CommandType.alter, val } };
                         break;
                 }

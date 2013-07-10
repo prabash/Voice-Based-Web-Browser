@@ -59,7 +59,50 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private static TabItemViewModel TabItemViewModel { get; set; }
 
-        public static Mode CommandMode { get; set; }
+        private Mode _commandMode;
+
+        public Mode CommandMode
+        {
+            get { return _commandMode; }
+            set
+            {
+                _commandMode = value;
+                switch (_commandMode)
+                {
+                    case Mode.CommandMode:
+                        {
+                            var bc = new BrushConverter();
+                            BottomBar.Background = (Brush)bc.ConvertFrom("#FF171717");
+                            LabelCurrentMode.Content = "Command Mode";
+                            break;
+                        }
+                    case Mode.DictationMode:
+                        {
+                            BottomBar.Background = Brushes.Crimson;
+                            LabelCurrentMode.Content = "Dictation Mode";
+                            break;
+                        }
+                    case Mode.GeneralSpellMode:
+                        {
+                            BottomBar.Background = Brushes.OrangeRed;
+                            LabelCurrentMode.Content = "General Spelling Mode";
+                            break;
+                        }
+                    case Mode.PasswordSpellMode:
+                        {
+                            BottomBar.Background = Brushes.SlateBlue;
+                            LabelCurrentMode.Content = "Username/Password Mode";
+                            break;
+                        }
+                    case Mode.WebsiteSpellMode:
+                        {
+                            BottomBar.Background = Brushes.ForestGreen;
+                            LabelCurrentMode.Content = "Website Spelling Mode";
+                            break;
+                        }
+                }
+            }
+        }
 
         public System.Speech.Recognition.SpeechRecognitionEngine SpeechRecognizerEngine { get; set; }
 
@@ -448,7 +491,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         private void ExecuteEmulator()
         {
             var speechEngine = new SpeechEngine();
-            speechEngine.InitializeEmulator();
+            speechEngine.InitializeEmulator(CommandMode);
             if (String.IsNullOrEmpty(CommandText)) return;
             speechEngine.StartEmulatorRecognition(CommandText);
             speechEngine.SpeechProcessed += SpeechEngine_SpeechProcessed;
@@ -639,6 +682,10 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                     ExecuteSpellingCommand(false, resultDictionary);
                     CommandMode = Mode.CommandMode;
                     break;
+                case Mode.PasswordSpellMode:
+                    ExecutePasswordSpelling(resultDictionary);
+                    CommandMode = Mode.CommandMode;
+                    break;
             }
         }
 
@@ -806,6 +853,11 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             CommandMode = Mode.WebsiteSpellMode;
                             break;
                         }
+                    case CommandType.startpasswordspelling:
+                        {
+                            CommandMode = Mode.PasswordSpellMode;
+                            break;
+                        }
                     case CommandType.startgeneralspelling:
                         {
                             CommandMode = Mode.GeneralSpellMode;
@@ -869,6 +921,80 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                     AppendWebsiteToTextFile(word);
                 else
                     InvokePostMessageService(word);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
+        }
+
+        private void ExecutePasswordSpelling(Dictionary<CommandType, object> dictationCommand)
+        {
+            var credential = "";
+            var caseState = CaseState.Default;
+            try
+            {
+                foreach (var segments in dictationCommand.Select(pair => pair.Value.ToString()).Select(command => command.Split(' ')))
+                {
+                    foreach (var segment in segments)
+                    {
+                        switch(caseState)
+                        {
+                            case CaseState.Default:
+                                {
+                                    if (String.Equals(segment, "capital", StringComparison.OrdinalIgnoreCase))
+                                        caseState = CaseState.UpperCase;
+                                    else if (String.Equals(segment, "simple", StringComparison.OrdinalIgnoreCase))
+                                        caseState = CaseState.LowerCase;
+                                    else if (String.Equals(segment, "one", StringComparison.OrdinalIgnoreCase))
+                                        credential += 1;
+                                    else if (String.Equals(segment, "two", StringComparison.OrdinalIgnoreCase))
+                                        credential += 2;
+                                    else if (String.Equals(segment, "three", StringComparison.OrdinalIgnoreCase))
+                                        credential += 3;
+                                    else if (String.Equals(segment, "four", StringComparison.OrdinalIgnoreCase))
+                                        credential += 4;
+                                    else if (String.Equals(segment, "five", StringComparison.OrdinalIgnoreCase))
+                                        credential += 5;
+                                    else if (String.Equals(segment, "six", StringComparison.OrdinalIgnoreCase))
+                                        credential += 6;
+                                    else if (String.Equals(segment, "seven", StringComparison.OrdinalIgnoreCase))
+                                        credential += 7;
+                                    else if (String.Equals(segment, "eight", StringComparison.OrdinalIgnoreCase))
+                                        credential += 8;
+                                    else if (String.Equals(segment, "nine", StringComparison.OrdinalIgnoreCase))
+                                        credential += 9;
+                                    else if (String.Equals(segment, "zero", StringComparison.OrdinalIgnoreCase))
+                                        credential += 0;
+                                    else if (String.Equals(segment, "underscore", StringComparison.OrdinalIgnoreCase))
+                                        credential += "_";
+                                    else if (String.Equals(segment, "hash", StringComparison.OrdinalIgnoreCase))
+                                        credential += "#";
+                                    else if (String.Equals(segment, "dot", StringComparison.OrdinalIgnoreCase))
+                                        credential += ".";
+                                    else if (String.Equals(segment, "at", StringComparison.OrdinalIgnoreCase))
+                                        credential += "@";
+                                    else
+                                        credential += segment.ToLower();
+                                    break;
+                                }
+                            case CaseState.UpperCase:
+                                {
+                                    credential += segment.ToUpper();
+                                    caseState = CaseState.Default;
+                                    break;
+                                }
+                            case CaseState.LowerCase:
+                                {
+                                    credential += segment.ToLower();
+                                    caseState = CaseState.Default;
+                                    break;
+                                }
+                        }
+                    }
+                }
+                InvokePostMessageService(credential);
             }
             catch (Exception ex)
             {

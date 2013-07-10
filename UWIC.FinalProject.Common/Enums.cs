@@ -71,6 +71,14 @@
         DictationMode,
         WebsiteSpellMode,
         GeneralSpellMode,
+        PasswordSpellMode
+    }
+
+    public enum CaseState
+    {
+        UpperCase,
+        LowerCase,
+        Default
     }
 
     public enum MessageBoxIcon
