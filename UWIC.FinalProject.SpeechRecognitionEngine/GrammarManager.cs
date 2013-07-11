@@ -40,7 +40,7 @@ namespace UWIC.FinalProject.SpeechRecognitionEngine
         {
             Settings.CultureInfo = "en-GB";
             var webSiteNames = new List<string>();
-            using (var fs = File.Open("..//..//data//fnc_brwsr_websites" + VbwFileManager.FileExtension(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var fs = File.Open(VbwFileManager.FilePath() + "fnc_brwsr_websites" + VbwFileManager.FileExtension(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var bs = new BufferedStream(fs))
             using (var sr = new StreamReader(bs))
             {

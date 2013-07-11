@@ -69,7 +69,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         {
             try
             {
-                var explicitFileName = filepath.Replace("..//..//data//", String.Empty);
+                var explicitFileName = filepath.Replace(VbwFileManager.FilePath(), String.Empty);
                 if (explicitFileName.Substring(0, 3) != "fnc") return;
                 var tempList = DataManager.GetFileData(filepath);
                 var prefix = explicitFileName.Substring(4, 5);

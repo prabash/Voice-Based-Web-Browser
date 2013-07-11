@@ -67,5 +67,10 @@ namespace UWIC.FinalProject.Common
         {
             return ConfigurationManager.AppSettings.Get("FileExtension");
         }
+
+        public static string FilePath()
+        {
+            return ConfigurationManager.AppSettings.Get("FilePath");
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
             {
                 foreach (var fileName in fileNames)
                 {
-                    var explicitFileName = fileName.Replace("..//..//data//", String.Empty)
+                    var explicitFileName = fileName.Replace(VbwFileManager.FilePath(), String.Empty)
                                                    .Replace(VbwFileManager.FileExtension(), String.Empty); // Get the proper file name, without extensions or the directory
                     if (!explicitFileName.StartsWith(prefix)) continue; // if the file doesn't belong to the command category meant by the given prefix, continue to the next item of the loop
                     var fileData = GetFileData(fileName); // else get the file data
@@ -111,7 +111,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <param name="commandType"></param>
         public static void AddToCommandCounter(CommandType commandType)
         {
-            string fileName = "..//..//data//count_commandExecutionCounter" + VbwFileManager.FileExtension();
+            string fileName = VbwFileManager.FilePath() + "count_commandExecutionCounter" + VbwFileManager.FileExtension();
             var data = GetFileData(fileName);
             var valueToBeRemoved = "";
             var valueToBeAdded = "";

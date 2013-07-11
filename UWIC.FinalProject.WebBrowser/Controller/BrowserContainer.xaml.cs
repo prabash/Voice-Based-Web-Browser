@@ -1005,7 +1005,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void AppendWebsiteToTextFile(string website)
         {
-            VbwFileManager.AppendToTextFile("..//..//data//fnc_brwsr_websites" + VbwFileManager.FileExtension(), new List<string> { website.ToLower() });
+            VbwFileManager.AppendToTextFile(VbwFileManager.FilePath() + "fnc_brwsr_websites" + VbwFileManager.FileExtension(), new List<string> { website.ToLower() });
         }
 
         private static void InvokePostMessageService(string message)

@@ -10,9 +10,9 @@ namespace UWIC.FinalProject.UnitTests
         [TestMethod]
         public void GetBlankPageImageTest()
         {
-            //var vm = new TabItemViewModel();
-            //var image = vm.getBlankPageImage();
-            //Assert.Equals(image.ToString(), "Test");
+            var vm = new TabItemViewModel();
+            var image = vm.getBlankPageImage();
+            Assert.AreEqual(image.UriSource.ToString(), "/Images/icon-page.png");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace UWIC.FinalProject.Common
         /// <typeparam name="T">Enum type</typeparam>
         /// <param name="value">integer value</param>
         /// <returns>Enum value of type T</returns>
-        public static T ConvertIntegerToEnum<T>(int value) where T : struct, IConvertible
+        public static T ConvertIntegerToEnum<T>(int value) where T : struct
         {
             try
             {
@@ -49,7 +49,7 @@ namespace UWIC.FinalProject.Common
         /// <typeparam name="T">Enum type</typeparam>
         /// <param name="value">string value</param>
         /// <returns>Enum value of type T</returns>
-        public static T ConvertStringToEnum<T>(string value) where T : struct, IConvertible
+        public static T ConvertStringToEnum<T>(string value) where T : struct
         {
             try
             {

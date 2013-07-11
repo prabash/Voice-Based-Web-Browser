@@ -70,7 +70,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             try
             {
                 var tempList = DataManager.GetFileData(filepath);
-                var explicitFileName = filepath.Replace("..//..//data//", String.Empty);
+                var explicitFileName = filepath.Replace(VbwFileManager.FilePath(), String.Empty);
                 var prefix = explicitFileName.Substring(0, 3);
                 CheckFunctionalCategory(prefix, tempList);
             }
