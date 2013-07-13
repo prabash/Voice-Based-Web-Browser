@@ -651,7 +651,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void GoToTabByIndex(int index)
         {
-            TabItemViewModel.SetFocusOnTabItem(index);
+            TabItemViewModel.SetFocusOnTabItem(index - 1);
         }
 
         private void RemoveCurrentTab()
