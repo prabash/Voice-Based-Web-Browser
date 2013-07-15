@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,10 +32,22 @@ namespace UWIC.FinalProject.WebBrowser.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            string url;
-            if (new UpdateManager().CheckForUpdates(
-                System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, out url))
-                System.Diagnostics.Process.Start(url);
+            try
+            {
+                string url;
+                // check for application updates
+                if (new UpdateManager().CheckForUpdates(
+                    System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, out url))
+                    System.Diagnostics.Process.Start(url);
+
+                // start service console
+                System.Diagnostics.Process.Start(ConfigurationManager.AppSettings.Get("ServiceConsolePath"));
+
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+            }
         }
 
         private void CloseButton_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
