@@ -84,8 +84,8 @@ namespace UWIC.FinalProject.UnitTests
         [TestMethod()]
         public void GetWebsiteNameForGoCommandTest()
         {
-            var commandSegments = new List<string> {"go", "to", "google"}; // TODO: Initialize to an appropriate value
-            string expected = "google"; // TODO: Initialize to an appropriate value
+            var commandSegments = new List<string> {"go", "to", "google"}; // The command provided by the user
+            var expected = "facebook"; // Expected value
             string actual;
             actual = CommandParametersManager.GetWebsiteNameForGoCommand(commandSegments);
             Assert.AreEqual(expected, actual);

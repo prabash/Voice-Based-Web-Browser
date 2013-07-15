@@ -68,7 +68,7 @@ namespace UWIC.FinalProject.UnitTests
         [TestMethod()]
         public void getFaviconTest()
         {
-            BrowserContainerModel target = new BrowserContainerModel(); // TODO: Initialize to an appropriate value
+            var target = new BrowserContainerModel(); // TODO: Initialize to an appropriate value
             Image value = null; // TODO: Initialize to an appropriate value
             BitmapImage expected = null; // TODO: Initialize to an appropriate value
             BitmapImage actual;

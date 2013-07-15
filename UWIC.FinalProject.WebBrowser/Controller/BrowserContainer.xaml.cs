@@ -699,8 +699,12 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                     case CommandType.go:
                         {
                             var identifiedWebSite = command.Value.ToString();
-                            if (!identifiedWebSite.Contains(".com"))
+                            if (!identifiedWebSite.Contains(".com") && !identifiedWebSite.Contains(".lk") &&
+                                !identifiedWebSite.Contains(".org") && !identifiedWebSite.Contains(".info") &&
+                                !identifiedWebSite.Contains(".net"))
+                            {
                                 identifiedWebSite += ".com";
+                            }
                             var websiteName = "http://www." + identifiedWebSite;
                             NavigateToUrl(websiteName);
                             break;
