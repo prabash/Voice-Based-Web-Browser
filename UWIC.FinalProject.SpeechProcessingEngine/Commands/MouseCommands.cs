@@ -19,8 +19,16 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Commands
 
         public List<CommandType> GetCommand()
         {
-            return new CommandManager(_command, "mse", _mouseCommandCategories, _mouseCommandProbabilityScoreIndices)
-                .GetCommand();
+            try
+            {
+                return new CommandManager(_command, "mse", _mouseCommandCategories, _mouseCommandProbabilityScoreIndices)
+                        .GetCommand();
+            }
+            catch (System.Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UWIC.FinalProject.Common;
 using UWIC.FinalProject.SpeechProcessingEngine.Managers;
 
@@ -19,8 +20,16 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Commands
 
         public List<CommandType> GetCommand()
         {
-            return new CommandManager(_command, "fnc_brwsr", _browserCommandCategories, _browserCommandProbabilityScoreIndices)
-                .GetCommand();
+            try
+            {
+                return new CommandManager(_command, "fnc_brwsr", _browserCommandCategories, _browserCommandProbabilityScoreIndices)
+                    .GetCommand();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

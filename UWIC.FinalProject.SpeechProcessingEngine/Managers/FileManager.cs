@@ -13,7 +13,15 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// </summary>
         public static string[] GetTestFiles()
         {
-            return Directory.GetFiles(VbwFileManager.FilePath(), "*" + VbwFileManager.FileExtension());
+            try
+            {
+                return Directory.GetFiles(VbwFileManager.FilePath(), "*" + VbwFileManager.FileExtension());
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -55,7 +63,15 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <returns></returns>
         public static List<string> GetExplicitFileNamesByPrefix(string[] fileNames, string startsWithValue)
         {
-            return fileNames.Select(item => item.Replace(VbwFileManager.FilePath(), String.Empty).Replace(VbwFileManager.FileExtension(), String.Empty)).Where(explicitFileName => explicitFileName.StartsWith(startsWithValue)).ToList();
+            try
+            {
+                return fileNames.Select(item => item.Replace(VbwFileManager.FilePath(), String.Empty).Replace(VbwFileManager.FileExtension(), String.Empty)).Where(explicitFileName => explicitFileName.StartsWith(startsWithValue)).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -65,7 +81,15 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <returns>File content as a list of string</returns>
         public static List<string> GetContentOfAFile(string file)
         {
-            return DataManager.GetFileData(VbwFileManager.FilePath() + file + VbwFileManager.FileExtension());
+            try
+            {
+                return DataManager.GetFileData(VbwFileManager.FilePath() + file + VbwFileManager.FileExtension());
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

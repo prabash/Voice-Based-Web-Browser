@@ -19,8 +19,16 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Commands
 
         public List<CommandType> GetCommand()
         {
-            return new CommandManager(_command, "fnc_wpage", _functionalWebpageCommandCategories, _functionalWebpageCommandProbabilityScoreIndices)
-                .GetCommand();
+            try
+            {
+                return new CommandManager(_command, "fnc_wpage", _functionalWebpageCommandCategories, _functionalWebpageCommandProbabilityScoreIndices)
+                        .GetCommand();
+            }
+            catch (System.Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

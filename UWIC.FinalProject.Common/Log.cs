@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -13,17 +10,18 @@ namespace UWIC.FinalProject.Common
     {
         public static void ErrorLog(Exception ex)
         {
-            string errorMessage = string.Empty;
-            errorMessage = ex.Source + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace;
+            var errorMessage = ex.Source + Environment.NewLine + ex.Message + Environment.NewLine + ex.StackTrace;
             CreateFile("ErrorLog", errorMessage);
         }
 
+/*
         private static char HexChar(int value)
         {
             value &= 0xF;
             if (value >= 0 && value <= 9) return (char)('0' + value);
-            else return (char)('A' + (value - 10));
+            return (char)('A' + (value - 10));
         }
+*/
 
         public static void MessageLog(string logMessage)
         {
@@ -47,21 +45,20 @@ namespace UWIC.FinalProject.Common
 
         public static void MessageLog(object obj)
         {
-            string logMessage = SerializeToXML(obj);
+            string logMessage = SerializeToXml(obj);
             CreateFile("MessageLog", logMessage);
         }
 
         private static void CreateFile(string fileName, string logMessage)
         {
-            string applicationPath = string.Empty;
-            string filePath = string.Empty;
-            string directoryPath = "\\Logs\\" + DateTime.Today.Date.ToString("dd-MM-yyyy") + "\\";
+            var directoryPath = "\\Logs\\" + DateTime.Today.Date.ToString("dd-MM-yyyy") + "\\";
 
             try
             {
                 //Get Application path
-                applicationPath = AppDomain.CurrentDomain.BaseDirectory;
-                filePath = applicationPath + directoryPath + fileName + " - " + DateTime.Today.Date.ToString("MMM-dd-yyyy") + ".txt";
+                var applicationPath = AppDomain.CurrentDomain.BaseDirectory;
+                var filePath = applicationPath + directoryPath + fileName + " - " +
+                               DateTime.Today.Date.ToString("MMM-dd-yyyy") + ".txt";
 
                 if (!File.Exists(filePath))
                 {
@@ -71,7 +68,7 @@ namespace UWIC.FinalProject.Common
                         Directory.CreateDirectory(applicationPath + directoryPath);
                     }
                     //Create Log File
-                    using (StreamWriter swLog = File.CreateText(filePath))
+                    using (var swLog = File.CreateText(filePath))
                     {
                         swLog.WriteLine("Created on - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
                         swLog.WriteLine("==================================");
@@ -80,43 +77,39 @@ namespace UWIC.FinalProject.Common
                 }
 
                 //Following text is added to the file untill the data is changed
-                using (StreamWriter sw = File.AppendText(filePath))
+                using (var sw = File.AppendText(filePath))
                 {
                     sw.WriteLine(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.fff ") + logMessage);
                     sw.WriteLine();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
-        private static string SerializeToXML(Object obj)
+        private static string SerializeToXml(Object obj)
         {
 
-            MemoryStream MemStream = null;
+            MemoryStream memStream = null;
 
             try
             {
-                XmlDocument XmlDoc = new XmlDocument();
-                XmlSerializer serializer = new XmlSerializer(obj.GetType());
-                MemStream = new MemoryStream();
+                var xmlDoc = new XmlDocument();
+                var serializer = new XmlSerializer(obj.GetType());
+                memStream = new MemoryStream();
 
-                serializer.Serialize(MemStream, obj);
-                MemStream.Position = 0;
-                XmlDoc.Load(MemStream);
+                serializer.Serialize(memStream, obj);
+                memStream.Position = 0;
+                xmlDoc.Load(memStream);
 
-                return FormatXml(XmlDoc);
+                return FormatXml(xmlDoc);
 
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
             finally
             {
-                MemStream.Close();
+                if (memStream != null) memStream.Close();
             }
         }
 

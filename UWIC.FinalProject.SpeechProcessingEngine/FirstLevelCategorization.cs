@@ -27,8 +27,10 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// </summary>
         private void DefinePrimaryCategories()
         {
-            // add first level category details to the category collection
-            _categoryCollection = new List<CategoryCollection>
+            try
+            {
+                // add first level category details to the category collection
+                _categoryCollection = new List<CategoryCollection>
                 {
                     new CategoryCollection
                         {
@@ -49,6 +51,12 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                             Name = "MouseCommandList"
                         }
                 };
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -108,33 +116,41 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <param name="testData">Test data set acquired from the local folder</param>
         private void CheckFunctionalCategory(string prefix, IEnumerable<string> testData)
         {
-            // switch by the prefix (category) of a command
-            switch (prefix)
+            try
             {
-                // if prefix is "fnc", add the command details to the functional command list
-                case "fnc":
-                    var funcCommand =
-                        _categoryCollection.FirstOrDefault(
-                            rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand));
-                    if (funcCommand != null)
-                        DataManager.AssignDataToTestSet(funcCommand.List, testData);
-                    break;
-                // if prefix is "key", add the command details to the keyboard command list
-                case "key":
-                    var keyCommand =
-                        _categoryCollection.FirstOrDefault(
-                            rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.KeyboardCommand));
-                    if (keyCommand != null)
-                        DataManager.AssignDataToTestSet(keyCommand.List, testData);
-                    break;
-                // if prefix is "mse", add the command details to the mouse command list
-                case "mse":
-                    var mouseCommand =
-                        _categoryCollection.FirstOrDefault(
-                            rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand));
-                    if (mouseCommand != null)
-                        DataManager.AssignDataToTestSet(mouseCommand.List, testData);
-                    break;
+                // switch by the prefix (category) of a command
+                switch (prefix)
+                {
+                    // if prefix is "fnc", add the command details to the functional command list
+                    case "fnc":
+                        var funcCommand =
+                            _categoryCollection.FirstOrDefault(
+                                rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand));
+                        if (funcCommand != null)
+                            DataManager.AssignDataToTestSet(funcCommand.List, testData);
+                        break;
+                    // if prefix is "key", add the command details to the keyboard command list
+                    case "key":
+                        var keyCommand =
+                            _categoryCollection.FirstOrDefault(
+                                rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.KeyboardCommand));
+                        if (keyCommand != null)
+                            DataManager.AssignDataToTestSet(keyCommand.List, testData);
+                        break;
+                    // if prefix is "mse", add the command details to the mouse command list
+                    case "mse":
+                        var mouseCommand =
+                            _categoryCollection.FirstOrDefault(
+                                rec => rec.Category == Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand));
+                        if (mouseCommand != null)
+                            DataManager.AssignDataToTestSet(mouseCommand.List, testData);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
             }
         }
 
@@ -144,38 +160,46 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <param name="command"></param>
         public Dictionary<CommandType, object> CalculateProbabilityOfCommand(string command)
         {
-            var probableCommands = new List<CommandType>();
-            new NaiveCommandCategorization(_categoryCollection).CalculateProbabilityOfSegments(
-                command.Split(' ').ToList(), true, out _probabilityScoreIndices);
-            if (_probabilityScoreIndices == null) return null;
-            var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_probabilityScoreIndices);
-            if (highestProbabilityCategories.Count == 1)
+            try
             {
-                var firstLevelHighestProbabilityCategory = highestProbabilityCategories.First();
-                if (firstLevelHighestProbabilityCategory.ReferenceId ==
-                    Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand))
-                    probableCommands = new SecondLevelCategorization().CalculateSecondLevelProbabilityOfCommand(command);
-                else if (firstLevelHighestProbabilityCategory.ReferenceId ==
-                         Conversions.ConvertEnumToInt(FirstLevelCategory.KeyboardCommand))
-                    probableCommands = new KeyboardCommands(command).GetCommand();
-                else if (firstLevelHighestProbabilityCategory.ReferenceId ==
-                         Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand))
-                    probableCommands = new MouseCommands(command).GetCommand();
+                var probableCommands = new List<CommandType>();
+                new NaiveCommandCategorization(_categoryCollection).CalculateProbabilityOfSegments(
+                    command.Split(' ').ToList(), true, out _probabilityScoreIndices);
+                if (_probabilityScoreIndices == null) return null;
+                var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_probabilityScoreIndices);
+                if (highestProbabilityCategories.Count == 1)
+                {
+                    var firstLevelHighestProbabilityCategory = highestProbabilityCategories.First();
+                    if (firstLevelHighestProbabilityCategory.ReferenceId ==
+                        Conversions.ConvertEnumToInt(FirstLevelCategory.FunctionalCommand))
+                        probableCommands = new SecondLevelCategorization().CalculateSecondLevelProbabilityOfCommand(command);
+                    else if (firstLevelHighestProbabilityCategory.ReferenceId ==
+                             Conversions.ConvertEnumToInt(FirstLevelCategory.KeyboardCommand))
+                        probableCommands = new KeyboardCommands(command).GetCommand();
+                    else if (firstLevelHighestProbabilityCategory.ReferenceId ==
+                             Conversions.ConvertEnumToInt(FirstLevelCategory.MouseCommand))
+                        probableCommands = new MouseCommands(command).GetCommand();
+                }
+                else
+                {
+                    throw new Exception("Command Identification Failed From the First Level. There are " +
+                                        highestProbabilityCategories.Count + " probable categories which are " + DataManager.GetHighestProbableCommandTypesForException<FirstLevelCategory>(highestProbabilityCategories));
+                }
+                var returnDict = GetCommandDetails(probableCommands, command);
+                if (returnDict.Count == 1)
+                {
+                    var identifiedCommandType = returnDict.First().Key;
+                    if (LearningManager.UnIdentifiedWords.Count > 0)
+                        LearningManager.AddUnidentifiedWordsToCommandText(identifiedCommandType);
+                    DataManager.AddToCommandCounter(identifiedCommandType);
+                }
+                return returnDict;
             }
-            else
+            catch (Exception ex)
             {
-                throw new Exception("Command Identification Failed From the First Level. There are " +
-                                    highestProbabilityCategories.Count + " probable categories which are " + DataManager.GetHighestProbableCommandTypesForException<FirstLevelCategory>(highestProbabilityCategories));
+                Log.ErrorLog(ex);
+                throw;
             }
-            var returnDict = GetCommandDetails(probableCommands, command);
-            if (returnDict.Count == 1)
-            {
-                var identifiedCommandType = returnDict.First().Key;
-                if(LearningManager.UnIdentifiedWords.Count > 0)
-                    LearningManager.AddUnidentifiedWordsToCommandText(identifiedCommandType);
-                DataManager.AddToCommandCounter(identifiedCommandType);
-            }
-            return returnDict;
         }
 
         /// <summary>
@@ -186,36 +210,44 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <returns></returns>
         private static Dictionary<CommandType, object> GetCommandDetails(IReadOnlyCollection<CommandType> commandTypes, string command)
         {
-            var resultDictionary = new Dictionary<CommandType, object>();
-            if (commandTypes == null) return null;
-            if (commandTypes.Count == 1)
+            try
             {
-                var commandType = commandTypes.FirstOrDefault();
-                switch (commandType)
+                var resultDictionary = new Dictionary<CommandType, object>();
+                if (commandTypes == null) return null;
+                if (commandTypes.Count == 1)
                 {
-                    case CommandType.go:
-                        {
-                            resultDictionary.Add(commandType, CommandParametersManager.GetWebsiteNameForGoCommand(command.Split(' ').ToList()));
-                            break;
-                        }
-                    case CommandType.go_to_tab:
-                        {
-                            resultDictionary.Add(commandType, CommandParametersManager.GetTabIndexForGoToTabCommand(command));
-                            break;
-                        }
-                    case CommandType.move:
-                        {
-                            resultDictionary.Add(commandType, CommandParametersManager.GetxyValuesToMouseMoveCommand(command));
-                            break;
-                        }
-                    default:
-                        {
-                            resultDictionary.Add(commandType, "");
-                            break;
-                        }
+                    var commandType = commandTypes.FirstOrDefault();
+                    switch (commandType)
+                    {
+                        case CommandType.go:
+                            {
+                                resultDictionary.Add(commandType, CommandParametersManager.GetWebsiteNameForGoCommand(command.Split(' ').ToList()));
+                                break;
+                            }
+                        case CommandType.go_to_tab:
+                            {
+                                resultDictionary.Add(commandType, CommandParametersManager.GetTabIndexForGoToTabCommand(command));
+                                break;
+                            }
+                        case CommandType.move:
+                            {
+                                resultDictionary.Add(commandType, CommandParametersManager.GetxyValuesToMouseMoveCommand(command));
+                                break;
+                            }
+                        default:
+                            {
+                                resultDictionary.Add(commandType, "");
+                                break;
+                            }
+                    }
                 }
+                return resultDictionary;
             }
-            return resultDictionary;
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

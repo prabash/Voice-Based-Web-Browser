@@ -26,7 +26,9 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// </summary>
         private void DefineSecondaryCategories()
         {
-            _secondLevelCategoryCollection = new List<CategoryCollection>
+            try
+            {
+                _secondLevelCategoryCollection = new List<CategoryCollection>
                 {
                     new CategoryCollection
                         {
@@ -47,6 +49,12 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                             Name = "WebPageCommand"
                         }
                 };
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -54,10 +62,18 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// </summary>
         private void AcquireTestFiles()
         {
-            var testFiles = FileManager.GetTestFiles();
-            foreach (var testFile in testFiles)
+            try
             {
-                GetTestSet(testFile);
+                var testFiles = FileManager.GetTestFiles();
+                foreach (var testFile in testFiles)
+                {
+                    GetTestSet(testFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
             }
         }
 
@@ -90,23 +106,31 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <param name="testData">Test data set acquired from the local folder</param>
         private void CheckFunctionalCategory(string prefix, IEnumerable<string> testData)
         {
-            switch (prefix)
+            try
             {
-                case "brwsr":
-                    var browserCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.BrowserCommand));
-                    if (browserCommand != null)
-                        DataManager.AssignDataToTestSet(browserCommand.List, testData);
-                    break;
-                case "intfc":
-                    var interfaceCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.InterfaceCommand));
-                    if (interfaceCommand != null)
-                        DataManager.AssignDataToTestSet(interfaceCommand.List, testData);
-                    break;
-                case "wpage":
-                    var webPageCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.WebPageCommand));
-                    if (webPageCommand != null)
-                        DataManager.AssignDataToTestSet(webPageCommand.List, testData);
-                    break;
+                switch (prefix)
+                {
+                    case "brwsr":
+                        var browserCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.BrowserCommand));
+                        if (browserCommand != null)
+                            DataManager.AssignDataToTestSet(browserCommand.List, testData);
+                        break;
+                    case "intfc":
+                        var interfaceCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.InterfaceCommand));
+                        if (interfaceCommand != null)
+                            DataManager.AssignDataToTestSet(interfaceCommand.List, testData);
+                        break;
+                    case "wpage":
+                        var webPageCommand = _secondLevelCategoryCollection.FirstOrDefault(rec => rec.Category == Conversions.ConvertEnumToInt(SecondLevelCategory.WebPageCommand));
+                        if (webPageCommand != null)
+                            DataManager.AssignDataToTestSet(webPageCommand.List, testData);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
             }
         }
         
@@ -116,21 +140,29 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <param name="command"></param>
         public List<CommandType> CalculateSecondLevelProbabilityOfCommand(string command)
         {
-            new NaiveCommandCategorization(_secondLevelCategoryCollection).CalculateProbabilityOfSegments(
-                command.Split(' ').ToList(), true, out _secondLevelProbabilityScoreIndices);
-            if (_secondLevelProbabilityScoreIndices == null) return null;
-            var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_secondLevelProbabilityScoreIndices);
-            if (highestProbabilityCategories == null) return null;
-            if (highestProbabilityCategories.Count != 1)
+            try
             {
-                throw new Exception("Command Identification Failed From the Second Level. There are " +
-                                    highestProbabilityCategories.Count + " probable categories which are " + DataManager.GetHighestProbableCommandTypesForException<SecondLevelCategory>(highestProbabilityCategories));
+                new NaiveCommandCategorization(_secondLevelCategoryCollection).CalculateProbabilityOfSegments(
+                        command.Split(' ').ToList(), true, out _secondLevelProbabilityScoreIndices);
+                if (_secondLevelProbabilityScoreIndices == null) return null;
+                var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_secondLevelProbabilityScoreIndices);
+                if (highestProbabilityCategories == null) return null;
+                if (highestProbabilityCategories.Count != 1)
+                {
+                    throw new Exception("Command Identification Failed From the Second Level. There are " +
+                                        highestProbabilityCategories.Count + " probable categories which are " + DataManager.GetHighestProbableCommandTypesForException<SecondLevelCategory>(highestProbabilityCategories));
+                }
+                var secondLevelHighestProbabilityCategory = highestProbabilityCategories.First();
+                var secondLevelCategory =
+                    Conversions.ConvertIntegerToEnum<SecondLevelCategory>(
+                        secondLevelHighestProbabilityCategory.ReferenceId);
+                return GetCommand(command, secondLevelCategory);
             }
-            var secondLevelHighestProbabilityCategory = highestProbabilityCategories.First();
-            var secondLevelCategory =
-                Conversions.ConvertIntegerToEnum<SecondLevelCategory>(
-                    secondLevelHighestProbabilityCategory.ReferenceId);
-            return GetCommand(command, secondLevelCategory);
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -141,22 +173,30 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <returns>probable command list</returns>
         private static List<CommandType> GetCommand(string command, SecondLevelCategory category)
         {
-            switch (category)
+            try
             {
-                case SecondLevelCategory.BrowserCommand:
-                    {
-                        return new FunctionalBrowserCommands(command).GetCommand();
-                    }
-                case SecondLevelCategory.InterfaceCommand:
-                    {
-                        return new FunctionalInterfaceCommands(command).GetCommand();
-                    }
-                case SecondLevelCategory.WebPageCommand:
-                    {
-                        return new FunctionalWebpageCommands(command).GetCommand();
-                    }
+                switch (category)
+                {
+                    case SecondLevelCategory.BrowserCommand:
+                        {
+                            return new FunctionalBrowserCommands(command).GetCommand();
+                        }
+                    case SecondLevelCategory.InterfaceCommand:
+                        {
+                            return new FunctionalInterfaceCommands(command).GetCommand();
+                        }
+                    case SecondLevelCategory.WebPageCommand:
+                        {
+                            return new FunctionalWebpageCommands(command).GetCommand();
+                        }
+                }
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

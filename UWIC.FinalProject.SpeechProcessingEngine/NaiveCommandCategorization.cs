@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UWIC.FinalProject.Common;
 using UWIC.FinalProject.SpeechProcessingEngine.Managers;
 
 namespace UWIC.FinalProject.SpeechProcessingEngine
@@ -61,7 +62,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             }
             catch (Exception ex)
             {
-                Common.Log.ErrorLog(ex);
+                Log.ErrorLog(ex);
                 throw;
             }
             finally
@@ -72,8 +73,17 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
 
         public List<ProbabilityScoreIndex> GetHighestProbabilityScoreIndeces(List<ProbabilityScoreIndex> probabilityScoreIndices)
         {
-            var maximumValue = probabilityScoreIndices.Select(row => row.ProbabilityScore).Max();
-            return probabilityScoreIndices.Where(row => Math.Abs(row.ProbabilityScore - maximumValue) < Double.Epsilon).ToList();
+            try
+            {
+                var maximumValue = probabilityScoreIndices.Select(row => row.ProbabilityScore).Max();
+                return probabilityScoreIndices.Where(row => Math.Abs(row.ProbabilityScore - maximumValue) < Double.Epsilon).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
+            
         }
     }
 }

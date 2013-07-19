@@ -9,9 +9,17 @@ namespace UWIC.FinalProject.Common
 
         public bool CheckForUpdates(Version currentVersion, out string url)
         {
-            var result = _updateServiceClient.CheckForUpdates(currentVersion);
-            url = Convert.ToBoolean(result["Available"]) ? result["url"].ToString() : "";
-            return (Convert.ToBoolean(result["Available"]));
+            try
+            {
+                var result = _updateServiceClient.CheckForUpdates(currentVersion);
+                url = Convert.ToBoolean(result["Available"]) ? result["url"].ToString() : "";
+                return (Convert.ToBoolean(result["Available"]));
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

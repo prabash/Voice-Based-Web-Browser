@@ -43,9 +43,16 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
                             throw new Exception("Command Identification failed from the final level!");
                         }
                     }
-                    probableCommandTypes.AddRange(highestProbabilityCategories.Select(highestProbabilityCategory => Conversions.ConvertIntegerToEnum<CommandType>(highestProbabilityCategory.ReferenceId)));
-                    DataManager.AcquireUnknownWordsForACommand(Command.Split(' ').ToList(),
-                                                               Prefix + "_" + probableCommandTypes.First().ToString());
+                    probableCommandTypes.AddRange(
+                        highestProbabilityCategories.Select(
+                            highestProbabilityCategory =>
+                            Conversions.ConvertIntegerToEnum<CommandType>(highestProbabilityCategory.ReferenceId)));
+                    var fileNameWithPrefix = Prefix + "_" + probableCommandTypes.First().ToString();
+
+                    // Acquiring unknown words for the fnc_browsr_go command is not facilitated due to that command
+                    // being a special scenario where the website names are located in a different test file
+                    if (fileNameWithPrefix != "fnc_brwsr_go")
+                        DataManager.AcquireUnknownWordsForACommand(Command.Split(' ').ToList(), fileNameWithPrefix);
                 }
                 return probableCommandTypes;
             }
@@ -58,27 +65,36 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
 
         private static List<ProbabilityScoreIndex> IdentifyLemmaConformation(IEnumerable<string> command, IEnumerable<CommandType> highestProbableCommands)
         {
-            var identifiedCategoryCollection = new List<CategoryCollection>();
-            foreach (var highestProbableCommand in highestProbableCommands)
+
+            try
             {
-                var categoryCollection = new CategoryCollection
-                    {
-                        Name = highestProbableCommand.ToString(),
-                        Category = Conversions.ConvertEnumToInt(
-                            Conversions.ConvertStringToEnum<CommandType>(highestProbableCommand.ToString()))
-                    };
-                var splittedCommand = highestProbableCommand.ToString().Split('_');
-                var newSplittedCommandList = splittedCommand.Where(cmd => !String.IsNullOrEmpty(cmd)).ToList();
-                categoryCollection.List = newSplittedCommandList;
-                identifiedCategoryCollection.Add(categoryCollection);
-            }
+                var identifiedCategoryCollection = new List<CategoryCollection>();
+                foreach (var highestProbableCommand in highestProbableCommands)
+                {
+                    var categoryCollection = new CategoryCollection
+                        {
+                            Name = highestProbableCommand.ToString(),
+                            Category = Conversions.ConvertEnumToInt(
+                                Conversions.ConvertStringToEnum<CommandType>(highestProbableCommand.ToString()))
+                        };
+                    var splittedCommand = highestProbableCommand.ToString().Split('_');
+                    var newSplittedCommandList = splittedCommand.Where(cmd => !String.IsNullOrEmpty(cmd)).ToList();
+                    categoryCollection.List = newSplittedCommandList;
+                    identifiedCategoryCollection.Add(categoryCollection);
+                }
 
 
-            List<ProbabilityScoreIndex> probabilityScoreIndices;
-            new NaiveCommandCategorization(identifiedCategoryCollection).CalculateProbabilityOfSegments(command, false,
-                                                                                                        out
+                List<ProbabilityScoreIndex> probabilityScoreIndices;
+                new NaiveCommandCategorization(identifiedCategoryCollection).CalculateProbabilityOfSegments(command, false,
+                                                                                                            out
                                                                                                             probabilityScoreIndices);
-            return new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(probabilityScoreIndices);
+                return new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(probabilityScoreIndices);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

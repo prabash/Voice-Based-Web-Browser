@@ -19,8 +19,16 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Commands
 
         public List<CommandType> GetCommand()
         {
-            return new CommandManager(_command, "key", _keyboardCommandCategories, _keyCommandProbabilityScoreIndices)
-                .GetCommand();
+            try
+            {
+                return new CommandManager(_command, "key", _keyboardCommandCategories, _keyCommandProbabilityScoreIndices)
+                        .GetCommand();
+            }
+            catch (System.Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

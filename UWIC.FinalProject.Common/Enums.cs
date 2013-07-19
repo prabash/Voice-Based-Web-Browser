@@ -28,6 +28,7 @@
         refresh,
         stop,
         no,
+        ok,
         chng_back_colour,
         chng_fore_colour,
         close_tab,

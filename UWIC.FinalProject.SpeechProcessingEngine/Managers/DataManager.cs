@@ -111,26 +111,34 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <param name="commandType"></param>
         public static void AddToCommandCounter(CommandType commandType)
         {
-            string fileName = VbwFileManager.FilePath() + "count_commandExecutionCounter" + VbwFileManager.FileExtension();
-            var data = GetFileData(fileName);
-            var valueToBeRemoved = "";
-            var valueToBeAdded = "";
-            foreach (var value in from value in data let command = value.Split('|').First() where command == commandType.ToString() select value)
+            try
             {
-                valueToBeRemoved = value;
-                var count = Convert.ToInt32(value.Split('|').Last());
-                valueToBeAdded = commandType + "|" + ++count;
-            }
-
-            data.Remove(valueToBeRemoved);
-            data.Add(valueToBeAdded);
-
-            using (var writer = new StreamWriter(fileName))
-            {
-                foreach (var content in data)
+                var fileName = VbwFileManager.FilePath() + "count_commandExecutionCounter" + VbwFileManager.FileExtension();
+                var data = GetFileData(fileName);
+                var valueToBeRemoved = "";
+                var valueToBeAdded = "";
+                foreach (var value in from value in data let command = value.Split('|').First() where command == commandType.ToString() select value)
                 {
-                    writer.WriteLine(content);
+                    valueToBeRemoved = value;
+                    var count = Convert.ToInt32(value.Split('|').Last());
+                    valueToBeAdded = commandType + "|" + ++count;
                 }
+
+                data.Remove(valueToBeRemoved);
+                data.Add(valueToBeAdded);
+
+                using (var writer = new StreamWriter(fileName))
+                {
+                    foreach (var content in data)
+                    {
+                        writer.WriteLine(content);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
             }
         }
 
@@ -141,22 +149,30 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <returns></returns>
         public static string GetHighestProbableCommandTypesForException<T>(IEnumerable<ProbabilityScoreIndex> highestProbabilityCategories) where T : struct, IConvertible
         {
-            var highProbableCategories = "";
-            var counter = 0;
-            var probabilityScoreIndices = highestProbabilityCategories as ProbabilityScoreIndex[] ?? highestProbabilityCategories.ToArray();
-            
-            foreach (var highestProbabilityCategory in probabilityScoreIndices)
+            try
             {
-                counter++;
-                if (counter < probabilityScoreIndices.Count())
-                    highProbableCategories += (T) Enum.ToObject(typeof (T), highestProbabilityCategory.ReferenceId) +
-                                              " - Probability Score : " + highestProbabilityCategory.ProbabilityScore +
-                                              ", ";
-                else
-                    highProbableCategories += (T) Enum.ToObject(typeof (T), highestProbabilityCategory.ReferenceId) +
-                                              " - Probability Score : " + highestProbabilityCategory.ProbabilityScore;
+                var highProbableCategories = "";
+                var counter = 0;
+                var probabilityScoreIndices = highestProbabilityCategories as ProbabilityScoreIndex[] ?? highestProbabilityCategories.ToArray();
+
+                foreach (var highestProbabilityCategory in probabilityScoreIndices)
+                {
+                    counter++;
+                    if (counter < probabilityScoreIndices.Count())
+                        highProbableCategories += (T)Enum.ToObject(typeof(T), highestProbabilityCategory.ReferenceId) +
+                                                  " - Probability Score : " + highestProbabilityCategory.ProbabilityScore +
+                                                  ", ";
+                    else
+                        highProbableCategories += (T)Enum.ToObject(typeof(T), highestProbabilityCategory.ReferenceId) +
+                                                  " - Probability Score : " + highestProbabilityCategory.ProbabilityScore;
+                }
+                return highProbableCategories;
             }
-            return highProbableCategories;
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -167,8 +183,16 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <returns></returns>
         public static List<T> GetHighestProbableCommands<T>(IEnumerable<ProbabilityScoreIndex> highestProbabilityCategories) where T : struct, IConvertible
         {
-            var probabilityScoreIndices = highestProbabilityCategories as ProbabilityScoreIndex[] ?? highestProbabilityCategories.ToArray();
-            return probabilityScoreIndices.Select(highestProbabilityCategory => (T) Enum.ToObject(typeof (T), highestProbabilityCategory.ReferenceId)).ToList();
+            try
+            {
+                var probabilityScoreIndices = highestProbabilityCategories as ProbabilityScoreIndex[] ?? highestProbabilityCategories.ToArray();
+                return probabilityScoreIndices.Select(highestProbabilityCategory => (T)Enum.ToObject(typeof(T), highestProbabilityCategory.ReferenceId)).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -178,7 +202,15 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         /// <param name="data">List of strings</param>
         public static void AppendToFile(string fileName, List<string> data)
         {
-            VbwFileManager.AppendToTextFile(fileName, data);
+            try
+            {
+                VbwFileManager.AppendToTextFile(fileName, data);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         /// <summary>

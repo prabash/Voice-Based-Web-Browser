@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -106,8 +107,6 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         public System.Speech.Recognition.SpeechRecognitionEngine SpeechRecognizerEngine { get; set; }
 
-        public MessageBoxWindow MessageWindow { get; set; }
-
         # endregion
 
         # region Main Page Events & Methods
@@ -154,9 +153,18 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// </summary>
         public void AcquireStoryboardAnimation()
         {
-            var storyBoard = (Storyboard)FindResource("DownAnimation");
-            DownAnimation = storyBoard;
-            DownAnimation.Completed += DownAnimation_Completed;
+            try
+            {
+                var storyBoard = (Storyboard)FindResource("DownAnimation");
+                DownAnimation = storyBoard;
+                DownAnimation.Completed += DownAnimation_Completed;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         /// <summary>
@@ -194,11 +202,20 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             public Int32 Y;
         };
 
-        public static Point GetMousePosition()
+        public Point GetMousePosition()
         {
-            Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
-            return new Point(w32Mouse.X, w32Mouse.Y);
+            try
+            {
+                var w32Mouse = new Win32Point();
+                GetCursorPos(ref w32Mouse);
+                return new Point(w32Mouse.X, w32Mouse.Y);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         /// <summary>
@@ -208,8 +225,17 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// <param name="e"></param>
         void webBrowserMain_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            Point point = GetMousePosition();
-            xyPosition.Content = "X Position = " + point.X.ToString() + "; Y Position = " + point.Y.ToString() + ";";
+            try
+            {
+                var point = GetMousePosition();
+                xyPosition.Content = "X Position = " + point.X.ToString(CultureInfo.InvariantCulture) + "; Y Position = " + point.Y.ToString(CultureInfo.InvariantCulture) + ";";
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         [DllImport("User32.dll")]
@@ -217,8 +243,17 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void SetPosition(int a, int b)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(3));
-            SetCursorPos(a, b);
+            try
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(3));
+                SetCursorPos(a, b);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         [DllImport("user32.dll")]
@@ -238,10 +273,21 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void LeftMouseClick()
         {
-            Thread.Sleep(TimeSpan.FromSeconds(3));
-            //Call the imported function with the cursor's current position
-            var currentPosition = GetMousePosition();
-            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+            try
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(3));
+                //Call the imported function with the cursor's current position
+                var currentPosition = GetMousePosition();
+                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X),
+                            Convert.ToInt32(currentPosition.Y), 0, 0);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
+            
         }
 
         private void RightMouseClick()
@@ -253,10 +299,19 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void DoubleClick()
         {
-            Thread.Sleep(TimeSpan.FromSeconds(3));
-            var currentPosition = GetMousePosition();
-            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
-            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+            try
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(3));
+                var currentPosition = GetMousePosition();
+                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, Convert.ToInt32(currentPosition.X), Convert.ToInt32(currentPosition.Y), 0, 0);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         # endregion
@@ -265,46 +320,87 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void RefreshBrowser()
         {
-            webBrowserMain.Reload(false);
-            SwitchToBusyState();
+            try
+            {
+                webBrowserMain.Reload(false);
+                SwitchToBusyState();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private void MoveBackward()
         {
-            if (webBrowserMain.CanGoBack())
+            try
             {
+                if (!webBrowserMain.CanGoBack()) return;
                 webBrowserMain.GoBack();
                 SwitchToBusyState();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
         }
 
         private void MoveForward()
         {
-            if (webBrowserMain.CanGoForward())
+            try
             {
+                if (!webBrowserMain.CanGoForward()) return;
                 webBrowserMain.GoForward();
                 SwitchToBusyState();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
         }
 
         private void StopBrowser()
         {
-            webBrowserMain.Stop();
-            SwitchToNormalState();
+            try
+            {
+                webBrowserMain.Stop();
+                SwitchToNormalState();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private void NavigateToUrl(string url = null)
         {
-            Uri tempUri;
-            if (url != null)
-                TryParseUrl(url, out tempUri);
-            else
-                TryParseUrl(UrlText, out tempUri);
-            if (!WebBrowserVisible)
-                DownAnimation.Begin();
+            try
+            {
+                Uri tempUri;
+                if (url != null)
+                    TryParseUrl(url, out tempUri);
+                else
+                    TryParseUrl(UrlText, out tempUri);
+                if (!WebBrowserVisible)
+                    DownAnimation.Begin();
 
-            webBrowserMain.Source = tempUri;
-            SwitchToBusyState();
+                webBrowserMain.Source = tempUri;
+                SwitchToBusyState();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private static bool TryParseUrl(string uriString, out Uri uri)
@@ -314,35 +410,44 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void ExecuteFunction(string command)
         {
-            FunctionalCommandType commandType;
-            if (!Enum.TryParse(command, out commandType)) return;
-            switch (commandType)
+            try
             {
-                case FunctionalCommandType.Backward:
-                    {
-                        MoveBackward();
-                        break;
-                    }
-                case FunctionalCommandType.Forward:
-                    {
-                        MoveForward();
-                        break;
-                    }
-                case FunctionalCommandType.Refresh:
-                    {
-                        RefreshBrowser();
-                        break;
-                    }
-                case FunctionalCommandType.Stop:
-                    {
-                        StopBrowser();
-                        break;
-                    }
-                case FunctionalCommandType.Go:
-                    {
-                        NavigateToUrl();
-                        break;
-                    }
+                FunctionalCommandType commandType;
+                if (!Enum.TryParse(command, out commandType)) return;
+                switch (commandType)
+                {
+                    case FunctionalCommandType.Backward:
+                        {
+                            MoveBackward();
+                            break;
+                        }
+                    case FunctionalCommandType.Forward:
+                        {
+                            MoveForward();
+                            break;
+                        }
+                    case FunctionalCommandType.Refresh:
+                        {
+                            RefreshBrowser();
+                            break;
+                        }
+                    case FunctionalCommandType.Stop:
+                        {
+                            StopBrowser();
+                            break;
+                        }
+                    case FunctionalCommandType.Go:
+                        {
+                            NavigateToUrl();
+                            break;
+                        }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
         }
 
@@ -357,21 +462,26 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// <param name="e"></param>
         private void webBrowserMain_LoadingFrameComplete(object sender, Awesomium.Core.FrameEventArgs e)
         {
-            if (e.IsMainFrame)
+            try
             {
-                if (webBrowserMain.IsDocumentReady)
-                {
-                    pbWebPageLoad.Visibility = Visibility.Collapsed;
-                    pbWebPageLoad.State = Elysium.Controls.ProgressState.Normal;
+                if (!e.IsMainFrame) return;
+                if (!webBrowserMain.IsDocumentReady) return;
+                pbWebPageLoad.Visibility = Visibility.Collapsed;
+                pbWebPageLoad.State = Elysium.Controls.ProgressState.Normal;
 
-                    Url = webBrowserMain.Source;
-                    SetWebPageTitleNFavicon();
-                    SetHeaderAndIcon();
-                    //if (this.PageLoadCompleted != null)
-                    //    this.PageLoadCompleted(this, e); 
-                    //SetCursorPos(36, 120);
-                    //LeftMouseClick(36, 120);
-                }
+                Url = webBrowserMain.Source;
+                SetWebPageTitleNFavicon();
+                SetHeaderAndIcon();
+                //if (this.PageLoadCompleted != null)
+                //    this.PageLoadCompleted(this, e); 
+                //SetCursorPos(36, 120);
+                //LeftMouseClick(36, 120);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
         }
         
@@ -380,8 +490,17 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// </summary>
         public void SetWebPageTitleNFavicon()
         {
-            Favicon = new BrowserContainerModel().GetFavicon(new BrowserContainerModel().GetImageSource(Url));
-            WebPageTitle = new BrowserContainerModel().GetWebPageTitle(Url.AbsoluteUri);
+            try
+            {
+                Favicon = new BrowserContainerModel().GetFavicon(new BrowserContainerModel().GetImageSource(Url));
+                WebPageTitle = new BrowserContainerModel().GetWebPageTitle(Url.AbsoluteUri);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         /// <summary>
@@ -389,15 +508,24 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// </summary>
         private void SetHeaderAndIcon()
         {
-            var parent = (UIElement)Parent;
-            var _parent = (TabItem)parent;
-            if (!String.IsNullOrEmpty(WebPageTitle))
+            try
             {
-                _parent.Header = new TabItemHeader(Favicon, WebPageTitle);
+                var parent = (UIElement)Parent;
+                var _parent = (TabItem)parent;
+                if (!String.IsNullOrEmpty(WebPageTitle))
+                {
+                    _parent.Header = new TabItemHeader(Favicon, WebPageTitle);
+                }
+                else
+                {
+                    _parent.Header = new TabItemHeader(Favicon, webBrowserMain.Source.Host);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _parent.Header = new TabItemHeader(Favicon, webBrowserMain.Source.Host);
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
         }
 
@@ -408,8 +536,17 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// <param name="e"></param>
         private void webBrowserMain_AddressChanged(object sender, Awesomium.Core.UrlEventArgs e)
         {
-            //ViewModel.URL = webBrowserMain.Source;
-            txtURL.Text = webBrowserMain.Source.AbsoluteUri;
+            try
+            {
+                //ViewModel.URL = webBrowserMain.Source;
+                txtURL.Text = webBrowserMain.Source.AbsoluteUri;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         /// <summary>
@@ -417,8 +554,17 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// </summary>
         private void SwitchToBusyState()
         {
-            pbWebPageLoad.Visibility = Visibility.Visible;
-            pbWebPageLoad.State = Elysium.Controls.ProgressState.Indeterminate;
+            try
+            {
+                pbWebPageLoad.Visibility = Visibility.Visible;
+                pbWebPageLoad.State = Elysium.Controls.ProgressState.Indeterminate;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         /// <summary>
@@ -426,8 +572,17 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         /// </summary>
         private void SwitchToNormalState()
         {
-            pbWebPageLoad.Visibility = Visibility.Collapsed;
-            pbWebPageLoad.State = Elysium.Controls.ProgressState.Normal;
+            try
+            {
+                pbWebPageLoad.Visibility = Visibility.Collapsed;
+                pbWebPageLoad.State = Elysium.Controls.ProgressState.Normal;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         #endregion
@@ -466,42 +621,91 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void UserControl_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+            try
             {
-                OpenEmulator();
+                if (e.Key == Key.O && Keyboard.Modifiers == ModifierKeys.Control)
+                {
+                    OpenEmulator();
+                }
+                else if (e.Key == Key.L && Keyboard.Modifiers == ModifierKeys.Control)
+                {
+                    CloseEmulator();
+                }
             }
-            else if (e.Key == Key.L && Keyboard.Modifiers == ModifierKeys.Control)
+            catch (Exception ex)
             {
-                CloseEmulator();
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
         }
 
         private void OpenEmulator()
         {
-            var sb = (Storyboard)FindResource("EmulatorOpen");
-            sb.Begin();
+            try
+            {
+                var sb = (Storyboard)FindResource("EmulatorOpen");
+                sb.Begin();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private void CloseEmulator()
         {
-            var sb = (Storyboard)FindResource("EmulatorClose");
-            sb.Begin();
+            try
+            {
+                var sb = (Storyboard)FindResource("EmulatorClose");
+                sb.Begin();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private void ExecuteEmulator()
         {
-            var speechEngine = new SpeechEngine();
-            speechEngine.InitializeEmulator(CommandMode);
-            if (String.IsNullOrEmpty(CommandText)) return;
-            speechEngine.StartEmulatorRecognition(CommandText);
-            speechEngine.SpeechProcessed += SpeechEngine_SpeechProcessed;
+            try
+            {
+                var speechEngine = new SpeechEngine();
+                speechEngine.InitializeEmulator(CommandMode);
+                if (String.IsNullOrEmpty(CommandText)) return;
+                speechEngine.StartEmulatorRecognition(CommandText);
+                speechEngine.SpeechProcessed += SpeechEngine_SpeechProcessed;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         void SpeechEngine_SpeechProcessed(object sender, EventArgs e)
         {
-            var speechEngine = (SpeechEngine)sender;
-            var resultDictionary = speechEngine.ResultDictionary;
-            StartCommandExecution(resultDictionary);
+            try
+            {
+                var speechEngine = (SpeechEngine)sender;
+                if (speechEngine.SpeechProcessingException != null)
+                {
+                    throw speechEngine.SpeechProcessingException;
+                }
+                var resultDictionary = speechEngine.ResultDictionary;
+                StartCommandExecution(resultDictionary);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Visible, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         #endregion
@@ -545,7 +749,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             TxtMessage.Text = message;
             BtnYes.Visibility = yesButtonVisible;
             BtnNo.Visibility = noButtonVisible;
-
+            BtnOk.Visibility = Visibility.Collapsed;
             OpenMessageBox();
         }
 
@@ -555,7 +759,8 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             LblTitle.Content = messageTitle;
             TxtMessage.Text = message;
             BtnOk.Visibility = okButtonVisible;
-
+            BtnNo.Visibility = Visibility.Collapsed;
+            BtnYes.Visibility = Visibility.Collapsed;
             OpenMessageBox();
         }
 
@@ -597,37 +802,66 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void InitializeSpeechRecognizer()
         {
-            var result = "";
-            SpeechRecognizerEngine = new SpeechEngine().CreateSpeechEngine("en-GB", out result);
-            SpeechRecognizerEngine.LoadGrammar(new DictationGrammar());
-            SpeechRecognizerEngine.LoadGrammar(new SpeechEngine().GetSpellingGrammar());
-            SpeechRecognizerEngine.LoadGrammar(new SpeechEngine().GetWebSiteNamesGrammar());
-            SpeechRecognizerEngine.AudioLevelUpdated += SpeechRecognizerEngine_AudioLevelUpdated;
-            SpeechRecognizerEngine.SpeechRecognized += SpeechRecognizerEngine_SpeechRecognized;
+            try
+            {
+                var result = "";
+                SpeechRecognizerEngine = new SpeechEngine().CreateSpeechEngine("en-GB", out result);
+                SpeechRecognizerEngine.LoadGrammar(new DictationGrammar());
+                SpeechRecognizerEngine.LoadGrammar(new SpeechEngine().GetSpellingGrammar());
+                SpeechRecognizerEngine.LoadGrammar(new SpeechEngine().GetWebSiteNamesGrammar());
+                SpeechRecognizerEngine.AudioLevelUpdated += SpeechRecognizerEngine_AudioLevelUpdated;
+                SpeechRecognizerEngine.SpeechRecognized += SpeechRecognizerEngine_SpeechRecognized;
 
-            // use the system's default microphone
-            SpeechRecognizerEngine.SetInputToDefaultAudioDevice();
+                // use the system's default microphone
+                SpeechRecognizerEngine.SetInputToDefaultAudioDevice();
 
-            // start listening
-            SpeechRecognizerEngine.RecognizeAsync(RecognizeMode.Multiple);
+                // start listening
+                SpeechRecognizerEngine.RecognizeAsync(RecognizeMode.Multiple);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private void SpeechRecognizerEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-            if (e.Result.Confidence >= 0.7)
+            try
             {
-                var resultDictionary = new SpeechEngine().InitializeSpeechProcessing(e.Result.Text);
-                StartCommandExecution(resultDictionary);
+                if (e.Result.Confidence >= 0.7)
+                {
+                    var resultDictionary = new SpeechEngine().InitializeSpeechProcessing(e.Result.Text);
+                    StartCommandExecution(resultDictionary);
+                }
+                else
+                {
+                    ShowMessageBoxDetails("Your words cannot be recognized properly!", "Information", Visibility.Visible,
+                                          MessageBoxIcon.Information);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Your words cannot be recognized properly!");
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
+            
         }
 
         private void SpeechRecognizerEngine_AudioLevelUpdated(object sender, AudioLevelUpdatedEventArgs e)
         {
-            PbAudioLevel.Value = e.AudioLevel;
+            try
+            {
+                PbAudioLevel.Value = e.AudioLevel;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         #endregion
@@ -636,12 +870,29 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         public static void SetTabItemViewModel(TabItemViewModel tabItemViewModel)
         {
-            TabItemViewModel = tabItemViewModel;
+            try
+            {
+                TabItemViewModel = tabItemViewModel;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         private void AddNewTab()
         {
-            TabItemViewModel.AddTabItem();
+            try
+            {
+                TabItemViewModel.AddTabItem();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private void RemoveTabByIndex(int index)
@@ -651,12 +902,30 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void GoToTabByIndex(int index)
         {
-            TabItemViewModel.SetFocusOnTabItem(index - 1);
+            try
+            {
+                TabItemViewModel.SetFocusOnTabItem(index - 1);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private void RemoveCurrentTab()
         {
-            TabItemViewModel.RemoveCurrentTabItem();
+            try
+            {
+                TabItemViewModel.RemoveCurrentTabItem();
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         # endregion
@@ -665,27 +934,36 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private void StartCommandExecution(Dictionary<CommandType, object> resultDictionary)
         {
-            switch (CommandMode)
+            try
             {
-                case Mode.CommandMode:
-                    ExecuteCommand(resultDictionary);
-                    break;
-                case Mode.DictationMode:
-                    ExecuteDictationCommand(resultDictionary);
-                    CommandMode = Mode.CommandMode;
-                    break;
-                case Mode.WebsiteSpellMode:
-                    ExecuteSpellingCommand(true, resultDictionary);
-                    CommandMode = Mode.CommandMode;
-                    break;
-                case Mode.GeneralSpellMode:
-                    ExecuteSpellingCommand(false, resultDictionary);
-                    CommandMode = Mode.CommandMode;
-                    break;
-                case Mode.PasswordSpellMode:
-                    ExecutePasswordSpelling(resultDictionary);
-                    CommandMode = Mode.CommandMode;
-                    break;
+                switch (CommandMode)
+                {
+                    case Mode.CommandMode:
+                        ExecuteCommand(resultDictionary);
+                        break;
+                    case Mode.DictationMode:
+                        ExecuteDictationCommand(resultDictionary);
+                        CommandMode = Mode.CommandMode;
+                        break;
+                    case Mode.WebsiteSpellMode:
+                        ExecuteSpellingCommand(true, resultDictionary);
+                        CommandMode = Mode.CommandMode;
+                        break;
+                    case Mode.GeneralSpellMode:
+                        ExecuteSpellingCommand(false, resultDictionary);
+                        CommandMode = Mode.CommandMode;
+                        break;
+                    case Mode.PasswordSpellMode:
+                        ExecutePasswordSpelling(resultDictionary);
+                        CommandMode = Mode.CommandMode;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
         }
 
@@ -877,25 +1155,43 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             ExecuteYesNoCommand(CommandType.no);
                             break;
                         }
+                    case CommandType.ok:
+                        {
+                            ExecuteYesNoCommand(CommandType.ok);
+                            break;
+                        }
                 }
             }
             catch (Exception ex)
             {
                 Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
                 throw;
             }
         }
 
         private void ExecuteYesNoCommand(CommandType type)
         {
-            switch (type)
+            try
             {
-                case CommandType.yes:
-                    if (MessageWindow != null) MessageWindow.Close();
-                    break;
-                case CommandType.no:
-                    if (MessageWindow != null) MessageWindow.Close();
-                    break;
+                switch (type)
+                {
+                    case CommandType.yes:
+                        CloseMessageBox();
+                        break;
+                    case CommandType.no:
+                        CloseMessageBox();
+                        break;
+                    case CommandType.ok:
+                        CloseMessageBox();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
             }
         }
 
@@ -911,6 +1207,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             catch (Exception ex)
             {
                 Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
                 throw;
             }
         }
@@ -929,6 +1226,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             catch (Exception ex)
             {
                 Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
                 throw;
             }
         }
@@ -1003,13 +1301,23 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             catch (Exception ex)
             {
                 Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
                 throw;
             }
         }
 
         private void AppendWebsiteToTextFile(string website)
         {
-            VbwFileManager.AppendToTextFile(VbwFileManager.FilePath() + "fnc_brwsr_websites" + VbwFileManager.FileExtension(), new List<string> { website.ToLower() });
+            try
+            {
+                VbwFileManager.AppendToTextFile(VbwFileManager.FilePath() + "fnc_brwsr_websites" + VbwFileManager.FileExtension(), new List<string> { website.ToLower() });
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
+                throw;
+            }
         }
 
         private static void InvokePostMessageService(string message)
@@ -1034,8 +1342,16 @@ namespace UWIC.FinalProject.WebBrowser.Controller
 
         private static string AcquireSpelledWord(string spelledWord)
         {
-            var letters = spelledWord.Split(' ');
-            return letters.Aggregate("", (current, letter) => current + letter);
+            try
+            {
+                var letters = spelledWord.Split(' ');
+                return letters.Aggregate("", (current, letter) => current + letter);
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
 
         # endregion
