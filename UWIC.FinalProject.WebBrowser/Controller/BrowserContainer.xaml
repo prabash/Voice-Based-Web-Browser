@@ -9,7 +9,8 @@
              xmlns:my ="clr-namespace:UWIC.FinalProject.WebBrowser.Controller"
              xmlns:vm ="clr-namespace:UWIC.FinalProject.WebBrowser.ViewModel"
              x:Name="BrowserContnr"
-             mc:Ignorable="d" Loaded="UserControl_Loaded" KeyDown="UserControl_KeyDown">
+             mc:Ignorable="d" Loaded="UserControl_Loaded" KeyDown="UserControl_KeyDown"
+             GotFocus="BrowserContainer_OnGotFocus" LostFocus="BrowserContainer_OnLostFocus">
 	<UserControl.Resources>
         <Storyboard x:Key="DownAnimation">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="grid">

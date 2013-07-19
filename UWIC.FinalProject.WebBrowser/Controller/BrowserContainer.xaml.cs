@@ -136,15 +136,23 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             CloseMessageBox();
 
             #region Background Image
-            if (!UriParser.IsKnownScheme("pack"))
-                UriParser.Register(new GenericUriParser(GenericUriParserOptions.GenericAuthority), "pack", -1);
+            try
+            {
+                if (!UriParser.IsKnownScheme("pack"))
+                    UriParser.Register(new GenericUriParser(GenericUriParserOptions.GenericAuthority), "pack", -1);
 
-            var dict = new ResourceDictionary();
-            var uri = new Uri("/UWIC.FinalProject.WebBrowser;component/Resources/BackgroundImageResourceDictionary.xaml", UriKind.Relative);
-            dict.Source = uri;
-            Application.Current.Resources.MergedDictionaries.Add(dict);
-            var backImageSource = (ImageSource)Application.Current.Resources["BackImage"];
-            BImage.ImageSource = backImageSource;
+                var dict = new ResourceDictionary();
+                var uri = new Uri("/UWIC.FinalProject.WebBrowser;component/Resources/BackgroundImageResourceDictionary.xaml", UriKind.Relative);
+                dict.Source = uri;
+                Application.Current.Resources.MergedDictionaries.Add(dict);
+                var backImageSource = (ImageSource)Application.Current.Resources["BackImage"];
+                BImage.ImageSource = backImageSource;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
             # endregion
         }
 
@@ -175,6 +183,26 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         void DownAnimation_Completed(object sender, EventArgs e)
         {
             WebBrowserVisible = true;
+        }
+
+        /// <summary>
+        /// This event will fire once the browser container gets the focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BrowserContainer_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            //InitializeSpeechRecognizer();
+        }
+
+        /// <summary>
+        /// This event will fire once the browser container lose the focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BrowserContainer_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            //StoSpeechRecognizer();
         }
 
         #region Timer
@@ -826,6 +854,11 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             }
         }
 
+        private void StoSpeechRecognizer()
+        {
+            SpeechRecognizerEngine.RecognizeAsyncStop();
+        }
+
         private void SpeechRecognizerEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             try
@@ -1371,5 +1404,6 @@ namespace UWIC.FinalProject.WebBrowser.Controller
         {
             //BackgroundImage.ImageSource
         }
+
     }
 }
