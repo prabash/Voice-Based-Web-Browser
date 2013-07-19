@@ -749,7 +749,7 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             InvokePostMessageService("^");
                             break;
                         }
-                    case CommandType.downarrow:
+                    case CommandType.down_arrow:
                         {
                             InvokePostMessageService("{DOWN}");
                             break;
@@ -764,12 +764,12 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             InvokePostMessageService("{F5}");
                             break;
                         }
-                    case CommandType.leftarrow:
+                    case CommandType.left_arrow:
                         {
                             InvokePostMessageService("{LEFT}");
                             break;
                         }
-                    case CommandType.rightarrow:
+                    case CommandType.right_arrow:
                         {
                             InvokePostMessageService("{RIGHT}");
                             break;
@@ -784,27 +784,27 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             InvokePostMessageService("{TAB}");
                             break;
                         }
-                    case CommandType.uparrow:
+                    case CommandType.up_arrow:
                         {
                             InvokePostMessageService("{UP}");
                             break;
                         }
-                    case CommandType.scrollup:
+                    case CommandType.scroll_up:
                         {
                             InvokePostMessageService("{PGUP}");
                             break;
                         }
-                    case CommandType.scrolldown:
+                    case CommandType.scroll_down:
                         {
                             InvokePostMessageService("{PGDN}");
                             break;
                         }
-                    case CommandType.scrollleft:
+                    case CommandType.scroll_left:
                         {
                             InvokePostMessageService("{LEFT}");
                             break;
                         }
-                    case CommandType.scrollright:
+                    case CommandType.scroll_right:
                         {
                             InvokePostMessageService("{RIGHT}");
                             break;
@@ -821,48 +821,48 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             LeftMouseClick();
                             break;
                         }
-                    case CommandType.rightclick:
+                    case CommandType.right_click:
                         {
                             RightMouseClick();
                             break;
                         }
-                    case CommandType.doubleclick:
+                    case CommandType.double_click:
                         {
                             DoubleClick();
                             break;
                         }
-                    case CommandType.opennewtab:
+                    case CommandType.open_new_tab:
                         {
                             AddNewTab();
                             break;
                         }
-                    case CommandType.gototab:
+                    case CommandType.go_to_tab:
                         {
                             var index = command.Value.ToString();
                             GoToTabByIndex(Convert.ToInt32(index));
                             break;
                         }
-                    case CommandType.closetab:
+                    case CommandType.close_tab:
                         {
                             RemoveCurrentTab();
                             break;
                         }
-                    case CommandType.startdictationmode:
+                    case CommandType.start_dictation_mode:
                         {
                             CommandMode = Mode.DictationMode;
                             break;
                         }
-                    case CommandType.startwebsitespelling:
+                    case CommandType.start_website_spelling:
                         {
                             CommandMode = Mode.WebsiteSpellMode;
                             break;
                         }
-                    case CommandType.startpasswordspelling:
+                    case CommandType.start_password_spelling:
                         {
                             CommandMode = Mode.PasswordSpellMode;
                             break;
                         }
-                    case CommandType.startgeneralspelling:
+                    case CommandType.start_general_spelling:
                         {
                             CommandMode = Mode.GeneralSpellMode;
                             break;

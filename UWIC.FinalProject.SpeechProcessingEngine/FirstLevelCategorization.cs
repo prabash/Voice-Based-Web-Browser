@@ -17,6 +17,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// </summary>
         public FirstLevelCategorization()
         {
+            // invoke the method to instantiate the first level category
             DefinePrimaryCategories();
             AcquireTestFiles();
         }
@@ -26,6 +27,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// </summary>
         private void DefinePrimaryCategories()
         {
+            // add first level category details to the category collection
             _categoryCollection = new List<CategoryCollection>
                 {
                     new CategoryCollection
@@ -54,10 +56,23 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// </summary>
         private void AcquireTestFiles()
         {
-            var testFiles = FileManager.GetTestFiles();
-            foreach (var testFile in testFiles)
+            try
             {
-                GetTestSet(testFile);
+                // get the files
+                var testFiles = FileManager.GetTestFiles();
+                // if there are no files, throw an exception
+                if (testFiles == null) throw new Exception("No Test Files Found");
+                // foreach test file
+                foreach (var testFile in testFiles)
+                {
+                    // get test data of the test file
+                    GetTestSet(testFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
             }
         }
 
@@ -69,9 +84,13 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         {
             try
             {
+                // get the file data of a given file path
                 var tempList = DataManager.GetFileData(filepath);
+                // get the explicit file name by removing the filepath
                 var explicitFileName = filepath.Replace(VbwFileManager.FilePath(), String.Empty);
+                // get the prefix of the file name
                 var prefix = explicitFileName.Substring(0, 3);
+                // invoke the method to store the file data according to the category
                 CheckFunctionalCategory(prefix, tempList);
             }
             catch (Exception ex)
@@ -89,8 +108,10 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <param name="testData">Test data set acquired from the local folder</param>
         private void CheckFunctionalCategory(string prefix, IEnumerable<string> testData)
         {
+            // switch by the prefix (category) of a command
             switch (prefix)
             {
+                // if prefix is "fnc", add the command details to the functional command list
                 case "fnc":
                     var funcCommand =
                         _categoryCollection.FirstOrDefault(
@@ -98,6 +119,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                     if (funcCommand != null)
                         DataManager.AssignDataToTestSet(funcCommand.List, testData);
                     break;
+                // if prefix is "key", add the command details to the keyboard command list
                 case "key":
                     var keyCommand =
                         _categoryCollection.FirstOrDefault(
@@ -105,6 +127,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                     if (keyCommand != null)
                         DataManager.AssignDataToTestSet(keyCommand.List, testData);
                     break;
+                // if prefix is "mse", add the command details to the mouse command list
                 case "mse":
                     var mouseCommand =
                         _categoryCollection.FirstOrDefault(
@@ -122,7 +145,8 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         public Dictionary<CommandType, object> CalculateProbabilityOfCommand(string command)
         {
             var probableCommands = new List<CommandType>();
-            new NaiveCommandCategorization(_categoryCollection).CalculateProbabilityOfSegments(command.Split(' ').ToList(), out _probabilityScoreIndices);
+            new NaiveCommandCategorization(_categoryCollection).CalculateProbabilityOfSegments(
+                command.Split(' ').ToList(), true, out _probabilityScoreIndices);
             if (_probabilityScoreIndices == null) return null;
             var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_probabilityScoreIndices);
             if (highestProbabilityCategories.Count == 1)
@@ -174,7 +198,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                             resultDictionary.Add(commandType, CommandParametersManager.GetWebsiteNameForGoCommand(command.Split(' ').ToList()));
                             break;
                         }
-                    case CommandType.gototab:
+                    case CommandType.go_to_tab:
                         {
                             resultDictionary.Add(commandType, CommandParametersManager.GetTabIndexForGoToTabCommand(command));
                             break;

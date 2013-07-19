@@ -160,6 +160,18 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         }
 
         /// <summary>
+        /// Get Highest Probability commands for a given category
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="highestProbabilityCategories"></param>
+        /// <returns></returns>
+        public static List<T> GetHighestProbableCommands<T>(IEnumerable<ProbabilityScoreIndex> highestProbabilityCategories) where T : struct, IConvertible
+        {
+            var probabilityScoreIndices = highestProbabilityCategories as ProbabilityScoreIndex[] ?? highestProbabilityCategories.ToArray();
+            return probabilityScoreIndices.Select(highestProbabilityCategory => (T) Enum.ToObject(typeof (T), highestProbabilityCategory.ReferenceId)).ToList();
+        }
+
+        /// <summary>
         /// This method will append a given list of strings to a text file
         /// </summary>
         /// <param name="fileName">Name of the Text File</param>
@@ -167,6 +179,46 @@ namespace UWIC.FinalProject.SpeechProcessingEngine.Managers
         public static void AppendToFile(string fileName, List<string> data)
         {
             VbwFileManager.AppendToTextFile(fileName, data);
+        }
+
+        /// <summary>
+        /// This method will get the unknown words associated a particular command and assign them to the UnidentifiedWords list of the Learning Manager
+        /// </summary>
+        /// <param name="commandSegments">command segments</param>
+        /// <param name="identifiedCommandWithPrefix">identified command name with prefix</param>
+        public static void AcquireUnknownWordsForACommand(List<string> commandSegments, string identifiedCommandWithPrefix)
+        {
+            try
+            {
+                // get the content of the file
+                var fileContent = FileManager.GetContentOfAFile(identifiedCommandWithPrefix);
+                //  assign the command segments into another list, from which they can be removed
+                var removableCommandSegments = new List<string>();
+                removableCommandSegments.AddRange(commandSegments);
+                // foreach command segment
+                foreach (var command in commandSegments)
+                {
+                    // if the file content includes the command
+                    if (fileContent.Contains(command))
+                        // remove them from the removableCommandSegments list
+                        removableCommandSegments.Remove(command);
+                }
+                // finally if there are any segments available in the removableCommandSegments list
+                if (removableCommandSegments.Count > 0)
+                {
+                    // add each of the commands to the unidentified words list
+                    foreach (var removableCommandSegment in removableCommandSegments)
+                    {
+                        if (!String.IsNullOrEmpty(removableCommandSegment))
+                            LearningManager.UnIdentifiedWords.Add(removableCommandSegment);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorLog(ex);
+                throw;
+            }
         }
     }
 }

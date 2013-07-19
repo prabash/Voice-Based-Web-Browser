@@ -111,7 +111,7 @@ namespace UWIC.FinalProject.UnitTests
         [TestMethod()]
         public void ConvertEnumToIntTest()
         {
-            Enum value = CommandType.startdictationmode; //Command Type Enum
+            Enum value = CommandType.start_dictation_mode; //Command Type Enum
             var expected = 1; // Expected value is 1
             int actual;
             actual = Conversions.ConvertEnumToInt(value);

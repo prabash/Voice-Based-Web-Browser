@@ -116,7 +116,8 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
         /// <param name="command"></param>
         public List<CommandType> CalculateSecondLevelProbabilityOfCommand(string command)
         {
-            new NaiveCommandCategorization(_secondLevelCategoryCollection).CalculateProbabilityOfSegments(command.Split(' ').ToList(), out _secondLevelProbabilityScoreIndices);
+            new NaiveCommandCategorization(_secondLevelCategoryCollection).CalculateProbabilityOfSegments(
+                command.Split(' ').ToList(), true, out _secondLevelProbabilityScoreIndices);
             if (_secondLevelProbabilityScoreIndices == null) return null;
             var highestProbabilityCategories = new NaiveCommandCategorization().GetHighestProbabilityScoreIndeces(_secondLevelProbabilityScoreIndices);
             if (highestProbabilityCategories == null) return null;

@@ -17,7 +17,7 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
             _categoryCollection = categoryCollection;
         }
 
-        public void CalculateProbabilityOfSegments(IEnumerable<string> speechCommand, out List<ProbabilityScoreIndex> probabilityScoreIndices)
+        public void CalculateProbabilityOfSegments(IEnumerable<string> speechCommand, bool assignUnknownCommands, out List<ProbabilityScoreIndex> probabilityScoreIndices)
         {
             try
             {
@@ -45,7 +45,11 @@ namespace UWIC.FinalProject.SpeechProcessingEngine
                                                         ReferenceId = category.Category
                                                     }).ToList(); // foreach list class, add boolean probability classes to the list
 
-                    if (booleanProbabilities.Count == 0) LearningManager.UnIdentifiedWords.Add(segment);
+                    if (assignUnknownCommands)
+                    {
+                        if (booleanProbabilities.Count == 0) 
+                            LearningManager.UnIdentifiedWords.Add(segment);
+                    }
                     var availableCount = booleanProbabilities.Count(rec => rec.Available);
                     var probabilityOfBelongness = availableCount > 0 ? (1.0/Convert.ToDouble(availableCount)) : 0;
                     foreach (var obj in from booleanProbability in booleanProbabilities where booleanProbability.Available select _probabilityScoreIndices.FirstOrDefault(
