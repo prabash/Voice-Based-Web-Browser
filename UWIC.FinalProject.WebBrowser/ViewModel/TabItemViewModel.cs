@@ -21,6 +21,10 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
 
         public ICommand ClickCommand { get; set; }
 
+        public ICommand GridShowCommand { get; set; }
+
+        public ICommand GridHideCommand { get; set; }
+
         # endregion
 
         #region Properties
@@ -49,6 +53,17 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
                 OnPropertyChanged("TabItems");
             }
         }
+
+        private Visibility _gridVisibility = Visibility.Collapsed;
+        public Visibility GridVisibility
+        {
+            get { return _gridVisibility; }
+            set
+            {
+                _gridVisibility = value;
+                OnPropertyChanged("GridVisibility");
+            }
+        }
         
         #endregion
 
@@ -59,9 +74,15 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             myItem.Content = new BrowserContainer();
             TabItems.Add(myItem);
 
+            HideGrid();
+
             this.ClickCommand = new RelayCommand(AddTabItem);
             TabItemHeader.SetViewModel(this);
             BrowserContainer.SetTabItemViewModel(this);
+
+            GridShowCommand = new RelayCommand(ShowGrid);
+
+            GridHideCommand = new RelayCommand(HideGrid);
         }
 
         private TabItemHeader getNewTabItemHeader()
@@ -83,9 +104,7 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
         /// </summary>
         public void AddTabItem()
         {
-            TabItem myItem = new TabItem();
-            myItem.Header = getNewTabItemHeader();
-            myItem.Content = new Controller.BrowserContainer();
+            var myItem = new TabItem {Header = getNewTabItemHeader(), Content = new BrowserContainer()};
             TabItems.Add(myItem);
             SelectedIndex = TabItems.Count - 1;
         }
@@ -125,6 +144,16 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
         public void SetFocusOnTabItem(int index)
         {
             SelectedIndex = index;
+        }
+
+        private void ShowGrid()
+        {
+            GridVisibility = Visibility.Visible;
+        }
+
+        private void HideGrid()
+        {
+            GridVisibility = Visibility.Hidden;
         }
     }
 }

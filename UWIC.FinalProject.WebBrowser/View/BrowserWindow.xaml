@@ -18,6 +18,12 @@
             <metro:CommandButton Header="Add New Tab" Margin="5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Command="{Binding ClickCommand}" >
                 <Image Source="/UWIC.FinalProject.WebBrowser;component/Images/icon-add.png"  Width="25" />
             </metro:CommandButton>
+            <metro:CommandButton Header="Show Grid" Margin="5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Command="{Binding GridShowCommand}" >
+                <Image Source="/UWIC.FinalProject.WebBrowser;component/Images/icon-add.png"  Width="25" />
+            </metro:CommandButton>
+            <metro:CommandButton Header="Hide Grid" Margin="5" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Command="{Binding GridHideCommand}" >
+                <Image Source="/UWIC.FinalProject.WebBrowser;component/Images/icon-add.png"  Width="25" />
+            </metro:CommandButton>
         </metro:ApplicationBar>
     </metro:Window.ApplicationBar>
     <Grid>
@@ -27,7 +33,7 @@
             <my:ControlButton HorizontalAlignment="Right" Width="40" Height="40" DefaultControlImage="/UWIC.FinalProject.WebBrowser;component/Images/minimize.png" HoverControlImage="/UWIC.FinalProject.WebBrowser;component/Images/minimize-w.png" Margin="0,0,30,0" x:Name="MinimizeButton" MouseLeftButtonUp="MinimizeButton_OnMouseLeftButtonUp"/>
             <my:ControlButton HorizontalAlignment="Right" Width="40" Height="40" MouseLeftButtonUp="CloseButton_OnMouseLeftButtonUp" DefaultControlImage="/UWIC.FinalProject.WebBrowser;component/Images/close.png" HoverControlImage="/UWIC.FinalProject.WebBrowser;component/Images/close-w.png"/>
         </Grid>
-        <!--<Grid Name="GridRuler">
+        <Grid Name="GridRuler" Visibility="{Binding GridVisibility, UpdateSourceTrigger=PropertyChanged}">
             <telerik:RadDiagramRuler Diagram="{Binding ElementName=xDiagram}" Placement="Top" Opacity="0.5">
                 <telerik:RadDiagramRuler.ScaleDefinitions>
                     <telerik:DiagramScaleDefinitionCollection>
@@ -44,7 +50,7 @@
             <telerik:RadDiagramRuler Diagram="{Binding ElementName=xDiagram}" Placement="Right" Opacity="0.5">
                 <telerik:RadDiagramRuler.ScaleDefinitions>
                     <telerik:DiagramScaleDefinitionCollection >
-                        <telerik:DiagramScaleDefinition MaxZoom="1.99">
+                        <telerik:DiagramScaleDefinition>
                             <telerik:DiagramScaleItemDefinition Interval="5" Type="XSmallTick" />
                             <telerik:DiagramScaleItemDefinition Interval="10" Type="SmallTick" />
                             <telerik:DiagramScaleItemDefinition Interval="25" Type="MediumTick" />
@@ -55,6 +61,6 @@
                 </telerik:RadDiagramRuler.ScaleDefinitions>
             </telerik:RadDiagramRuler>
             <telerik:RadDiagram x:Name="xDiagram"/>
-        </Grid>-->
+        </Grid>
     </Grid>
 </metro:Window>
