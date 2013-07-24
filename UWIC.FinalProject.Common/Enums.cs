@@ -54,7 +54,9 @@
         move,
         click,
         double_click,
-        right_click
+        right_click,
+        show_grid,
+        hide_grid
     }
 
     public enum FunctionalCommandType
@@ -63,7 +65,9 @@
         Forward,
         Backward,
         Refresh,
-        Stop
+        Stop,
+        StartVoice,
+        StopVoice
     }
 
     public enum Mode

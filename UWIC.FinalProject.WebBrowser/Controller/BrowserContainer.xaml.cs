@@ -132,7 +132,6 @@ namespace UWIC.FinalProject.WebBrowser.Controller
             CommandMode = Mode.CommandMode;
             //timer.Elapsed += timer_Elapsed;
             //timer.Start();
-
             CloseMessageBox();
 
             #region Background Image
@@ -469,6 +468,16 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             NavigateToUrl();
                             break;
                         }
+                    case FunctionalCommandType.StartVoice:
+                        {
+                            StartStopVoiceRecognition(FunctionalCommandType.StartVoice);
+                            break;
+                        }
+                    case FunctionalCommandType.StopVoice:
+                        {
+                            StartStopVoiceRecognition(FunctionalCommandType.StopVoice);
+                            break;
+                        }
                 }
             }
             catch (Exception ex)
@@ -476,6 +485,22 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                 Log.ErrorLog(ex);
                 ShowMessageBoxDetails(ex.Message, "Error", Visibility.Collapsed, MessageBoxIcon.Error);
                 throw;
+            }
+        }
+
+        private void StartStopVoiceRecognition(FunctionalCommandType commandType)
+        {
+            if (commandType == FunctionalCommandType.StartVoice)
+            {
+                InitializeSpeechRecognizer();
+                StartVoiceButton.Visibility = Visibility.Collapsed;
+                StopVoiceButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                StoSpeechRecognizer();
+                StartVoiceButton.Visibility = Visibility.Visible;
+                StopVoiceButton.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -1193,6 +1218,16 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                             ExecuteYesNoCommand(CommandType.ok);
                             break;
                         }
+                    case CommandType.show_grid:
+                        {
+                            DisplayGird(true);
+                            break;
+                        }
+                    case CommandType.hide_grid:
+                        {
+                            DisplayGird(false);
+                            break;
+                        }
                 }
             }
             catch (Exception ex)
@@ -1385,6 +1420,14 @@ namespace UWIC.FinalProject.WebBrowser.Controller
                 Log.ErrorLog(ex);
                 throw;
             }
+        }
+
+        private void DisplayGird(bool displayGrid)
+        {
+            if (displayGrid)
+                TabItemViewModel.ShowGrid();
+            else
+                TabItemViewModel.HideGrid();
         }
 
         # endregion

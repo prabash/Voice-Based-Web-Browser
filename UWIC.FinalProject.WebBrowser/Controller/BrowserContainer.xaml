@@ -114,7 +114,7 @@
                     <ColumnDefinition Width="0.6*"/>
                     <ColumnDefinition Width="0.6*"/>
                     <ColumnDefinition Width="0.6*"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0.6*"/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -126,6 +126,8 @@
                 <my:NavigationButton Grid.Column="3" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/right-arrow-2.png" CommandParameter="Forward" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
                 <my:NavigationButton Grid.Column="4" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/refresh-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/refresh-2.png" CommandParameter="Refresh" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
                 <my:NavigationButton Grid.Column="5" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/stop-1.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/stop-2.png"  CommandParameter="Stop" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}"/>
+                <my:NavigationButton Grid.Column="6" CommandParameter="StartVoice" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}" x:Name="StartVoiceButton" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/mic_icon_b_256.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/mic_icon_w_256.png"/>
+                <my:NavigationButton Grid.Column="6" CommandParameter="StopVoice" Command="{Binding ElementName=BrowserContnr, Path=FunctionCommand}" x:Name="StopVoiceButton" DefaultNavigationImage="/UWIC.FinalProject.WebBrowser;component/Images/mic_stop_icon_b_256.png" HoverNavigateImage="/UWIC.FinalProject.WebBrowser;component/Images/mic_stop_icon_w_256.png" Visibility="Collapsed"/>
                 <Grid HorizontalAlignment="Right" Grid.Column="6" Grid.ColumnSpan="5">
                     <Grid x:Name="emulatorWindow" RenderTransformOrigin="0.5,0.5" Width="220" Height="40">
                         <Grid.RenderTransform>

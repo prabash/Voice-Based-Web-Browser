@@ -317,6 +317,12 @@
     <Resource Include="Images\minimize-w.png" />
     <Resource Include="Images\minimize.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\mic_icon_b_256.png" />
+    <Resource Include="Images\mic_icon_w_256.png" />
+    <Resource Include="Images\mic_stop_icon_b_256.png" />
+    <Resource Include="Images\mic_stop_icon_w_256.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

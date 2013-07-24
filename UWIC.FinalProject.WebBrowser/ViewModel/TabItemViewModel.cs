@@ -146,12 +146,12 @@ namespace UWIC.FinalProject.WebBrowser.ViewModel
             SelectedIndex = index;
         }
 
-        private void ShowGrid()
+        public void ShowGrid()
         {
             GridVisibility = Visibility.Visible;
         }
 
-        private void HideGrid()
+        public void HideGrid()
         {
             GridVisibility = Visibility.Hidden;
         }
